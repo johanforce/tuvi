@@ -1,0 +1,204 @@
+{
+ "note": "Vị trí sao phụ đọc từ ảnh Tuvi.vn (docs/03_Fixture_TuviVN). Chuyển chép bằng mắt từ ảnh; cần người kiểm tra lại ngẫu nhiên. Input lấy từ fixture cùng id.",
+ "charts": [
+  {
+   "id": "TV-001",
+   "stars": {
+    "thien-khoi": "Ngọ",
+    "thien-viet": "Dần",
+    "hong-loan": "Tỵ",
+    "thien-hy": "Hợi",
+    "co-than": "Hợi",
+    "qua-tu": "Mùi",
+    "thien-khong": "Hợi",
+    "dao-hoa": "Mão",
+    "phong-cao": "Thân",
+    "quoc-an": "Thìn",
+    "thien-tru": "Dần",
+    "dau-quan": "Tỵ",
+    "thien-thuong": "Tý",
+    "thien-su": "Dần",
+    "pha-toai": "Sửu",
+    "da-la": "Mùi"
+   }
+  },
+  {
+   "id": "TV-002",
+   "stars": {
+    "thien-khoi": "Mão",
+    "thien-viet": "Tỵ",
+    "hong-loan": "Dần",
+    "thien-hy": "Thân",
+    "co-than": "Dần",
+    "qua-tu": "Tuất",
+    "thien-khong": "Dần",
+    "dao-hoa": "Ngọ",
+    "phong-cao": "Thân",
+    "quoc-an": "Thân",
+    "thien-tru": "Tuất",
+    "dau-quan": "Mão",
+    "thien-thuong": "Tỵ",
+    "thien-su": "Mùi",
+    "pha-toai": "Sửu"
+   }
+  },
+  {
+   "id": "TV-003",
+   "stars": {
+    "thien-khoi": "Tý",
+    "thien-viet": "Thân",
+    "hong-loan": "Tý",
+    "thien-hy": "Ngọ",
+    "co-than": "Tỵ",
+    "qua-tu": "Sửu",
+    "thien-khong": "Thìn",
+    "dao-hoa": "Tý",
+    "phong-cao": "Tỵ",
+    "quoc-an": "Dần",
+    "thien-tru": "Thân",
+    "dau-quan": "Thân",
+    "thien-thuong": "Dần",
+    "thien-su": "Thìn",
+    "pha-toai": "Tỵ"
+   }
+  },
+  {
+   "id": "TV-004",
+   "stars": {
+    "thien-khoi": "Ngọ",
+    "thien-viet": "Dần",
+    "hong-loan": "Tý",
+    "thien-hy": "Ngọ",
+    "co-than": "Tỵ",
+    "qua-tu": "Sửu",
+    "thien-khong": "Thìn",
+    "dao-hoa": "Tý",
+    "phong-cao": "Mão",
+    "quoc-an": "Tỵ",
+    "thien-tru": "Ngọ",
+    "dau-quan": "Hợi",
+    "thien-thuong": "Hợi",
+    "thien-su": "Sửu",
+    "pha-toai": "Tỵ"
+   }
+  },
+  {
+   "id": "TV-005",
+   "stars": {
+    "thien-khoi": "Sửu",
+    "thien-viet": "Mùi",
+    "hong-loan": "Dậu",
+    "thien-hy": "Mão",
+    "co-than": "Thân",
+    "qua-tu": "Thìn",
+    "thien-khong": "Mùi",
+    "dao-hoa": "Mão",
+    "phong-cao": "Tý",
+    "quoc-an": "Tuất",
+    "thien-tru": "Tỵ",
+    "dau-quan": "Ngọ",
+    "thien-thuong": "Mùi",
+    "thien-su": "Dậu",
+    "pha-toai": "Tỵ"
+   }
+  },
+  {
+   "id": "TV-006",
+   "stars": {
+    "thien-khoi": "Hợi",
+    "thien-viet": "Dậu",
+    "hong-loan": "Dậu",
+    "thien-hy": "Mão",
+    "co-than": "Thân",
+    "qua-tu": "Thìn",
+    "thien-khong": "Mùi",
+    "dao-hoa": "Mão",
+    "phong-cao": "Tuất",
+    "quoc-an": "Sửu",
+    "thien-tru": "Tý",
+    "dau-quan": "Dậu",
+    "thien-thuong": "Thìn",
+    "thien-su": "Ngọ",
+    "pha-toai": "Tỵ"
+   }
+  },
+  {
+   "id": "TV-007",
+   "stars": {
+    "thien-khoi": "Ngọ",
+    "thien-viet": "Dần",
+    "hong-loan": "Mùi",
+    "thien-hy": "Sửu",
+    "co-than": "Hợi",
+    "qua-tu": "Mùi",
+    "thien-khong": "Dậu",
+    "dao-hoa": "Dậu",
+    "phong-cao": "Thân",
+    "quoc-an": "Thìn",
+    "thien-tru": "Dần",
+    "dau-quan": "Hợi",
+    "thien-thuong": "Thìn",
+    "thien-su": "Ngọ",
+    "pha-toai": "Dậu"
+   }
+  },
+  {
+   "id": "CORE-03",
+   "stars": {
+    "thien-khoi": "Tý",
+    "thien-viet": "Thân",
+    "hong-loan": "Tuất",
+    "thien-hy": "Thìn",
+    "co-than": "Thân",
+    "qua-tu": "Thìn",
+    "thien-khong": "Ngọ",
+    "dao-hoa": "Ngọ",
+    "phong-cao": "Tuất",
+    "quoc-an": "Dần",
+    "thien-tru": "Thân",
+    "dau-quan": "Dần",
+    "thien-thuong": "Tuất",
+    "thien-su": "Tý",
+    "pha-toai": "Dậu"
+   }
+  },
+  {
+   "id": "LEAP-04",
+   "stars": {
+    "thien-khoi": "Mão",
+    "thien-viet": "Tỵ",
+    "hong-loan": "Tý",
+    "thien-hy": "Ngọ",
+    "co-than": "Tỵ",
+    "qua-tu": "Sửu",
+    "thien-khong": "Thìn",
+    "dao-hoa": "Tý",
+    "phong-cao": "Ngọ",
+    "quoc-an": "Thân",
+    "thien-tru": "Tuất",
+    "dau-quan": "Ngọ",
+    "thien-thuong": "Thìn",
+    "thien-su": "Ngọ"
+   }
+  },
+  {
+   "id": "LEAP-08",
+   "stars": {
+    "thien-khoi": "Tý",
+    "thien-viet": "Thân",
+    "hong-loan": "Tuất",
+    "thien-hy": "Thìn",
+    "co-than": "Thân",
+    "qua-tu": "Thìn",
+    "thien-khong": "Ngọ",
+    "dao-hoa": "Ngọ",
+    "phong-cao": "Ngọ",
+    "quoc-an": "Hợi",
+    "thien-tru": "Ngọ",
+    "dau-quan": "Thìn",
+    "thien-thuong": "Thân",
+    "thien-su": "Tuất"
+   }
+  }
+ ]
+}

@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --parchment: #fcf8ee;
+    --parchment-border: #d4c2a5;
+    --cell-bg: #fffcf5;
+    --cell-border: #d8c8b0;
+    --ink: #1f1b18;
+    --ink-muted: #6b6055;
+    --imperial-red: #982218;
+    --imperial-gold: #b3740e;
+    --royal-blue: #1e3a8a;
+    --jade-green: #15803d;
+    --earth-brown: #78350f;
+    --slate-silver: #475569;
+  }
+
+  body {
+    background-color: #f7f3e8;
+    background-image: 
+      radial-gradient(#e5dcce 1px, transparent 1px),
+      radial-gradient(#efe7dc 1px, #f7f3e8 1px);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Kiểu chữ tiêu đề truyền thống */
+.font-classical {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+}
+
+.font-hanzi {
+  font-family: 'Noto Serif SC', serif;
+}
+
+/* In ấn và xuất PDF: A4 Landscape */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 4mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Ẩn các thanh công cụ, nút bấm và panel phụ khi in */
+  .no-print,
+  nav,
+  header,
+  footer,
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Lá số hiển thị toàn trang ngang chuẩn chỉnh */
+  .print-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+  }
+
+  .chart-board {
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    grid-auto-rows: 44mm !important;
+    gap: 1.5mm !important;
+    font-size: 8.5pt !important;
+  }
+
+  .palace-cell {
+    border: 1px solid #786450 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    padding: 4px 6px !important;
+  }
+
+  .center-cell {
+    background: #faf8f2 !important;
+    border: 1.5px solid #8c2d19 !important;
+  }
+}
