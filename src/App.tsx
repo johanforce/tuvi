@@ -150,7 +150,7 @@ export default function App() {
 
       {/* Footer bản quyền */}
       <footer className="w-full bg-[#fcf8ee] border-t border-[#d8c8b0] py-4 text-center text-[12px] text-stone-500 no-print">
-        <p>Hệ Thống Lập Lá Số Tử Vi • Bố Cục Địa Bàn 4x4 • Đối Chiếu Đa Fixture Tuvi.vn</p>
+        <p>Hệ Thống Lập Lá Số Tử Vi • Bố Cục Địa Bàn 4x4 • Đối Chiếu Đa Fixture tuvidauso.ai.studio</p>
       </footer>
     </div>
   );

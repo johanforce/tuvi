@@ -29,10 +29,13 @@ const BRANCH_ELEMENT_INFO: Record<number, string> = {
   10: '+Thổ',  // Tuất
   11: '-Thủy', // Hợi
 };
+const BRANCH_ELEMENT_COLORS: Record<string, string> = {
+  Kim: '#5b666e', Mộc: '#279653', Thủy: '#2787CE', Hỏa: '#D94A40', Thổ: '#FFD700',
+};
 
 export function getPalaceCanChiAbbr(stem: number, branch: number): string {
   const abbr = STEM_ABBR[stem % 10] || '';
-  const brName = EARTHLY_BRANCHES[branch % 12] || '';
+  const brName = EARTHLY_BRANCHES[branch % 12]  || '';
   return `${abbr}${brName}`;
 }
 
@@ -40,16 +43,22 @@ export function getBranchElementInfo(branch: number): string {
   return BRANCH_ELEMENT_INFO[branch % 12] || '';
 }
 
-// Màu tiêu đề cung như trong fixture Tuvi.vn
+export function getBranchElementColor(branch: number): string {
+  const info = getBranchElementInfo(branch);
+  return BRANCH_ELEMENT_COLORS[info.slice(1)] || '#111827';
+}
+
+// Màu tiêu đề cung như trong fixture tuvidauso.ai.studio
 export function getPalaceNameColor(palaceName: string, isThan: boolean): string {
   if (palaceName.includes('Mệnh') || isThan) {
     return 'text-[#d97706]'; // Cam / hổ phách
   }
   switch (palaceName) {
-    case 'Phu Thê':
     case 'Huynh Đệ':
     case 'Tật Ách':
       return 'text-[#dc2626]'; // Đỏ
+    case 'Phu Thê':
+      return 'text-[#6b7280]'; // Kim
     case 'Tài Bạch':
     case 'Thiên Di':
       return 'text-[#16a34a]'; // Xanh lá

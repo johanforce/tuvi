@@ -126,7 +126,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
         <div className="lg:col-span-5 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100/80 text-amber-900 border border-amber-300 rounded-full text-[12px] font-semibold">
             <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-            <span>Thuật Toán Chuẩn Hóa Theo Tuvi.vn</span>
+            <span>Thuật Toán Chuẩn Hóa Theo tuvidauso.ai.studio</span>
           </div>
 
           <h1 className="font-classical text-3xl md:text-4xl font-black text-[#8c2d19] tracking-tight leading-tight">

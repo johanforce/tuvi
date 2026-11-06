@@ -1,6 +1,6 @@
 /**
  * Bảng âm dương và độ sáng (Miếu, Vượng, Đắc, Bình hòa, Hãm địa) của 14 chính tinh
- * và các phụ tinh tiêu biểu qua 12 địa chi theo chuẩn Tuvi.vn.
+ * và các phụ tinh tiêu biểu qua 12 địa chi theo chuẩn tuvidauso.ai.studio.
  *
  * Chỉ số Chi: 0: Tý, 1: Sửu, 2: Dần, 3: Mão, 4: Thìn, 5: Tỵ, 6: Ngọ, 7: Mùi, 8: Thân, 9: Dậu, 10: Tuất, 11: Hợi.
  */
@@ -99,12 +99,13 @@ export const SECONDARY_STARS_BRIGHTNESS: Record<string, Record<number, 'M' | 'V'
   'dia-kiep': { 5: 'Đ', 11: 'Đ', 0: 'H', 1: 'H', 2: 'H', 3: 'H', 4: 'H', 6: 'H', 7: 'H', 8: 'H', 9: 'H', 10: 'H' },
   'van-xuong': { 1: 'Đ', 4: 'Đ', 5: 'Đ', 10: 'Đ', 2: 'H', 6: 'H', 8: 'H' },
   'van-khuc': { 1: 'Đ', 4: 'Đ', 5: 'Đ', 10: 'Đ', 2: 'H', 6: 'H', 8: 'H' },
-  'loc-ton': { 0: 'B', 1: 'B', 2: 'B', 3: 'B', 4: 'B', 5: 'B', 6: 'B', 7: 'B', 8: 'B', 9: 'B', 10: 'B', 11: 'B' },
+  // Bảng độ sáng áp dụng trên các cung Lộc Tồn có thể an; Miếu ở Tý, Dần, Mão, Ngọ.
+  'loc-ton': { 0: 'M', 2: 'M', 3: 'M', 5: 'Đ', 6: 'M', 8: 'B', 9: 'B', 11: 'Đ' },
   'thien-ma': { 2: 'Đ', 5: 'Đ', 8: 'H', 11: 'H' },
   'thien-khoc': { 0: 'Đ', 1: 'Đ', 6: 'Đ', 7: 'Đ', 3: 'H', 9: 'H' },
   'thien-hu': { 0: 'Đ', 1: 'Đ', 6: 'Đ', 7: 'Đ', 3: 'H', 9: 'H' },
-  'thien-hinh': { 2: 'Đ', 3: 'Đ', 9: 'Đ', 10: 'Đ' },
-  'thien-dieu': { 3: 'Đ', 9: 'Đ', 10: 'Đ', 11: 'Đ' },
+  'thien-hinh': { 2: 'Đ', 3: 'Đ', 7: 'Đ', 9: 'Đ', 10: 'Đ' },
+  'thien-dieu': { 3: 'Đ', 9: 'Đ', 10: 'Đ', 11: 'H' },
 };
 
 export function getStarBrightness(starId: string, branch: number): string | undefined {

@@ -14,6 +14,8 @@ import {placeAnnualStars} from '../src/engine/stars-annual.js';
 import {placeAnnualTransformations} from '../src/catalog/transformations.js';
 import {buildChart,getPlacementMonth} from '../src/engine/build-chart.js';
 import {EARTHLY_BRANCHES,HEAVENLY_STEMS,mod} from '../src/engine/constants.js';
+import {STAR_META} from '../src/catalog/star-metadata.js';
+import {getStarBrightness} from '../src/data/brightness.js';
 
 const captureAudit = capturedFixtures as Array<{id:string;inputAuditStatus?:string;duplicateOf?:string;sourceObservationNote?:string;ruleNote?:string}>;
 const MAIN_IDS=['tu-vi','thien-co','thai-duong','vu-khuc','thien-dong','liem-trinh','thien-phu','thai-am','tham-lang','cu-mon','thien-tuong','thien-luong','that-sat','pha-quan'];
@@ -44,7 +46,7 @@ describe('lịch âm Việt Nam UTC+7',()=>{
     expect(solarToLunar(8,8,2025,7)).toEqual({day:15,month:6,year:2025,isLeapMonth:true});
     expect(solarToLunar(9,8,2025,7)).toEqual({day:16,month:6,year:2025,isLeapMonth:true});
   });
-  it('Tuvi.vn giữ nguyên tháng âm trong toàn bộ tháng nhuận, kể cả ngày 16 và ngày cuối',()=>{
+  it('tuvidauso.ai.studio giữ nguyên tháng âm trong toàn bộ tháng nhuận, kể cả ngày 16 và ngày cuối',()=>{
     for (const day of [1,15,16,29,30]) {
       expect(getPlacementMonth(2,day,true)).toBe(2);
       expect(getPlacementMonth(6,day,true)).toBe(6);
@@ -54,7 +56,7 @@ describe('lịch âm Việt Nam UTC+7',()=>{
   });
 });
 
-describe('28 testcase fixture Tuvi.vn thu thập ngày 05/11/2026',()=>{
+describe('28 testcase fixture tuvidauso.ai.studio thu thập ngày 05/11/2026',()=>{
   it.each(capturedFixtures.map(f=>[f.id,f] as const))('%s: lịch âm, Can Chi và Cục khớp ảnh trung tâm',(id,f)=>{
     const [hour,minute]=parseTime(f.input.time);
     const chart=buildChart({solarDate:f.input.solarDate,gender:f.input.gender as 'nam'|'nu',hour,minute});
@@ -109,7 +111,7 @@ describe('28 testcase fixture Tuvi.vn thu thập ngày 05/11/2026',()=>{
 });
 
 describe('Tiểu Hạn, Nguyệt hạn và Lưu Niên Đại Hạn',()=>{
-  it('tái lập bốn fixture Tuvi.vn: Tiểu Hạn và Th.1 đúng vị trí',()=>{
+  it('tái lập bốn fixture tuvidauso.ai.studio: Tiểu Hạn và Th.1 đúng vị trí',()=>{
     const cases=[
       {id:'TV-001',birthChi:10,age:117,gender:'nam' as const,month:12,hour:6,tieuHan:0,month1:7},
       {id:'TV-002',birthChi:1,age:114,gender:'nam' as const,month:5,hour:6,tieuHan:0,month1:2},
@@ -223,7 +225,7 @@ describe('14 chính tinh',()=>{
 });
 
 describe('P0 coverage matrix',()=>{
-  it('có ít nhất 20 lá số Tuvi.vn duy nhất',()=>{
+  it('có ít nhất 20 lá số tuvidauso.ai.studio duy nhất',()=>{
     expect(fixtures.length).toBeGreaterThanOrEqual(20);
     expect(new Set(fixtures.map(f=>f.id)).size).toBe(fixtures.length);
     expect(new Set(fixtures.map(f=>f.sourceUrl??f.source)).size).toBe(fixtures.length);
@@ -247,7 +249,7 @@ describe('P0 coverage matrix',()=>{
     expect(fixtures.filter(f=>'mainStars' in f.expected).length).toBeGreaterThanOrEqual(9);
     expect(fixtures.filter(f=>'observedMainStars' in f.expected).length).toBeGreaterThanOrEqual(10);
   });
-  it('phân biệt fixture gốc và 8 ảnh tháng nhuận Tuvi.vn mới',()=>{
+  it('phân biệt fixture gốc và 8 ảnh tháng nhuận tuvidauso.ai.studio mới',()=>{
     expect(fixtures.filter(f=>f.expected.lunar.isLeapMonth).length).toBe(0);
     const leapCaptures=capturedFixtures.filter(f=>f.expectedFromTuviVn.lunar.isLeapMonth);
     expect(leapCaptures).toHaveLength(8);
@@ -272,7 +274,7 @@ describe('P0 coverage matrix',()=>{
   });
 });
 
-describe('Sao phụ đã khớp ảnh Tuvi.vn: Khôi/Việt, Hồng Loan, Hỷ, Cô/Quả, Không, Đào Hoa, Phong Cáo, Quốc Ấn, Trù, Thương/Sứ, Đẩu Quân',()=>{
+describe('Sao phụ đã khớp ảnh tuvidauso.ai.studio: Khôi/Việt, Hồng Loan, Hỷ, Cô/Quả, Không, Đào Hoa, Phong Cáo, Quốc Ấn, Trù, Thương/Sứ, Đẩu Quân',()=>{
   const inputs=new Map<string,{solarDate:string;time:string;gender:string}>();
   for(const f of fixtures) inputs.set(f.id,f.input as {solarDate:string;time:string;gender:string});
   for(const f of capturedFixtures) inputs.set(f.id,f.input as {solarDate:string;time:string;gender:string});
@@ -295,7 +297,7 @@ describe('Sao phụ đã khớp ảnh Tuvi.vn: Khôi/Việt, Hồng Loan, Hỷ, 
       expect(at('thien-su')).toBe(mod(chart.menhBranch!+7));
     }
   });
-  it('Thiên Khôi/Việt ưu tiên cặp đã quan sát trên fixture Tuvi.vn',()=>{
+  it('Thiên Khôi/Việt ưu tiên cặp đã quan sát trên fixture tuvidauso.ai.studio',()=>{
     const observed:Record<number,[string,string]>={0:['Sửu','Mùi'],1:['Tý','Thân'],2:['Hợi','Dậu'],5:['Tý','Thân'],6:['Ngọ','Dần'],7:['Ngọ','Dần'],9:['Mão','Tỵ']};
     for(const [stem,pair] of Object.entries(observed)){
       const stars=placeYearStemStars(Number(stem));
@@ -373,6 +375,15 @@ describe('Sao lưu niên theo năm xem (công thức ứng viên)',()=>{
     expect(at('luu-van-xuong')).toBe(8); // Thân
     expect(at('luu-van-khuc')).toBe(6); // Ngọ
     expect(at('luu-van-tinh')).toBe(9); // Can năm sinh Kỷ -> Dậu
+    expect(at('luu-thien-khoi')).toBe(11); // Can Bính -> Hợi
+  });
+  it('ngũ hành phụ tinh và độ sáng Thiên Diêu theo các chỉnh sửa đã đối chiếu',()=>{
+    expect(STAR_META['bac-si-1']?.element).toBe('thuy'); // Lực Sĩ
+    expect(STAR_META['bac-si-11']?.element).toBe('hoa'); // Quan Phủ
+    expect(STAR_META['huu-bat']?.element).toBe('thuy');
+    expect(STAR_META['thai-tue-7']?.element).toBe('thuy'); // Long Đức
+    expect(STAR_META['thien-khoi']?.element).toBe('hoa'); // Lưu Thiên Khôi dùng metadata sao gốc
+    expect(getStarBrightness('thien-dieu',11)).toBe('H');
   });
   it('chỉ đặt sao lưu trong 12 địa chi và đổi Can Chi sẽ đổi một số vị trí',()=>{
     const a=placeAnnualStars(2030,0),b=placeAnnualStars(2031,0);

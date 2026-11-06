@@ -126,26 +126,26 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
 
       {/* 2. CÁC NHÃN ĐỊA CHI PHÂN BỔ 4 CẠNH & 4 GÓC CHUẨN XÁC */}
       {/* 4 Góc: Tỵ (trên-trái), Thân (trên-phải), Hợi (dưới-phải), Dần (dưới-trái) */}
-      <span className="absolute top-1 left-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Tỵ</span>
-      <span className="absolute top-1 right-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Thân</span>
-      <span className="absolute bottom-1 right-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Hợi</span>
-      <span className="absolute bottom-1 left-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Dần</span>
+      <span className="absolute top-1 left-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Mùi</span>
+      <span className="absolute top-1 right-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Tuất</span>
+      <span className="absolute bottom-1 right-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Sửu</span>
+      <span className="absolute bottom-1 left-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Thìn</span>
 
       {/* Cạnh trên: Ngọ (25%), Mùi (75%) */}
-      <span className="absolute top-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '25%' }}>Ngọ</span>
-      <span className="absolute top-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '75%' }}>Mùi</span>
+      <span className="absolute top-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '25%' }}>Thân</span>
+      <span className="absolute top-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '75%' }}>Dậu</span>
 
       {/* Cạnh phải: Dậu (25%), Tuất (75%) */}
-      <span className="absolute right-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '25%' }}>Dậu</span>
-      <span className="absolute right-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '75%' }}>Tuất</span>
+      <span className="absolute right-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '25%' }}>Hợi</span>
+      <span className="absolute right-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '75%' }}>Tý</span>
 
       {/* Cạnh dưới: Sửu (25%), Tý (75%) */}
-      <span className="absolute bottom-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '25%' }}>Sửu</span>
-      <span className="absolute bottom-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '75%' }}>Tý</span>
+      <span className="absolute bottom-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '25%' }}>Mão</span>
+      <span className="absolute bottom-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '75%' }}>Dần</span>
 
       {/* Cạnh trái: Thìn (25%), Mão (75%) */}
-      <span className="absolute left-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '25%' }}>Thìn</span>
-      <span className="absolute left-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '75%' }}>Mão</span>
+      <span className="absolute left-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '25%' }}>Ngọ</span>
+      <span className="absolute left-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '75%' }}>Tỵ</span>
 
       {/* 3. NỘI DUNG CHÍNH CỦA THIÊN BÀN */}
       <div className="relative z-10 flex flex-col h-full justify-between px-3 py-1">
@@ -155,12 +155,12 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
             TRANG TỬ VI CỔ HỌC HÀNG ĐẦU VIỆT NAM
           </h3>
           <a 
-            href="https://tuvi.vn" 
+            href="https://tuvidauso.ai.studio" 
             target="_blank" 
             rel="noreferrer"
             className="text-[12px] text-[#0066cc] font-medium block hover:underline"
           >
-            https://tuvi.vn
+            https://tuvidauso.ai.studio
           </a>
           <h2 className="font-serif font-black text-[22px] md:text-[24px] text-black tracking-wide mt-0.5 italic">
             Lá Số Tử Vi
@@ -171,7 +171,7 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
         <div className="text-[11.5px] md:text-[12px] leading-[1.45] text-stone-900 my-auto pl-2 pr-6 space-y-0.5">
           <div className="grid grid-cols-12">
             <span className="col-span-3 font-bold text-black">Họ tên:</span>
-            <span className="col-span-9 font-medium">{input.name || 'Lá số tuvi.vn'}</span>
+            <span className="col-span-9 font-medium">{input.name || 'Lá số tuvidauso.ai.studio'}</span>
           </div>
 
           <div className="grid grid-cols-12">

@@ -22,9 +22,9 @@ export function placeBirthTransformations(yearStem:number,starBranches:Map<strin
 
 /** Lưu Tứ Hóa: dùng Can năm xem, bám lên vị trí sao gốc của lá số.
  * Bảng cùng cấu trúc với Tứ Hóa bản mệnh; vị trí sao đích không di chuyển.
- * Chưa có fixture Tuvi.vn đa năm nên trạng thái chỉ là công thức ứng viên.
+ * Chưa có fixture tuvidauso.ai.studio đa năm nên trạng thái chỉ là công thức ứng viên.
  */
 export function placeAnnualTransformations(yearStem:number,starBranches:Map<string,number>):StarPlacement[]{
   const row=TABLE[mod(yearStem,10)]!;
-  return row.map((id,i)=>({id:`luu-hoa-${['loc','quyen','khoa','ky'][i]}`,name:`Lưu ${NAMES[i]}`,branch:starBranches.get(id)??-1,scope:'annual' as const,status:'CANDIDATE_SPEC' as const,note:`Can năm xem; gắn lên sao gốc ${id}. Chưa xác minh riêng với Tuvi.vn.`})).filter(x=>x.branch>=0);
+  return row.map((id,i)=>({id:`luu-hoa-${['loc','quyen','khoa','ky'][i]}`,name:`Lưu ${NAMES[i]}`,branch:starBranches.get(id)??-1,scope:'annual' as const,status:'CANDIDATE_SPEC' as const,note:`Can năm xem; gắn lên sao gốc ${id}. Chưa xác minh riêng với tuvidauso.ai.studio.`})).filter(x=>x.branch>=0);
 }

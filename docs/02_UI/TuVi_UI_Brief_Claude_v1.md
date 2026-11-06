@@ -255,7 +255,7 @@ Các trường chưa có dữ liệu phải hiển thị trạng thái “Chưa 
 
 ## 4.4. Ô thông tin trung tâm
 
-Ô trung tâm phải có phong cách giống mẫu Tuvi.vn trong ảnh. Các trường mong muốn:
+Ô trung tâm phải có phong cách giống mẫu tuvidauso.ai.studio trong ảnh. Các trường mong muốn:
 
 1. Tiêu đề: “LÁ SỐ TỬ VI”.
 2. Họ tên.
@@ -460,13 +460,13 @@ Claude phải dựng UI cho các trạng thái sau, ít nhất bằng mock/demo:
 
 # 11. DỮ LIỆU DEMO GỢI Ý — TV-001
 
-Dùng lá số Tuvi.vn #13405 làm fixture để dựng UI. Đây chỉ là dữ liệu minh họa cho frontend, không phải yêu cầu Claude viết thuật toán để tính ra các giá trị này.
+Dùng lá số tuvidauso.ai.studio #13405 làm fixture để dựng UI. Đây chỉ là dữ liệu minh họa cho frontend, không phải yêu cầu Claude viết thuật toán để tính ra các giá trị này.
 
 ## 11.1. Input demo
 
 ```ts
 const demoBirthInput = {
-  name: 'Lá số tuvi.vn',
+  name: 'Lá số tuvidauso.ai.studio',
   gender: 'nam',
   solarDate: '1911-01-01',
   birthTime: {
@@ -500,7 +500,7 @@ const demoBirthInput = {
 | Chủ Thân | Văn Xương |
 | Lai Nhân Cung | Tử Tức |
 
-Nguồn fixture: lá số Tuvi.vn #13405 do người dùng cung cấp. Không dùng nội dung này để hard-code thuật toán.
+Nguồn fixture: lá số tuvidauso.ai.studio #13405 do người dùng cung cấp. Không dùng nội dung này để hard-code thuật toán.
 
 ## 11.3. Vị trí 14 chính tinh dùng để minh họa bố cục
 

@@ -1,7 +1,7 @@
 # Sao lưu niên — tích hợp bảng quy tắc do người dùng cung cấp v0.2.4
 
 **Ngày:** 05/11/2026  
-**Phạm vi:** Hoàn thiện 6 mục còn chờ trong lớp sao lưu v0.2.3. Đây là bản triển khai theo bảng quy tắc người dùng cung cấp; chưa phải xác minh độc lập với Tuvi.vn.
+**Phạm vi:** Hoàn thiện 6 mục còn chờ trong lớp sao lưu v0.2.3. Đây là bản triển khai theo bảng quy tắc người dùng cung cấp; chưa phải xác minh độc lập với tuvidauso.ai.studio.
 
 ## Các quy tắc mới được tích hợp
 
@@ -32,7 +32,7 @@ Năm xem 2026 có Can Chi Bính Ngọ. Engine phải cho:
 - `placeAnnualStars(viewedYear, birthYearStem)` nhận riêng Can năm sinh để không nhầm quy tắc của Lưu Niên Văn Tinh.
 - Lưu Tuần Không và Lưu Triệt Không được biểu diễn bằng hai `StarPlacement` cho hai cung, cùng tên nhưng ID khác nhau (`...-1`, `...-2`).
 - Sáu nhóm sao đã chuyển khỏi `annualPendingStars`; danh sách chờ hiện trống đối với đúng các mục này.
-- Các sao mới vẫn mang `CANDIDATE_SPEC`. Bảng do người dùng cung cấp đã được code hóa và kiểm thử logic, nhưng chưa có fixture đầu ra độc lập từ Tuvi.vn nên không đánh dấu `VERIFIED_TUVIVN`.
+- Các sao mới vẫn mang `CANDIDATE_SPEC`. Bảng do người dùng cung cấp đã được code hóa và kiểm thử logic, nhưng chưa có fixture đầu ra độc lập từ tuvidauso.ai.studio nên không đánh dấu `VERIFIED_TUVIVN`.
 - Lưu Tứ Hóa vẫn được đặt ở pipeline riêng và chỉ định vị được khi lá số có giờ sinh/đã có vị trí sao gốc.
 
 ## Test mới
@@ -42,4 +42,4 @@ Năm xem 2026 có Can Chi Bính Ngọ. Engine phải cho:
 - Lưu Tuần Không kiểm tra đủ 6 Giáp tuần.
 - Lưu Triệt Không kiểm tra đủ 10 Can.
 
-**Cảnh báo:** Cách gọi Lưu Thiên Không và lựa chọn trường phái có thể không đồng nhất. Vị trí đã triển khai đúng theo bảng bạn cung cấp; khi so sánh Tuvi.vn nếu kết quả khác thì cần giữ lại ảnh và năm xem để xác định đây là khác trường phái hay lỗi công thức.
+**Cảnh báo:** Cách gọi Lưu Thiên Không và lựa chọn trường phái có thể không đồng nhất. Vị trí đã triển khai đúng theo bảng bạn cung cấp; khi so sánh tuvidauso.ai.studio nếu kết quả khác thì cần giữ lại ảnh và năm xem để xác định đây là khác trường phái hay lỗi công thức.

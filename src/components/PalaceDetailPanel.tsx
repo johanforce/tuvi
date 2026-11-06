@@ -3,7 +3,8 @@ import type { ChartCore, Palace } from '../engine/types.js';
 import { BRANCH_NAMES, STEM_NAMES } from '../engine/constants.js';
 import { STAR_META } from '../catalog/star-metadata.js';
 import { StarLabel } from './StarLabel.js';
-import { Sparkles, Compass, Info, Calendar } from 'lucide-react';
+import { Sparkles, Compass, Calendar } from 'lucide-react';
+import { ReadingPanel } from './ReadingPanel.js';
 
 interface PalaceDetailPanelProps {
   chart: ChartCore;
@@ -73,7 +74,7 @@ export const PalaceDetailPanel: React.FC<PalaceDetailPanelProps> = ({
           }`}
         >
           <Sparkles className="w-4 h-4" />
-          <span>Luận giải (Phase sau)</span>
+          <span>Luận giải Gemini</span>
         </button>
       </div>
 
@@ -217,19 +218,9 @@ export const PalaceDetailPanel: React.FC<PalaceDetailPanelProps> = ({
         </div>
       )}
 
-      {/* Tab 3: Luận giải (Phase sau theo lời dặn của user) */}
+      {/* Tab 3: Luận giải AI */}
       {activeTab === 'reading' && (
-        <div className="bg-amber-50/60 border border-amber-200 rounded-xl p-5 text-center space-y-2">
-          <div className="inline-flex p-2.5 rounded-full bg-amber-100 text-amber-800 mb-1">
-            <Info className="w-5 h-5" />
-          </div>
-          <h4 className="font-classical font-bold text-[16px] text-[#8c2d19]">
-            Phần Luận Giải Đang Được Để Dành Cho Giai Đoạn Tiếp Theo
-          </h4>
-          <p className="text-[13px] text-stone-600 max-w-xl mx-auto leading-relaxed">
-            Theo đúng định hướng phát triển của dự án, giai đoạn hiện tại tập trung hoàn thiện tuyệt đối thuật toán an sao, đối chiếu fixture chuẩn xác với Tuvi.vn, phân tầng sao lưu và tối ưu xuất PDF lưu trữ. Module luận giải tổng quan trọn đời và vận hạn từng năm sẽ được tích hợp ở Phase sau.
-          </p>
-        </div>
+        <ReadingPanel chart={chart} />
       )}
     </div>
   );

@@ -113,42 +113,40 @@ export const ChartGrid: React.FC<ChartGridProps> = ({
   const startMonthBranch = (chart.viewedYearCanChi.branch - (chart.lunar.month - 1) + 12) % 12;
 
   // Tính vị trí huy hiệu Tuần & Triệt trên đường ranh giới
-  const getBadgePosition = (branches: [number, number]) => {
+  const getBadgePosition = (branches: [number, number]): React.CSSProperties | null => {
     const [b1, b2] = branches;
     const c1 = GRID_COORDINATES[b1];
     const c2 = GRID_COORDINATES[b2];
     if (!c1 || !c2) return null;
 
-    // Nếu cùng hàng
-    if (c1.row === c2.row) {
-      const minCol = Math.min(c1.col, c2.col);
-      // Nằm giữa 2 cột tại hàng này
+    // Tọa độ tính theo phần trăm của lưới để tâm nhãn nằm đúng trung điểm cạnh chung.
+    if (c1.row === c2.row && Math.abs(c1.col - c2.col) === 1) {
+      const edgeCol = Math.min(c1.col, c2.col);
       return {
-        gridRow: `${c1.row} / span 1`,
-        gridColumn: `${minCol} / span 2`,
-        alignSelf: c1.row === 4 ? 'start' : 'end',
-        justifySelf: 'center',
-        marginTop: c1.row === 4 ? '-10px' : undefined,
-        marginBottom: c1.row !== 4 ? '-10px' : undefined,
+        position: 'absolute',
+        left: `${edgeCol * 25}%`,
+        top: `${(c1.row - 0.5) * 25}%`,
+        transform: 'translate(-50%, -50%)',
+        zIndex: 50,
       };
     }
 
-    // Nếu cùng cột
-    if (c1.col === c2.col) {
-      const minRow = Math.min(c1.row, c2.row);
+    if (c1.col === c2.col && Math.abs(c1.row - c2.row) === 1) {
+      const edgeRow = Math.min(c1.row, c2.row);
       return {
-        gridRow: `${minRow} / span 2`,
-        gridColumn: `${c1.col} / span 1`,
-        alignSelf: 'center',
-        justifySelf: c1.col === 1 ? 'end' : 'start',
-        marginRight: c1.col === 1 ? '-18px' : undefined,
-        marginLeft: c1.col !== 1 ? '-18px' : undefined,
+        position: 'absolute',
+        left: `${(c1.col - 0.5) * 25}%`,
+        top: `${edgeRow * 25}%`,
+        transform: 'translate(-50%, -50%)',
+        zIndex: 50,
       };
     }
 
     return null;
   };
 
+  // Tuần và Triệt có thể cùng án một cặp cung; khi đó gom hai nhãn tại cùng trung điểm.
+  const sameVoidPair = tuanBranches[0] === trietBranches[0] && tuanBranches[1] === trietBranches[1];
   const tuanPos = getBadgePosition(tuanBranches);
   const trietPos = getBadgePosition(trietBranches);
 
@@ -209,27 +207,26 @@ export const ChartGrid: React.FC<ChartGridProps> = ({
           <CenterInfo chart={chart} />
 
           {/* HUY HIỆU ĐEN NẰM TRÊN ĐƯỜNG RANH GIỚI: TUẦN */}
-          {tuanPos && (
-            <div 
-              style={tuanPos as React.CSSProperties}
-              className="z-30 pointer-events-none select-none"
-            >
-              <div className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">
-                Tuần
+          {sameVoidPair ? (
+            tuanPos && (
+              <div style={tuanPos} className="flex gap-1 pointer-events-none select-none">
+                <span className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">Tuần</span>
+                <span className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">Triệt</span>
               </div>
-            </div>
-          )}
-
-          {/* HUY HIỆU ĐEN NẰM TRÊN ĐƯỜNG RANH GIỚI: TRIỆT */}
-          {trietPos && (
-            <div 
-              style={trietPos as React.CSSProperties}
-              className="z-30 pointer-events-none select-none"
-            >
-              <div className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">
-                Triệt
-              </div>
-            </div>
+            )
+          ) : (
+            <>
+              {tuanPos && (
+                <div style={tuanPos} className="pointer-events-none select-none">
+                  <span className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">Tuần</span>
+                </div>
+              )}
+              {trietPos && (
+                <div style={trietPos} className="pointer-events-none select-none">
+                  <span className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">Triệt</span>
+                </div>
+              )}
+            </>
           )}
         </div>
 

@@ -4,7 +4,7 @@
 **Ngày cập nhật:** 05/11/2026  
 **Trạng thái:** Đặc tả công thức/backlog đang được dùng trong quá trình triển khai; engine v0.2.0 đã được code và đối chiếu một phần. Tài liệu này tiếp tục quản lý các mục `candidate`, `conflict`, `missing_rule` và `todo_fixture`.
 
-> **Mục tiêu chuẩn đầu ra:** xây dựng website tạo lá số có kết quả hiển thị gần/đúng với **Tuvi.vn**. Các công thức trong MD cũ là ứng viên cần kiểm thử, không mặc nhiên được xem là đúng. Nguồn iztro/紫微研习社 được dùng để tìm công thức, phát hiện mục thiếu và tạo giả thuyết kiểm thử; không được tự động ghi đè kết quả Tuvi.vn. Vương Đình Chi là nguồn tham khảo lịch sử, không còn là chuẩn ưu tiên sau quyết định mới nhất của người dùng.
+> **Mục tiêu chuẩn đầu ra:** xây dựng website tạo lá số có kết quả hiển thị gần/đúng với **tuvidauso.ai.studio**. Các công thức trong MD cũ là ứng viên cần kiểm thử, không mặc nhiên được xem là đúng. Nguồn iztro/紫微研习社 được dùng để tìm công thức, phát hiện mục thiếu và tạo giả thuyết kiểm thử; không được tự động ghi đè kết quả tuvidauso.ai.studio. Vương Đình Chi là nguồn tham khảo lịch sử, không còn là chuẩn ưu tiên sau quyết định mới nhất của người dùng.
 
 ---
 
@@ -14,69 +14,69 @@ Các nhãn sau được dùng xuyên suốt:
 
 | Nhãn | Ý nghĩa |
 |---|---|
-| `MATCH_TV001` | Khớp dữ liệu/ảnh lá số mẫu Tuvi.vn #13405; chỉ xác nhận trên mẫu này, không chứng minh mọi trường hợp. |
-| `CANDIDATE_IZTRO` | Có công thức rõ trong tài liệu hoặc mã nguồn iztro; cần kiểm tra với Tuvi.vn trước khi chốt. |
-| `CONFLICT` | Tài liệu MD, iztro, bài viết Tuvi.vn hoặc kết quả lá số đang khác nhau. Không tự chọn một bên. |
+| `MATCH_TV001` | Khớp dữ liệu/ảnh lá số mẫu tuvidauso.ai.studio #13405; chỉ xác nhận trên mẫu này, không chứng minh mọi trường hợp. |
+| `CANDIDATE_IZTRO` | Có công thức rõ trong tài liệu hoặc mã nguồn iztro; cần kiểm tra với tuvidauso.ai.studio trước khi chốt. |
+| `CONFLICT` | Tài liệu MD, iztro, bài viết tuvidauso.ai.studio hoặc kết quả lá số đang khác nhau. Không tự chọn một bên. |
 | `MISSING_RULE` | Danh mục có sao nhưng MD chưa ghi công thức. |
-| `MISSING_CATALOG` | Tuvi.vn/MD có hiển thị sao nhưng danh sách 117 + 21 của người dùng chưa có. |
-| `TODO_FIXTURE` | Cần thêm lá số Tuvi.vn có Can/Chi/giờ/năm xem thích hợp để phân biệt các công thức. |
-| `READY_FOR_TEST` | Có thể đưa vào bộ test, nhưng chưa phải đã xác minh với Tuvi.vn. |
+| `MISSING_CATALOG` | tuvidauso.ai.studio/MD có hiển thị sao nhưng danh sách 117 + 21 của người dùng chưa có. |
+| `TODO_FIXTURE` | Cần thêm lá số tuvidauso.ai.studio có Can/Chi/giờ/năm xem thích hợp để phân biệt các công thức. |
+| `READY_FOR_TEST` | Có thể đưa vào bộ test, nhưng chưa phải đã xác minh với tuvidauso.ai.studio. |
 
 **Nguyên tắc quan trọng:** một sao có tên trên trang không đồng nghĩa công thức an sao đã được xác minh. Một công thức trùng trên TV-001 cũng chưa đủ để xác nhận nếu hai chiều đếm cho cùng kết quả ở giờ Ngọ (sáu cung đối diện), hoặc nếu nhiều biến đầu vào cùng thay đổi.
 
 ## 0.1. SỔ THEO DÕI CÔNG THỨC CHƯA TÌM ĐƯỢC / CHƯA XÁC MINH — BACKLOG HIỆN HÀNH
 
-> Yêu cầu của người dùng: phải giữ lại danh sách những sao chưa tìm được công thức để xử lý ở giai đoạn sau. **Không tự bịa công thức, không đánh dấu hoàn tất chỉ vì tìm thấy một công thức ở iztro hoặc một website khác.** Chuẩn đầu ra vẫn là Tuvi.vn.
+> Yêu cầu của người dùng: phải giữ lại danh sách những sao chưa tìm được công thức để xử lý ở giai đoạn sau. **Không tự bịa công thức, không đánh dấu hoàn tất chỉ vì tìm thấy một công thức ở iztro hoặc một website khác.** Chuẩn đầu ra vẫn là tuvidauso.ai.studio.
 >
 > Phân biệt ba trạng thái:
 > - **Chưa tìm được công thức riêng (`MISSING_RULE`)**: tài liệu hiện tại chưa có quy tắc đủ rõ cho sao đó.
-> - **Có công thức ứng viên (`CANDIDATE`)**: tìm được quy tắc trong MD/iztro/tài liệu khác, nhưng chưa xác nhận khớp Tuvi.vn.
+> - **Có công thức ứng viên (`CANDIDATE`)**: tìm được quy tắc trong MD/iztro/tài liệu khác, nhưng chưa xác nhận khớp tuvidauso.ai.studio.
 > - **Có mâu thuẫn (`CONFLICT`)**: có từ hai công thức hoặc nguồn cho kết quả khác nhau.
 
 ### A. Sao chưa tìm được công thức riêng đủ căn cứ
 
 | Sao / hạng mục | Phạm vi | Trạng thái hiện tại | Ghi chú cần làm sau |
 |---|---|---|---|
-| **Đường Phù** | Nguyên cục | `MISSING_RULE` | TV-001 có hiển thị; MD chưa có bảng an đủ căn cứ. Cần tìm vị trí theo Can/Chi/tháng và ít nhất 2–3 fixture Tuvi.vn. Chữ Hán/tên chính xác cũng cần xác nhận. |
-| **Không Vong (空亡)** | Nguyên cục / thần sát | `MISSING_RULE + IDENTITY_UNRESOLVED` | Chưa có công thức placement riêng và chưa xác định Tuvi.vn có xem đây là sao độc lập hay tên gọi liên quan Tuần/Triệt. Không tự tạo placement. |
-| **Lưu Tuần Không** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 đã code hóa theo Giáp tuần của năm xem và đặt hai Chi Tuần Không; cần fixture Tuvi.vn để xác nhận trường phái. |
-| **Lưu Triệt Không** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 đã code hóa bảng hai Chi theo Can năm xem; cần fixture Tuvi.vn để xác nhận. |
+| **Đường Phù** | Nguyên cục | `MISSING_RULE` | TV-001 có hiển thị; MD chưa có bảng an đủ căn cứ. Cần tìm vị trí theo Can/Chi/tháng và ít nhất 2–3 fixture tuvidauso.ai.studio. Chữ Hán/tên chính xác cũng cần xác nhận. |
+| **Không Vong (空亡)** | Nguyên cục / thần sát | `MISSING_RULE + IDENTITY_UNRESOLVED` | Chưa có công thức placement riêng và chưa xác định tuvidauso.ai.studio có xem đây là sao độc lập hay tên gọi liên quan Tuần/Triệt. Không tự tạo placement. |
+| **Lưu Tuần Không** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 đã code hóa theo Giáp tuần của năm xem và đặt hai Chi Tuần Không; cần fixture tuvidauso.ai.studio để xác nhận trường phái. |
+| **Lưu Triệt Không** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 đã code hóa bảng hai Chi theo Can năm xem; cần fixture tuvidauso.ai.studio để xác nhận. |
 | **Lưu Thiên Không** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 theo quy tắc người dùng cung cấp: từ Thái Tuế năm xem tiến thuận 1 cung, đồng cung Thiếu Dương; cách gọi khác nhau giữa trường phái. |
-| **Lưu Thiên Trù** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.3 tạm áp bảng Thiên Trù theo Can năm xem; chưa chứng minh Tuvi.vn dùng phép này. |
-| **Lưu Văn Tinh** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 code hóa Lưu Niên Văn Tinh theo Can năm sinh; vị trí cố định trên lá số gốc, không đổi theo năm xem. Cần fixture xác nhận identity với nhãn Tuvi.vn. |
+| **Lưu Thiên Trù** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.3 tạm áp bảng Thiên Trù theo Can năm xem; chưa chứng minh tuvidauso.ai.studio dùng phép này. |
+| **Lưu Văn Tinh** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 code hóa Lưu Niên Văn Tinh theo Can năm sinh; vị trí cố định trên lá số gốc, không đổi theo năm xem. Cần fixture xác nhận identity với nhãn tuvidauso.ai.studio. |
 | **Lưu Phúc Đức** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.3 tạm lấy vị trí Phúc Đức trong vòng Thái Tuế theo chi năm xem; chưa xác minh. |
 | **Lưu Long Đức** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.3 tạm lấy vị trí Long Đức trong vòng Thái Tuế theo chi năm xem; cần xác định có phải vòng Tuế Tiền hay quy tắc khác. |
 | **Lưu Thiên Đức** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.3 tạm áp bảng Thiên Đức theo chi năm xem; chưa xác minh placement lưu. |
 | **Lưu Nguyệt Đức** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.3 tạm áp bảng Nguyệt Đức theo chi năm xem; chưa xác minh placement lưu. |
 | **Lưu Kiếp Sát** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.3 tạm áp bảng Kiếp Sát theo chi năm xem; chưa xác minh placement lưu. |
-| **Lưu Thiên Khôi** | Lưu niên | `MISSING_RULE/TODO_FIXTURE` | Nhãn được quan sát trên trang; chưa chốt lấy Can năm xem, Can ngày hay quy tắc khác của Tuvi.vn. |
+| **Lưu Thiên Khôi** | Lưu niên | `MISSING_RULE/TODO_FIXTURE` | Nhãn được quan sát trên trang; chưa chốt lấy Can năm xem, Can ngày hay quy tắc khác của tuvidauso.ai.studio. |
 | **Lưu Thiên Việt** | Lưu niên | `CANDIDATE_SPEC/CONFLICT/TODO_FIXTURE` | v0.2.3 tạm áp bảng Thiên Việt theo Can năm xem; kế thừa trạng thái conflict ở các Can mà bảng sao gốc đang mâu thuẫn. |
-| **Lưu Văn Xương** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 theo bảng Trung Châu phái do người dùng cung cấp, khóa Can năm xem; cần fixture Tuvi.vn để kiểm chứng trường phái. |
-| **Lưu Văn Khúc** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 theo bảng Trung Châu phái do người dùng cung cấp, khóa Can năm xem; cần fixture Tuvi.vn để kiểm chứng trường phái. |
+| **Lưu Văn Xương** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 theo bảng Trung Châu phái do người dùng cung cấp, khóa Can năm xem; cần fixture tuvidauso.ai.studio để kiểm chứng trường phái. |
+| **Lưu Văn Khúc** | Lưu niên | `CANDIDATE_SPEC/TODO_FIXTURE` | v0.2.4 theo bảng Trung Châu phái do người dùng cung cấp, khóa Can năm xem; cần fixture tuvidauso.ai.studio để kiểm chứng trường phái. |
 | **Cân Lượng** | Thông tin trung tâm | `MISSING_RULE` | TV-001 hiển thị 3 lượng 4 chỉ; MD chưa có bảng/công thức. Cần module Cân Xương Tính Số và test độc lập. |
-| **Lai Nhân Cung** | Thông tin trung tâm | `MISSING_RULE` | TV-001 hiển thị Tử Tức; MD chưa có công thức. Cần xác minh thuật toán trên nhiều chart Tuvi.vn. |
+| **Lai Nhân Cung** | Thông tin trung tâm | `MISSING_RULE` | TV-001 hiển thị Tử Tức; MD chưa có công thức. Cần xác minh thuật toán trên nhiều chart tuvidauso.ai.studio. |
 | **Bảng độ sáng Miếu/Vượng/Đắc/Bình/Hãm** | Thuộc tính sao | `MISSING_TABLE` | Không phải công thức vị trí. Chưa có bảng đầy đủ theo sao × 12 cung; cần nguồn/bộ fixture riêng, tuyệt đối không tự suy ra. |
 
-### B. Có công thức ứng viên nhưng CHƯA xác minh với Tuvi.vn
+### B. Có công thức ứng viên nhưng CHƯA xác minh với tuvidauso.ai.studio
 
 | Sao / nhóm | Công thức ứng viên đã tìm thấy | Vấn đề cần test |
 |---|---|---|
-| **Thiên Vu** | Bảng theo tháng âm: 1/5/9→Tỵ; 2/6/10→Thân; 3/7/11→Dần; 4/8/12→Hợi | Test đủ 12 tháng trên Tuvi.vn. `CANDIDATE_IZTRO`. |
-| **Thiên Nguyệt** | Bảng theo tháng âm đang ghi tại mục 6.9 | Test đủ 12 tháng; xác nhận tên/chữ Hán và vị trí trên Tuvi.vn. `CANDIDATE_IZTRO`. |
-| **Âm Sát** | Bảng theo tháng âm đang ghi tại mục 6.9 | Test đủ 12 tháng trên Tuvi.vn. `CANDIDATE_IZTRO`. |
+| **Thiên Vu** | Bảng theo tháng âm: 1/5/9→Tỵ; 2/6/10→Thân; 3/7/11→Dần; 4/8/12→Hợi | Test đủ 12 tháng trên tuvidauso.ai.studio. `CANDIDATE_IZTRO`. |
+| **Thiên Nguyệt** | Bảng theo tháng âm đang ghi tại mục 6.9 | Test đủ 12 tháng; xác nhận tên/chữ Hán và vị trí trên tuvidauso.ai.studio. `CANDIDATE_IZTRO`. |
+| **Âm Sát** | Bảng theo tháng âm đang ghi tại mục 6.9 | Test đủ 12 tháng trên tuvidauso.ai.studio. `CANDIDATE_IZTRO`. |
 | **Thiên Y** | Ứng viên đồng cung Thiên Diêu; là sao riêng, TV-001 hiển thị đồng thời cả hai | Xác nhận vị trí cùng cung trong nhiều chart; không gộp ID. |
 | **Thiên Trù nguyên cục** | Bảng theo Can năm; ứng viên iztro sửa Can Quý từ Tuất sang Hợi | Cần chart có năm sinh Can Quý. |
-| **Giải Thần / Nguyệt Giải / Niên Giải** | Các nguồn phân tách cách an theo Phượng Các, tháng sinh hoặc năm xem | Chưa biết Tuvi.vn dùng một sao, nhiều sao hay tên hiển thị khác nhau. |
+| **Giải Thần / Nguyệt Giải / Niên Giải** | Các nguồn phân tách cách an theo Phượng Các, tháng sinh hoặc năm xem | Chưa biết tuvidauso.ai.studio dùng một sao, nhiều sao hay tên hiển thị khác nhau. |
 | **Phong Cáo** | MD dùng Văn Khúc − 2; mã iztro tương đương Dần + G; khẩu quyết có nguồn ghi chiều ngược | TV-001 giờ Ngọ không phân biệt được hai chiều; cần giờ không đối xứng. |
 | **Hỏa Tinh / Linh Tinh** | MD cũ đổi chiều theo Âm Dương/giới tính; iztro candidate cho cả hai đếm thuận từ cung khởi | Chưa sửa chính thức; cần giờ Dần/Thìn/Dậu và cả Nam/Nữ. |
 | **Địa Không / Địa Kiếp** | Hợi khởi giờ Tý; Không nghịch, Kiếp thuận theo giờ | TV-001 giờ Ngọ không phân biệt được hai chiều. Bộ fixture đã có nhiều giờ ngoài Ngọ; cần transcribe vị trí từ ảnh hiện có trước, chỉ tạo fixture mới nếu ảnh không đủ rõ. |
-| **Thiên Khôi / Thiên Việt** | Có các bảng theo Can năm ở MD/iztro và bảng khác ở nội dung Tuvi.vn | TV-001 không đủ để biết Tuvi.vn lấy Can năm hay Can ngày; cần fixture tách biệt hai Can. |
+| **Thiên Khôi / Thiên Việt** | Có các bảng theo Can năm ở MD/iztro và bảng khác ở nội dung tuvidauso.ai.studio | TV-001 không đủ để biết tuvidauso.ai.studio lấy Can năm hay Can ngày; cần fixture tách biệt hai Can. |
 | **Tuần / Triệt / Tuần Không / Triệt Không** | Có cách an phổ thông và biến thể iztro/Trung Châu khác nhau | Chưa chọn engine mặc định; cần ảnh thấy rõ hai cung và nhiều Can năm. |
-| **Vòng Tướng Tiền** | Có đủ chuỗi 12 sao và bảng cung khởi trong iztro | Chỉ là candidate; cần xác nhận Tuvi.vn có hiển thị vòng này ở layer lưu niên và đúng thứ tự. |
+| **Vòng Tướng Tiền** | Có đủ chuỗi 12 sao và bảng cung khởi trong iztro | Chỉ là candidate; cần xác nhận tuvidauso.ai.studio có hiển thị vòng này ở layer lưu niên và đúng thứ tự. |
 | **Vòng Tuế Tiền** | Khởi tại chi năm xem, đi thuận theo 12 tên trong tài liệu iztro | Chỉ là candidate; không đồng nhất với vòng Thái Tuế bản mệnh đang có trong MD. |
-| **Toàn bộ 21 lưu diệu người dùng liệt kê** | Một số placement có thể suy ra từ sao gốc (ví dụ Lưu Kình/Lưu Đà quanh Lưu Lộc Tồn; Lưu Hóa theo Can năm xem) | Chưa có bộ công thức 21 sao được xác minh trọn vẹn trên Tuvi.vn. Giữ nguyên danh sách người dùng làm baseline, không đánh dấu đủ/đúng chỉ theo iztro. |
-| **Lưu Thiên Hỷ** | Có thể là đối cung Lưu Hồng Loan trong một số bảng | Chưa xác minh trên Tuvi.vn; không tự chốt. |
-| **Lưu Đà La** | Có thể suy ra từ Lưu Lộc Tồn − 1 theo công thức sao gốc | Chưa xác minh scope/naming trên Tuvi.vn. |
+| **Toàn bộ 21 lưu diệu người dùng liệt kê** | Một số placement có thể suy ra từ sao gốc (ví dụ Lưu Kình/Lưu Đà quanh Lưu Lộc Tồn; Lưu Hóa theo Can năm xem) | Chưa có bộ công thức 21 sao được xác minh trọn vẹn trên tuvidauso.ai.studio. Giữ nguyên danh sách người dùng làm baseline, không đánh dấu đủ/đúng chỉ theo iztro. |
+| **Lưu Thiên Hỷ** | Có thể là đối cung Lưu Hồng Loan trong một số bảng | Chưa xác minh trên tuvidauso.ai.studio; không tự chốt. |
+| **Lưu Đà La** | Có thể suy ra từ Lưu Lộc Tồn − 1 theo công thức sao gốc | Chưa xác minh scope/naming trên tuvidauso.ai.studio. |
 | **Mệnh Chủ** | TV-001 chỉ ra tra theo chi năm sinh (Canh Tuất → Lộc Tồn) thay vì chi cung Mệnh | Cần test đủ 12 chi năm sinh. |
 | **Mệnh Chủ/Thân Chủ và các bảng sao theo Can/Chi** | Có bảng ứng viên trong MD và tài liệu nguồn | Mọi bảng phải test đa fixture; TV-001 chỉ xác nhận một trường hợp. |
 
@@ -86,23 +86,23 @@ Các nhãn sau được dùng xuyên suốt:
 |---|---|
 | Thiên Riêu / Thiên Diêu | Một sao 天姚; một ID, lưu alias. |
 | Thiên Y / Thiên Diêu | Hai sao riêng; có thể cùng một cung. TV-001 hiển thị đồng thời cả hai. |
-| Đài Phụ / Thai Phụ | Ứng viên cùng sao 台輔; một ID và hai alias cho tới khi Tuvi.vn xác nhận tên hiển thị. |
+| Đài Phụ / Thai Phụ | Ứng viên cùng sao 台輔; một ID và hai alias cho tới khi tuvidauso.ai.studio xác nhận tên hiển thị. |
 | Phi Liêm 飛廉 / Phi Liêm 蜚廉 | Hai sao khác chữ Hán, hai ID, hai công thức. |
-| Hàm Trì / Đào Hoa | Có nguồn coi là tên đồng nghĩa 咸池; Tuvi.vn hiển thị Đào Hoa. Cần giữ alias và phân biệt layer bản mệnh/lưu. |
+| Hàm Trì / Đào Hoa | Có nguồn coi là tên đồng nghĩa 咸池; tuvidauso.ai.studio hiển thị Đào Hoa. Cần giữ alias và phân biệt layer bản mệnh/lưu. |
 | Hoa Cái, Kiếp Sát, Tang Môn, Quan Phù, Tiểu Hao, Đại Hao, Long Đức, Bạch Hổ, Điếu Khách, Bệnh Phù | Có thể xuất hiện ở nhiều vòng hoặc layer. Mỗi placement phải có `scope` riêng; không ghi đè vị trí nguyên cục. |
-| Tuần Không / Triệt Không / Không Vong | Chưa gộp; cần ảnh/chữ Hán và rule của Tuvi.vn. |
+| Tuần Không / Triệt Không / Không Vong | Chưa gộp; cần ảnh/chữ Hán và rule của tuvidauso.ai.studio. |
 | Văn Tinh / Lưu Niên Văn Tinh | Chưa xác định là cùng một ID hay khác; không tự hợp nhất. |
 
 ### D. Danh sách việc để sau — không triển khai mặc định trước khi có nguồn/fixture
 
 1. Tìm công thức Đường Phù.
 2. Xác định Không Vong có phải sao độc lập và tìm placement riêng.
-3. Đã code hóa Lưu Tuần Không, Lưu Triệt Không, Lưu Thiên Không, Lưu Văn Tinh, Lưu Văn Xương và Lưu Văn Khúc theo bảng người dùng cung cấp ở v0.2.4; còn cần fixture Tuvi.vn để xác minh. Tiếp tục xác minh riêng Lưu Thiên Trù.
-4. Tìm công thức Tuvi.vn cho Lưu Phúc Đức, Lưu Long Đức, Lưu Thiên Đức, Lưu Nguyệt Đức, Lưu Kiếp Sát và Lưu Thiên Việt; các quy tắc Lưu Văn Xương/Lưu Văn Khúc đã có bảng Trung Châu phái do người dùng cung cấp nhưng vẫn cần fixture đối chiếu.
+3. Đã code hóa Lưu Tuần Không, Lưu Triệt Không, Lưu Thiên Không, Lưu Văn Tinh, Lưu Văn Xương và Lưu Văn Khúc theo bảng người dùng cung cấp ở v0.2.4; còn cần fixture tuvidauso.ai.studio để xác minh. Tiếp tục xác minh riêng Lưu Thiên Trù.
+4. Tìm công thức tuvidauso.ai.studio cho Lưu Phúc Đức, Lưu Long Đức, Lưu Thiên Đức, Lưu Nguyệt Đức, Lưu Kiếp Sát và Lưu Thiên Việt; các quy tắc Lưu Văn Xương/Lưu Văn Khúc đã có bảng Trung Châu phái do người dùng cung cấp nhưng vẫn cần fixture đối chiếu.
 5. Xác minh toàn bộ 21 lưu diệu bằng cách giữ nguyên ngày sinh và thay đổi năm xem (ví dụ 2026/2027).
 6. Hoàn thiện bảng độ sáng sao.
 7. Tìm công thức Cân Lượng và Lai Nhân Cung.
-8. Chỉ nâng trạng thái từ `candidate`/`conflict`/`todo` lên `verified` khi kết quả khớp nhiều fixture Tuvi.vn có biến đầu vào phân biệt được.
+8. Chỉ nâng trạng thái từ `candidate`/`conflict`/`todo` lên `verified` khi kết quả khớp nhiều fixture tuvidauso.ai.studio có biến đầu vào phân biệt được.
 
 ---
 
@@ -112,8 +112,8 @@ Các nhãn sau được dùng xuyên suốt:
 
 | # | Hạng mục | Quyết định cuối cùng |
 |---|---|---|
-| D1 | Nguồn chuẩn | **Tuvi.vn là chuẩn đầu ra chính.** Khi MD khác kết quả Tuvi.vn, phải rà soát và điều chỉnh để khớp Tuvi.vn. iztro dùng làm nguồn công thức tham khảo/giả thuyết; Vương Đình Chi chỉ tham khảo, không ghi đè Tuvi.vn. |
-| D2 | Trường phái | Người dùng ban đầu gọi là Nam phái. Sau khi kiểm tra, không gán nhãn toàn bộ thuật toán của Tuvi.vn cho một phái cụ thể khi chưa có tài liệu chính thức. Có thể ghi “định hướng Nam phái/Tam Hợp” trong phần mô tả, nhưng **hệ quy tắc vận hành là bộ quy tắc tái tạo Tuvi.vn**. |
+| D1 | Nguồn chuẩn | **tuvidauso.ai.studio là chuẩn đầu ra chính.** Khi MD khác kết quả tuvidauso.ai.studio, phải rà soát và điều chỉnh để khớp tuvidauso.ai.studio. iztro dùng làm nguồn công thức tham khảo/giả thuyết; Vương Đình Chi chỉ tham khảo, không ghi đè tuvidauso.ai.studio. |
+| D2 | Trường phái | Người dùng ban đầu gọi là Nam phái. Sau khi kiểm tra, không gán nhãn toàn bộ thuật toán của tuvidauso.ai.studio cho một phái cụ thể khi chưa có tài liệu chính thức. Có thể ghi “định hướng Nam phái/Tam Hợp” trong phần mô tả, nhưng **hệ quy tắc vận hành là bộ quy tắc tái tạo tuvidauso.ai.studio**. |
 | D3 | Đối tượng | Website công khai, phục vụ nhiều người dùng; không cần đăng nhập/tài khoản. |
 | D4 | Thiết bị | Máy tính và điện thoại. Trên điện thoại vẫn giữ lá số 4×4, cho phép phóng to/thu nhỏ; không chuyển thành danh sách 12 cung. |
 | D5 | Triển khai | Online bằng URL. |
@@ -123,8 +123,8 @@ Các nhãn sau được dùng xuyên suốt:
 | D9 | Không rõ giờ | Cho phép chọn “Không rõ giờ sinh”. Không tự gán giờ; đánh dấu các thành phần phụ thuộc giờ là chưa xác định. |
 | D10 | Giới tính | Bắt buộc chọn Nam hoặc Nữ. |
 | D11 | Múi giờ | Dùng UTC+7 cố định cho tất cả trường hợp nhập. Không hỏi nơi sinh, không tra kinh độ, không hiệu chỉnh giờ Lạc Dương/giờ mặt trời thật, không xử lý lịch sử múi giờ hoặc DST. Nếu sinh ở nước ngoài, người dùng tự quy đổi giờ về giờ Việt Nam trước khi nhập. |
-| D12 | Mốc đổi ngày | **00:00**. 23:00–23:59 vẫn thuộc ngày hiện tại, địa chi giờ Tý; 00:00–00:59 thuộc ngày mới, địa chi giờ Tý. Theo fixture Tuvi.vn HOUR-02, Can giờ trong 23:00–23:59 dùng Can của ngày kế tiếp, nhưng Can Chi ngày hiển thị vẫn giữ ngày hiện tại. |
-| D13 | Tháng nhuận | **Đã cập nhật theo ảnh Tuvi.vn ngày 05/11/2026:** dùng đúng số tháng âm nhuận trong toàn bộ tháng, không chuyển sang tháng kế ở ngày 16. Quy tắc ban đầu ngày 1–15/16+ đã bị thay thế vì không khớp LEAP-03/04 và LEAP-08/09. |
+| D12 | Mốc đổi ngày | **00:00**. 23:00–23:59 vẫn thuộc ngày hiện tại, địa chi giờ Tý; 00:00–00:59 thuộc ngày mới, địa chi giờ Tý. Theo fixture tuvidauso.ai.studio HOUR-02, Can giờ trong 23:00–23:59 dùng Can của ngày kế tiếp, nhưng Can Chi ngày hiển thị vẫn giữ ngày hiện tại. |
+| D13 | Tháng nhuận | **Đã cập nhật theo ảnh tuvidauso.ai.studio ngày 05/11/2026:** dùng đúng số tháng âm nhuận trong toàn bộ tháng, không chuyển sang tháng kế ở ngày 16. Quy tắc ban đầu ngày 1–15/16+ đã bị thay thế vì không khớp LEAP-03/04 và LEAP-08/09. |
 | D14 | Danh mục sao | Dùng danh sách người dùng cung cấp: 14 chính tinh + 14 phụ tinh + 37 tạp diệu + 48 thần sát + 4 Tứ Hóa; danh sách lưu diệu ban đầu gồm 21 sao. Không ép danh mục phải có số lượng duy nhất nếu có sao lặp tên theo tầng vận hoặc khác chữ Hán. |
 | D15 | Tràng Sinh Thổ Ngũ Cục | Khởi tại cung Thân. |
 | D16 | Luận giải | Hai chế độ: (1) Tổng quan trọn đời; (2) Đại Hạn/Tiểu Hạn theo từng năm người dùng chọn. Người dùng tự chọn chế độ xem. |
@@ -135,12 +135,12 @@ Các nhãn sau được dùng xuyên suốt:
 | D21 | Công nghệ | React 19 + TypeScript + Vite + Tailwind CSS v4 + Lucide React + Motion (Framer Motion). |
 | D22 | Lưu dữ liệu | Không có tài khoản; không lưu hồ sơ/lá số lâu dài trên máy chủ. Tính toán tại trình duyệt; không dùng localStorage/IndexedDB để lưu hồ sơ nếu người dùng chưa yêu cầu lại. |
 | D23 | AI | Có thể tích hợp AI API ở giai đoạn sau. Không để API key trong frontend; khi triển khai AI cần backend/proxy bảo vệ khóa. |
-| D24 | Quy trình | Ưu tiên đặc tả và rà soát công thức; engine đã được triển khai từng phần. Không tự chốt công thức candidate/conflict nếu chưa có bằng chứng Tuvi.vn. |
+| D24 | Quy trình | Ưu tiên đặc tả và rà soát công thức; engine đã được triển khai từng phần. Không tự chốt công thức candidate/conflict nếu chưa có bằng chứng tuvidauso.ai.studio. |
 
 ### Điều chỉnh lịch sử quan trọng
 
 - D4 cũ trong MD v1.0 quy định 23:00 chuyển ngày. Quyết định đó đã bị thay thế. Quy tắc chính thức hiện tại là đổi ngày lúc **00:00**.
-- Quyết định ban đầu “Vương Đình Chi làm chuẩn” cũng đã được thay thế. Hiện **Tuvi.vn là chuẩn đầu ra**.
+- Quyết định ban đầu “Vương Đình Chi làm chuẩn” cũng đã được thay thế. Hiện **tuvidauso.ai.studio là chuẩn đầu ra**.
 - Hiệu chỉnh theo kinh độ/Lạc Dương đã bị người dùng yêu cầu bỏ hoàn toàn. Không đưa lại vào form hoặc logic.
 
 ---
@@ -156,7 +156,7 @@ Các nhãn sau được dùng xuyên suốt:
 5. Hai chế độ luận giải: Tổng quan; Đại Hạn/Tiểu Hạn từng năm.
 6. Lá số 4×4 cổ điển, màu hành sao, độ sáng nếu đã có bảng nguồn, dấu hóa, Tuần/Triệt và chú giải.
 7. Xuất PDF.
-8. Bộ kiểm thử so khớp từng sao/từng cung với các lá số mẫu Tuvi.vn.
+8. Bộ kiểm thử so khớp từng sao/từng cung với các lá số mẫu tuvidauso.ai.studio.
 
 ### 2.2 Không làm trong MVP
 
@@ -181,7 +181,7 @@ Các nhãn sau được dùng xuyên suốt:
 | State | React state hoặc Zustand khi thật sự cần; không cần state toàn cục phức tạp ở MVP |
 | Calendar | Module TypeScript riêng, tính dương → âm với timezone cố định UTC+7 |
 | Engine Tử Vi | Pure functions, module theo nhóm sao và scope |
-| Test | Vitest; fixture JSON từ Tuvi.vn |
+| Test | Vitest; fixture JSON từ tuvidauso.ai.studio |
 | PDF | HTML print layout hoặc thư viện render PDF client-side; phải thử font tiếng Việt/chữ Hán và ngắt trang |
 | Deploy | Static hosting phù hợp Vite; không cần backend cho chức năng lập lá số cơ bản |
 
@@ -328,16 +328,16 @@ Không áp dụng “Tý sớm/Tý muộn” kiểu chuyển ngày lúc 23h tron
 - Tách `actualLunarMonth` khỏi `placementLunarMonth` để xử lý tháng nhuận.
 - Thuật toán phải test ít nhất 50 mốc: Tết, ngày sóc, ngày cuối tháng, tháng nhuận, ranh giới năm âm.
 
-### 4.5 Quy tắc tháng nhuận — đã cập nhật theo fixture Tuvi.vn
+### 4.5 Quy tắc tháng nhuận — đã cập nhật theo fixture tuvidauso.ai.studio
 
 **Kết luận hiện hành:** khi sinh trong tháng nhuận, tháng dùng để an Can Chi tháng, an Mệnh/Thân và các sao phụ thuộc tháng là chính số tháng âm được lịch trả về trong toàn bộ tháng nhuận. Không tự chuyển sang tháng kế tiếp từ ngày 16.
 
-Bằng chứng Tuvi.vn:
+Bằng chứng tuvidauso.ai.studio:
 - LEAP-03 (15/2 nhuận 2023) và LEAP-04 (16/2 nhuận 2023) đều ghi Can Chi tháng Ất Mão, Thủy Nhị Cục.
 - LEAP-08 (15/6 nhuận 2025) và LEAP-09 (16/6 nhuận 2025) đều ghi Can Chi tháng Quý Mùi, Thổ Ngũ Cục.
 - Các ảnh LEAP-02/05 và LEAP-07/10 bổ sung mốc đầu/cuối tháng nhuận. Ảnh nguồn và map 14 sao đã chép nằm ở `tests/fixtures/tuvi-vn-captured-20261105.json`.
 
-Quy tắc cũ “ngày 1–15 giữ tháng, ngày 16+ chuyển tháng kế” là quyết định dự kiến trước khi có ảnh; **đã bị supersede** do không khớp đầu ra Tuvi.vn. Engine giữ riêng ngày/tháng âm thực tế (để hiển thị) và `placementMonth` (hiện bằng đúng số tháng âm trong toàn tháng nhuận).
+Quy tắc cũ “ngày 1–15 giữ tháng, ngày 16+ chuyển tháng kế” là quyết định dự kiến trước khi có ảnh; **đã bị supersede** do không khớp đầu ra tuvidauso.ai.studio. Engine giữ riêng ngày/tháng âm thực tế (để hiển thị) và `placementMonth` (hiện bằng đúng số tháng âm trong toàn tháng nhuận).
 
 ### 4.6 Can Chi
 
@@ -354,9 +354,9 @@ Quy ước index: Can Giáp=0…Quý=9; Chi Tý=0…Hợi=11.
 | Chi giờ | Công thức phút ở mục 4.2 |
 | Can giờ | `mod(2 * dayCan + hourBranch, 10)` |
 
-**Lỗi đã phát hiện trong MD v1.0/v1.1:** công thức Can tháng cũ ghi `mod(yearCan * 12 + lunarMonth + 3, 10)`. Công thức đó không khớp Ngũ Hổ Độn và cho kết quả sai ở TV-001. Công thức mới `mod(2*yearCan + lunarMonth + 1,10)` trả Kỷ Sửu cho tháng 12, năm Canh; Tuvi.vn TV-001 cũng hiển thị **Kỷ Sửu**. [Nguồn công thức Ngũ Hổ Độn](https://docs.iztro.com/learn/setup#1-%E5%AE%9A%E5%AF%85%E9%A6%96%E8%AF%80) · [Lá số TV-001](https://tuvi.vn/la-so-duong-nam-am-duong-nghich-ly-2-12-1910-ngo-13405?thang-xem=9&nam-xem=2026&day=1&hour=12&min=30&month=1&name=&year=1911&option=1).
+**Lỗi đã phát hiện trong MD v1.0/v1.1:** công thức Can tháng cũ ghi `mod(yearCan * 12 + lunarMonth + 3, 10)`. Công thức đó không khớp Ngũ Hổ Độn và cho kết quả sai ở TV-001. Công thức mới `mod(2*yearCan + lunarMonth + 1,10)` trả Kỷ Sửu cho tháng 12, năm Canh; tuvidauso.ai.studio TV-001 cũng hiển thị **Kỷ Sửu**. [Nguồn công thức Ngũ Hổ Độn](https://docs.iztro.com/learn/setup#1-%E5%AE%9A%E5%AF%85%E9%A6%96%E8%AF%80) · [Lá số TV-001](https://tuvidauso.ai.studio/la-so-duong-nam-am-duong-nghich-ly-2-12-1910-ngo-13405?thang-xem=9&nam-xem=2026&day=1&hour=12&min=30&month=1&name=&year=1911&option=1).
 
-**Ranh giới Can Chi năm:** dùng năm âm lịch theo kết quả chuyển lịch, không mặc định Lập Xuân. Đây là cấu hình dự án; phải giữ test giao thừa và ngày đầu năm. Tài liệu iztro có tuỳ chọn ranh giới vận hạn và từng bản phát hành đã sửa ranh giới ngày/tháng; không lấy mặc định thư viện làm chuẩn thay cho Tuvi.vn.
+**Ranh giới Can Chi năm:** dùng năm âm lịch theo kết quả chuyển lịch, không mặc định Lập Xuân. Đây là cấu hình dự án; phải giữ test giao thừa và ngày đầu năm. Tài liệu iztro có tuỳ chọn ranh giới vận hạn và từng bản phát hành đã sửa ranh giới ngày/tháng; không lấy mặc định thư viện làm chuẩn thay cho tuvidauso.ai.studio.
 
 ---
 
@@ -428,7 +428,7 @@ Cục tra từ Can Chi cung Mệnh. MD hiện có công thức rút gọn:
 - Hành: 1=Kim, 2=Thủy, 3=Hỏa, 4=Thổ, 5=Mộc.
 - Cục: Thủy nhị (2), Mộc tam (3), Kim tứ (4), Thổ ngũ (5), Hỏa lục (6).
 
-**Trạng thái:** công thức phải được test đủ 60 Can Chi cung Mệnh và so sánh với nạp âm/cục mà Tuvi.vn trả về; TV-001 cho **Mộc Tam Cục**.
+**Trạng thái:** công thức phải được test đủ 60 Can Chi cung Mệnh và so sánh với nạp âm/cục mà tuvidauso.ai.studio trả về; TV-001 cho **Mộc Tam Cục**.
 
 ### 5.7 Nạp âm bản mệnh
 
@@ -436,7 +436,7 @@ Tra bảng 60 Hoa Giáp đầy đủ; không suy ra bằng bảng Ngũ Hành C�
 
 ### 5.8 Mệnh Chủ và Thân Chủ
 
-**Mệnh Chủ:** MD cũ ghi tra theo chi cung Mệnh. Điều này không khớp TV-001: năm sinh Canh Tuất, cung Mệnh Mùi, nhưng Tuvi.vn ghi **Lộc Tồn**. Bảng lookup hiện có cho chi Tuất = Lộc Tồn. Tài liệu iztro cũng ghi rõ thuật toán Trung Châu có thể tra Mệnh Chủ theo **chi năm sinh**, thay vì chi cung Mệnh. Vì vậy, cấu hình tái tạo Tuvi.vn dùng **birthYear.branch** làm khóa tra Mệnh Chủ. `MATCH_TV001`, cần test thêm các chi năm khác.
+**Mệnh Chủ:** MD cũ ghi tra theo chi cung Mệnh. Điều này không khớp TV-001: năm sinh Canh Tuất, cung Mệnh Mùi, nhưng tuvidauso.ai.studio ghi **Lộc Tồn**. Bảng lookup hiện có cho chi Tuất = Lộc Tồn. Tài liệu iztro cũng ghi rõ thuật toán Trung Châu có thể tra Mệnh Chủ theo **chi năm sinh**, thay vì chi cung Mệnh. Vì vậy, cấu hình tái tạo tuvidauso.ai.studio dùng **birthYear.branch** làm khóa tra Mệnh Chủ. `MATCH_TV001`, cần test thêm các chi năm khác.
 
 Bảng tra theo chi dùng cho cấu hình này (giữ dữ liệu MD, đổi khóa tra):
 
@@ -493,7 +493,7 @@ const tuVi = x % 2 === 1 ? mod(base - x) : mod(base + x);
 const thienPhu = mod(4 - tuVi);
 ```
 
-Công thức này khớp mô tả và ví dụ trong mã nguồn iztro. TV-001 là ngày âm 2, Mộc Tam Cục; vị trí 14 chính tinh trong trang Tuvi.vn là fixture để kiểm tra. `READY_FOR_TEST`.
+Công thức này khớp mô tả và ví dụ trong mã nguồn iztro. TV-001 là ngày âm 2, Mộc Tam Cục; vị trí 14 chính tinh trong trang tuvidauso.ai.studio là fixture để kiểm tra. `READY_FOR_TEST`.
 
 ### 5.10 14 chính tinh
 
@@ -541,7 +541,7 @@ Không tự an 14 sao bằng 14 bảng độc lập; chúng được suy ra từ
 | Thiên Khôi | Bảng tra theo Can, đang có dị bản | `CONFLICT`; xem dưới |
 | Thiên Việt | Bảng tra theo Can, đang có dị bản | `CONFLICT`; xem dưới |
 
-**Thiên Khôi/Thiên Việt là điểm xung đột rõ:** MD cũ và iztro dùng bảng Can năm, trong đó Canh → Sửu/Mùi. Nhưng TV-001 là Canh Tuất và trang Tuvi.vn hiển thị Thiên Khôi ở Ngọ, Thiên Việt ở Dần; bảng nội dung SEO riêng của Tuvi.vn lại ghi Thiên Khôi Canh/Tân ở Thân, cũng không khớp trực tiếp với chart. Không được tự kết luận đây là Can ngày Tân chỉ từ một lá số. **Cần thêm fixture có Can năm và Can ngày khác nhau**, rồi xem vị trí Khôi/Việt trên Tuvi.vn.
+**Thiên Khôi/Thiên Việt là điểm xung đột rõ:** MD cũ và iztro dùng bảng Can năm, trong đó Canh → Sửu/Mùi. Nhưng TV-001 là Canh Tuất và trang tuvidauso.ai.studio hiển thị Thiên Khôi ở Ngọ, Thiên Việt ở Dần; bảng nội dung SEO riêng của tuvidauso.ai.studio lại ghi Thiên Khôi Canh/Tân ở Thân, cũng không khớp trực tiếp với chart. Không được tự kết luận đây là Can ngày Tân chỉ từ một lá số. **Cần thêm fixture có Can năm và Can ngày khác nhau**, rồi xem vị trí Khôi/Việt trên tuvidauso.ai.studio.
 
 ### 6.2 Lộc Tồn, Kình Dương, Đà La, Thiên Mã
 
@@ -590,7 +590,7 @@ hoaTinh = mod(hoaStart + G);
 linhTinh = mod(linhStart + G);
 ```
 
-MD cũ lại cho Hỏa/Linh đổi chiều theo Âm Dương và giới tính. Đây là một khác biệt có khả năng là lỗi nếu mục tiêu là iztro, nhưng **chưa được phép sửa chính thức theo iztro** vì Tuvi.vn là chuẩn chính. TV-001 sinh giờ Ngọ (6 cung), thuận và nghịch đều có thể đến cùng cung đối diện, không phân biệt được. Trạng thái `CONFLICT/TODO_FIXTURE`.
+MD cũ lại cho Hỏa/Linh đổi chiều theo Âm Dương và giới tính. Đây là một khác biệt có khả năng là lỗi nếu mục tiêu là iztro, nhưng **chưa được phép sửa chính thức theo iztro** vì tuvidauso.ai.studio là chuẩn chính. TV-001 sinh giờ Ngọ (6 cung), thuận và nghịch đều có thể đến cùng cung đối diện, không phân biệt được. Trạng thái `CONFLICT/TODO_FIXTURE`.
 
 ### 6.5 Vòng Thái Tuế bản mệnh (12 sao)
 
@@ -598,7 +598,7 @@ MD v1.0 có chuỗi theo chi năm, đi thuận:
 
 **Thái Tuế → Thiếu Dương → Tang Môn → Thiếu Âm → Quan Phù → Tử Phù → Tuế Phá → Long Đức → Bạch Hổ → Phúc Đức → Điếu Khách → Trực Phù.**
 
-Đây là chuỗi thấy được trong lá số Tuvi.vn TV-001 và cần giữ độc lập. **Không thay chuỗi này bằng vòng Tuế Tiền (Tuế Kiện, Hối Khí, Quán Tác...)** của tài liệu 48 thần sát iztro; hai danh sách có tên gần nhau nhưng không phải một chuỗi đồng nhất.
+Đây là chuỗi thấy được trong lá số tuvidauso.ai.studio TV-001 và cần giữ độc lập. **Không thay chuỗi này bằng vòng Tuế Tiền (Tuế Kiện, Hối Khí, Quán Tác...)** của tài liệu 48 thần sát iztro; hai danh sách có tên gần nhau nhưng không phải một chuỗi đồng nhất.
 
 ### 6.6 Vòng Bác Sĩ (12 sao)
 
@@ -629,7 +629,7 @@ Cách gọi “Trường Sinh” trong một số nguồn là biến thể tên;
 | Sao | Công thức hiện có/ứng viên |
 |---|---|
 | Thiên Mã | Bảng nhóm tam hợp chi năm ở mục 6.2 |
-| Hàm Trì / Đào Hoa (咸池) | Tý/Thìn/Thân→Dậu; Sửu/Tỵ/Dậu→Ngọ; Dần/Ngọ/Tuất→Mão; Mão/Mùi/Hợi→Tý. Tuvi.vn hiển thị “Đào Hoa”; danh sách người dùng ghi “Hàm Trì”. Tạm giữ một bản ghi sao có alias, nhưng tách scope bản mệnh và lưu niên. |
+| Hàm Trì / Đào Hoa (咸池) | Tý/Thìn/Thân→Dậu; Sửu/Tỵ/Dậu→Ngọ; Dần/Ngọ/Tuất→Mão; Mão/Mùi/Hợi→Tý. tuvidauso.ai.studio hiển thị “Đào Hoa”; danh sách người dùng ghi “Hàm Trì”. Tạm giữ một bản ghi sao có alias, nhưng tách scope bản mệnh và lưu niên. |
 | Hoa Cái | Tý/Thìn/Thân→Thìn; Sửu/Tỵ/Dậu→Sửu; Dần/Ngọ/Tuất→Tuất; Mão/Mùi/Hợi→Mùi |
 | Kiếp Sát | Thân/Tý/Thìn→Tỵ; Hợi/Mão/Mùi→Thân; Dần/Ngọ/Tuất→Hợi; Tỵ/Dậu/Sửu→Dần |
 | Hồng Loan | Từ Mão đếm nghịch đến chi năm: `mod(3 - Z)` |
@@ -653,8 +653,8 @@ Cách gọi “Trường Sinh” trong một số nguồn là biến thể tên;
 |---|---|
 | Thiên Hình | Từ Dậu khởi tháng 1, đi thuận đến tháng sinh: `mod(9 + M - 1)` |
 | Thiên Diêu (天姚) | Từ Sửu khởi tháng 1, đi thuận: `mod(1 + M - 1)`; MD cũ dùng tên “Thiên Riêu”, chuyển thành alias. |
-| Thiên Y | Cùng cung với Thiên Diêu theo các nguồn an sao phổ biến; **là sao riêng, không phải bí danh của Thiên Diêu**. TV-001 Tuvi.vn hiển thị đồng thời Thiên Y và Thiên Diêu. MD có công thức nhưng catalog người dùng chưa liệt kê; bổ sung thành mục phụ tinh ngoài 117 cho tới khi chốt cách đếm. |
-| Thiên Giải / Nguyệt Giải | Tháng 1–2 tại Thân; 3–4 tại Tuất; 5–6 tại Tý; 7–8 tại Dần; 9–10 tại Thìn; 11–12 tại Ngọ. Cần lưu đúng tên sao theo Tuvi.vn; không gộp với Niên Giải. |
+| Thiên Y | Cùng cung với Thiên Diêu theo các nguồn an sao phổ biến; **là sao riêng, không phải bí danh của Thiên Diêu**. TV-001 tuvidauso.ai.studio hiển thị đồng thời Thiên Y và Thiên Diêu. MD có công thức nhưng catalog người dùng chưa liệt kê; bổ sung thành mục phụ tinh ngoài 117 cho tới khi chốt cách đếm. |
+| Thiên Giải / Nguyệt Giải | Tháng 1–2 tại Thân; 3–4 tại Tuất; 5–6 tại Tý; 7–8 tại Dần; 9–10 tại Thìn; 11–12 tại Ngọ. Cần lưu đúng tên sao theo tuvidauso.ai.studio; không gộp với Niên Giải. |
 | Địa Giải | MD: từ Mùi đếm thuận theo tháng: `mod(7 + M - 1)`. TV-001 hiển thị Địa Giải; cần test thêm. |
 | Thiên Nguyệt | Bảng theo tháng 1→Tuất, 2→Tỵ, 3→Thìn, 4→Dần, 5→Mùi, 6→Mão, 7→Hợi, 8→Mùi, 9→Dần, 10→Ngọ, 11→Tuất, 12→Dần. `CANDIDATE_IZTRO`. |
 | Thiên Vu | Tháng 1/5/9→Tỵ; 2/6/10→Thân; 3/7/11→Dần; 4/8/12→Hợi. `CANDIDATE_IZTRO`. |
@@ -673,7 +673,7 @@ Cách gọi “Trường Sinh” trong một số nguồn là biến thể tên;
 
 | Sao | Cách an | Trạng thái |
 |---|---|---|
-| Đài Phụ (台輔) / Thai Phụ | Khẩu quyết: Ngọ khởi giờ Tý, đếm thuận đến giờ sinh. MD dùng Văn Khúc `+2`, tương đương cách tính này trong index đang dùng. Dùng tên hiển thị Tuvi.vn “Thai Phụ” hoặc tên người dùng “Đài Phụ” theo quyết định thống nhất; một ID, hai alias. | `CANDIDATE_IZTRO` |
+| Đài Phụ (台輔) / Thai Phụ | Khẩu quyết: Ngọ khởi giờ Tý, đếm thuận đến giờ sinh. MD dùng Văn Khúc `+2`, tương đương cách tính này trong index đang dùng. Dùng tên hiển thị tuvidauso.ai.studio “Thai Phụ” hoặc tên người dùng “Đài Phụ” theo quyết định thống nhất; một ID, hai alias. | `CANDIDATE_IZTRO` |
 | Phong Cáo (封誥) | Tài liệu khẩu quyết iztro ghi “Dần khởi giờ Tý, đếm nghịch”; nhưng mã nguồn iztro 2.6.4 tính `Dần + G` (thuận). MD cũ dùng `Văn Khúc - 2`, tương đương `Dần + G`. TV-001 sinh giờ Ngọ nên thuận/nghịch sáu cung có thể trùng. | `CONFLICT/TODO_FIXTURE` |
 | Đẩu Quân | Từ Thái Tuế (chi năm xem) đếm nghịch tháng sinh, sau đó thuận đến giờ sinh; cung dừng là tháng Giêng của lưu nguyệt. MD công thức: `mod(Z_yearViewed - (M-1) + G)`. Cần test qua nhiều năm xem. | `CANDIDATE_IZTRO` |
 
@@ -685,17 +685,17 @@ Cách gọi “Trường Sinh” trong một số nguồn là biến thể tên;
 | Thiên Phúc (天福) | Giáp–Dậu; Ất–Thân; Bính–Tý; Đinh–Hợi; Mậu–Mão; Kỷ–Dần; Canh–Ngọ; Tân–Tỵ; Nhâm–Ngọ; Quý–Tỵ |
 | Thiên Trù | Giáp–Tỵ; Ất–Ngọ; Bính–Tý; Đinh–Tỵ; Mậu–Ngọ; Kỷ–Thân; Canh–Dần; Tân–Ngọ; Nhâm–Dậu; **Quý–Hợi** |
 | Lưu Hà | Giáp–Dậu; Ất–Tuất; Bính–Mùi; Đinh–Thìn; Mậu–Tỵ; Kỷ–Ngọ; Canh–Thân; Tân–Mão; Nhâm–Hợi; Quý–Dần |
-| Quốc Ấn | `Lộc Tồn + 8` theo index địa bàn; cần kiểm tra vị trí trên nhiều lá số Tuvi.vn |
-| Lưu Niên Văn Tinh / Văn Tinh | MD có bảng ứng viên: Giáp–Tỵ; Ất–Ngọ; Bính–Thân; Đinh–Dậu; Mậu–Thân; Kỷ–Dậu; Canh–Hợi; Tân–Tý; Nhâm–Dần; Quý–Mão. Tuvi.vn có lúc hiển thị “Văn Tinh”, cần xác minh cùng ID với Lưu Niên Văn Tinh hay không. |
+| Quốc Ấn | `Lộc Tồn + 8` theo index địa bàn; cần kiểm tra vị trí trên nhiều lá số tuvidauso.ai.studio |
+| Lưu Niên Văn Tinh / Văn Tinh | MD có bảng ứng viên: Giáp–Tỵ; Ất–Ngọ; Bính–Thân; Đinh–Dậu; Mậu–Thân; Kỷ–Dậu; Canh–Hợi; Tân–Tý; Nhâm–Dần; Quý–Mão. tuvidauso.ai.studio có lúc hiển thị “Văn Tinh”, cần xác minh cùng ID với Lưu Niên Văn Tinh hay không. |
 | Đường Phù | MD chưa có công thức. TV-001 có hiển thị Đường Phù; cần tìm bảng an riêng. `MISSING_RULE`. |
 
-**Lỗi cụ thể cần sửa trong MD:** bảng Thiên Trù cũ ghi Can Quý tại Tuất; iztro docs/source code ghi Quý tại Hợi. Cập nhật giá trị ứng viên thành Hợi nhưng giữ trạng thái `CANDIDATE_IZTRO/TODO_FIXTURE` cho tới khi có lá số năm Quý trên Tuvi.vn.
+**Lỗi cụ thể cần sửa trong MD:** bảng Thiên Trù cũ ghi Can Quý tại Tuất; iztro docs/source code ghi Quý tại Hợi. Cập nhật giá trị ứng viên thành Hợi nhưng giữ trạng thái `CANDIDATE_IZTRO/TODO_FIXTURE` cho tới khi có lá số năm Quý trên tuvidauso.ai.studio.
 
 ### 6.13 Thiên Thương và Thiên Sứ
 
 MD cũ cố định Thiên Thương ở Nô Bộc và Thiên Sứ ở Tật Ách. Mã nguồn iztro có nhánh Trung Châu: Dương Nam/Âm Nữ giữ bố cục đó; Âm Nam/Dương Nữ đổi hai sao cho nhau. Bộ fixture hiện đã có đủ bốn tổ hợp âm/dương năm × Nam/Nữ; cần trích riêng vị trí Thiên Thương/Thiên Sứ từ các ảnh phù hợp để kiểm tra trường hợp đổi vị trí.
 
-**Thiết kế đề xuất:** cho phép `placementRule` nhận giới tính + âm dương năm; chưa gắn trạng thái verified với Tuvi.vn. Cần fixture Âm Nam và Dương Nữ.
+**Thiết kế đề xuất:** cho phép `placementRule` nhận giới tính + âm dương năm; chưa gắn trạng thái verified với tuvidauso.ai.studio. Cần fixture Âm Nam và Dương Nữ.
 
 ### 6.14 Tuần, Triệt, Thiên Không, Không Vong
 
@@ -705,15 +705,15 @@ Không được gộp các tên sau chỉ vì đều có chữ “Không”:
 - Địa Không 地空.
 - Địa Kiếp 地劫.
 - Tuần Không 旬空.
-- Triệt Không / Triệt Lộ Không Vong 截空 / 截路空亡 (cần xác định cách viết Tuvi.vn).
+- Triệt Không / Triệt Lộ Không Vong 截空 / 截路空亡 (cần xác định cách viết tuvidauso.ai.studio).
 - Không Vong 空亡 (tên trong danh mục 37 tạp diệu người dùng cung cấp).
 
 **Khác biệt trong nguồn công thức:**
 - MD phổ thông đang an Tuần phủ hai địa chi theo tuần Giáp và Triệt ở hai địa chi theo Can năm.
 - iztro tài liệu Trung Châu hiện có logic riêng: tính một index Tuần Không có hiệu chỉnh theo âm dương; mã nguồn có biến `jieluIndex`, `kongwangIndex` và `jiekongIndex`, trong comment ghi Trung Châu không dùng `截路空亡` mà dùng một sao `截空` được chọn theo âm dương năm.
-- Tài liệu tổng quát Tuvi.vn không công khai thuật toán Tuần/Triệt; TV-001 hiển thị nhãn Triệt và Tuần, nhưng chỉ một mẫu không đủ để phân biệt hai cách an.
+- Tài liệu tổng quát tuvidauso.ai.studio không công khai thuật toán Tuần/Triệt; TV-001 hiển thị nhãn Triệt và Tuần, nhưng chỉ một mẫu không đủ để phân biệt hai cách an.
 
-**Quyết định:** không xóa công thức Tuần/Triệt hiện tại, nhưng hạ trạng thái về `CONFLICT`. Tạo hai engine candidate (phổ thông và biến thể iztro) trong test harness; chỉ một bộ sẽ trở thành mặc định sau khi khớp nhiều lá số Tuvi.vn. Không tự thêm Không Vong như một vị trí riêng nếu chưa quan sát thấy Tuvi.vn hiển thị tách biệt.
+**Quyết định:** không xóa công thức Tuần/Triệt hiện tại, nhưng hạ trạng thái về `CONFLICT`. Tạo hai engine candidate (phổ thông và biến thể iztro) trong test harness; chỉ một bộ sẽ trở thành mặc định sau khi khớp nhiều lá số tuvidauso.ai.studio. Không tự thêm Không Vong như một vị trí riêng nếu chưa quan sát thấy tuvidauso.ai.studio hiển thị tách biệt.
 
 ### 6.15 Vòng sao còn thiếu trong MD
 
@@ -738,7 +738,7 @@ Từ Tướng Tinh đi thuận:
 
 **Tướng Tinh → Phan Án (攀鞍) → Tuế Dịch (岁驿) → Tức Thần (息神) → Hoa Cái → Kiếp Sát → Tai Sát (灾煞) → Thiên Sát → Chỉ Bối → Hàm Trì → Nguyệt Sát → Vong Thần.**
 
-Tài liệu 48 thần sát iztro xác định hai vòng Tướng Tiền và Tuế Tiền chạy theo lưu niên, trong khi Tràng Sinh và Bác Sĩ cố định từ lúc sinh. Đây là quy tắc ứng viên; chỉ đưa vào giao diện mặc định khi Tuvi.vn xác nhận.
+Tài liệu 48 thần sát iztro xác định hai vòng Tướng Tiền và Tuế Tiền chạy theo lưu niên, trong khi Tràng Sinh và Bác Sĩ cố định từ lúc sinh. Đây là quy tắc ứng viên; chỉ đưa vào giao diện mặc định khi tuvidauso.ai.studio xác nhận.
 
 ### 6.16 Bảng độ sáng
 
@@ -758,7 +758,7 @@ Danh mục người dùng gửi được giữ nguyên làm danh sách mong mu�
 interface StarDefinition {
   id: string;                   // ID ổn định, không phụ thuộc tên hiển thị
   hanzi?: string;               // chữ Hán để phân biệt sao đồng âm
-  displayName: string;          // tên hiển thị mặc định theo Tuvi.vn
+  displayName: string;          // tên hiển thị mặc định theo tuvidauso.ai.studio
   aliases: string[];             // Thiên Riêu/Thiên Diêu, Thai Phụ/Đài Phụ...
   group: string;
   defaultScope: 'natal' | 'annual' | 'decadal' | 'monthly';
@@ -867,16 +867,16 @@ Hóa Lộc（化祿）, Hóa Quyền（化權）, Hóa Khoa（化科）, Hóa K�
 20. Lưu Tuần Không
 21. Lưu Triệt Không
 
-**Danh sách 21 là baseline người dùng yêu cầu, chưa phải danh mục đã xác nhận đầy đủ trên Tuvi.vn.** TV-001 hiển thị thêm một số nhãn `L.` như Lưu Long Đức, Lưu Phúc Đức, Lưu Thiên Đức, Lưu Nguyệt Đức, Lưu Thiên Việt, Lưu Văn Xương, Lưu Văn Khúc và Lưu Kiếp Sát. Cần giữ chúng trong `observedExtras` để so sánh, không tự động xóa hoặc gộp vào 21 khi chưa tìm ra công thức.
+**Danh sách 21 là baseline người dùng yêu cầu, chưa phải danh mục đã xác nhận đầy đủ trên tuvidauso.ai.studio.** TV-001 hiển thị thêm một số nhãn `L.` như Lưu Long Đức, Lưu Phúc Đức, Lưu Thiên Đức, Lưu Nguyệt Đức, Lưu Thiên Việt, Lưu Văn Xương, Lưu Văn Khúc và Lưu Kiếp Sát. Cần giữ chúng trong `observedExtras` để so sánh, không tự động xóa hoặc gộp vào 21 khi chưa tìm ra công thức.
 
-### 7.8 Các sao bổ sung cần có để tái tạo Tuvi.vn
+### 7.8 Các sao bổ sung cần có để tái tạo tuvidauso.ai.studio
 
 Các tên sau có trong MD cũ hoặc hiển thị trên TV-001 nhưng không được xếp rõ trong bộ 117/21 người dùng gửi. Cần thêm catalog kỹ thuật riêng, chưa ép vào con số 117:
 
 - **Thiên Y（天醫）:** sao riêng, đi cùng vị trí Thiên Diêu theo các nguồn công thức phổ biến; TV-001 hiển thị đồng thời Thiên Y và Thiên Diêu.
 - **Địa Giải（地解）**.
 - **Quốc Ấn（國印）**.
-- **Đường Phù（唐符/ đường phù; cần xác minh đúng chữ Hán theo nguồn Tuvi.vn）**.
+- **Đường Phù（唐符/ đường phù; cần xác minh đúng chữ Hán theo nguồn tuvidauso.ai.studio）**.
 - **Lưu Hà（流霞）**.
 - **Đẩu Quân（斗君）**.
 - **Thiên La（天羅） và Địa Võng（地網）**.
@@ -886,10 +886,10 @@ Các tên sau có trong MD cũ hoặc hiển thị trên TV-001 nhưng không đ
 
 | Tên | Chuẩn hóa |
 |---|---|
-| Thiên Riêu / Thiên Diêu | Cùng sao Thiên Diêu 天姚; một ID, alias `Thiên Riêu`. Dùng tên theo cách hiển thị Tuvi.vn khi có xác nhận. |
+| Thiên Riêu / Thiên Diêu | Cùng sao Thiên Diêu 天姚; một ID, alias `Thiên Riêu`. Dùng tên theo cách hiển thị tuvidauso.ai.studio khi có xác nhận. |
 | Đài Phụ / Thai Phụ | Cùng sao 台輔; một ID, alias cả hai cách ghi. |
 | Phi Liêm 飛廉 / Phi Liêm 蜚廉 | **Hai ID khác nhau**: một sao vòng Bác Sĩ, một sao trong 37 tạp diệu. |
-| Hàm Trì 咸池 / Đào Hoa | Có thể là cùng sao/tên gọi tùy nguồn; Tuvi.vn hiển thị “Đào Hoa”. Giữ một ID dự kiến, alias khác; tách scope bản mệnh/lưu niên. |
+| Hàm Trì 咸池 / Đào Hoa | Có thể là cùng sao/tên gọi tùy nguồn; tuvidauso.ai.studio hiển thị “Đào Hoa”. Giữ một ID dự kiến, alias khác; tách scope bản mệnh/lưu niên. |
 | Hoa Cái, Kiếp Sát | Có thể xuất hiện ở sao nguyên cục và vòng Tướng Tiền lưu niên; cùng gốc tên nhưng cần hai placement theo scope, không ghi đè vị trí. |
 | Thiên Y / Thiên Diêu | Hai sao khác ID dù theo một số bảng cùng an một cung. TV-001 hiển thị cả hai cùng lúc. |
 | Tuần Không / Triệt Không / Không Vong | Không gộp. Phải xác minh chữ Hán và cách hiển thị/vùng án ngữ. |
@@ -915,7 +915,7 @@ Thứ tự cột: Hóa Lộc, Hóa Quyền, Hóa Khoa, Hóa Kỵ.
 | Nhâm | Thiên Lương | Tử Vi | Tả Phù | Vũ Khúc |
 | Quý | Phá Quân | Cự Môn | Thái Âm | Tham Lang |
 
-Bảng này là khẩu quyết Nam phái được iztro công bố; không mặc định là đã xác nhận toàn bộ Tuvi.vn. TV-001 sinh Canh Tuất và Tuvi.vn hiển thị các dấu Hóa trong lá số, nhưng cần phân biệt Hóa bản mệnh với Hóa phi cung/đại hạn/lưu niên trước khi kết luận từng vị trí.
+Bảng này là khẩu quyết Nam phái được iztro công bố; không mặc định là đã xác nhận toàn bộ tuvidauso.ai.studio. TV-001 sinh Canh Tuất và tuvidauso.ai.studio hiển thị các dấu Hóa trong lá số, nhưng cần phân biệt Hóa bản mệnh với Hóa phi cung/đại hạn/lưu niên trước khi kết luận từng vị trí.
 
 ### 8.2 Tách tầng Tứ Hóa
 
@@ -924,7 +924,7 @@ Phải lưu riêng:
 - `decadal`: Tứ Hóa Đại Hạn theo Can của tầng Đại Hạn.
 - `annual`: Tứ Hóa Lưu Niên theo Can năm xem.
 - `monthly`: Tứ Hóa Lưu Nguyệt theo Can tháng xem, sau khi có công thức được xác nhận.
-- `palace`: Phi Hóa theo Can cung, nếu Tuvi.vn hiển thị; không gộp với Tứ Hóa vận hạn.
+- `palace`: Phi Hóa theo Can cung, nếu tuvidauso.ai.studio hiển thị; không gộp với Tứ Hóa vận hạn.
 
 Một sao có thể đồng thời có Hóa bản mệnh, Hóa Đại Hạn và Hóa Lưu Niên khác nhau. Vì vậy `Star.hoa` dạng một trường duy nhất trong MD cũ là chưa đủ; dùng mảng `transformations[]` theo scope.
 
@@ -953,16 +953,16 @@ Tuổi 1 ở cung khởi; Nam đi thuận, Nữ đi nghịch. Đây là quy tắ
 
 - Lấy Can Chi năm xem theo quy ước năm âm lịch của dự án.
 - Cung có chi năm xem được dùng làm vị trí Lưu Thái Tuế trong bản triển khai ứng viên.
-- Engine v0.2.3 đã thêm lớp `scope='annual'`; v0.2.4 bổ sung các quy tắc Lưu Thiên Không, Lưu Niên Văn Tinh, Lưu Tuần Không, Lưu Triệt Không, Lưu Văn Xương và Lưu Văn Khúc theo bảng người dùng cung cấp. Các mục này hiện là `CANDIDATE_SPEC`, chưa xác minh với fixture Tuvi.vn.
+- Engine v0.2.3 đã thêm lớp `scope='annual'`; v0.2.4 bổ sung các quy tắc Lưu Thiên Không, Lưu Niên Văn Tinh, Lưu Tuần Không, Lưu Triệt Không, Lưu Văn Xương và Lưu Văn Khúc theo bảng người dùng cung cấp. Các mục này hiện là `CANDIDATE_SPEC`, chưa xác minh với fixture tuvidauso.ai.studio.
 - Không đặt Lưu sao chồng lên bản mệnh như cùng một bản ghi; giữ `scope='annual'` và năm xem riêng.
-- Các công thức lưu vẫn chưa được xác minh bằng cặp fixture Tuvi.vn nhiều năm; không nâng trạng thái candidate thành verified chỉ vì áp dụng được quy tắc sao gốc.
+- Các công thức lưu vẫn chưa được xác minh bằng cặp fixture tuvidauso.ai.studio nhiều năm; không nâng trạng thái candidate thành verified chỉ vì áp dụng được quy tắc sao gốc.
 
 ### 9.4 Lưu Nguyệt
 
 - Đẩu Quân là mốc tháng Giêng lưu niên; tính từ cung Thái Tuế của năm xem, nghịch theo tháng sinh rồi thuận đến giờ sinh.
 - Sau khi tìm được cung tháng Giêng, xếp tháng tiếp theo theo chiều thuận.
 - Người dùng chọn năm xem và tháng xem; cần tách tháng âm thực tế, tháng nhuận và tháng dùng trong công thức.
-- Lưu nguyệt Tứ Hóa cần căn cứ rõ: có hệ dùng Can tháng, có hệ dùng Can cung; chưa mặc định chọn một cách khi chưa so khớp Tuvi.vn.
+- Lưu nguyệt Tứ Hóa cần căn cứ rõ: có hệ dùng Can tháng, có hệ dùng Can cung; chưa mặc định chọn một cách khi chưa so khớp tuvidauso.ai.studio.
 
 ---
 
@@ -1001,9 +1001,9 @@ Xuất PDF toàn bộ lá số, gồm 12 cung và phần thông tin trung tâm. 
 
 ---
 
-## 11. Fixture chuẩn ban đầu – Tuvi.vn #13405 (TV-001)
+## 11. Fixture chuẩn ban đầu – tuvidauso.ai.studio #13405 (TV-001)
 
-**Nguồn:** [Lá số Tuvi.vn #13405](https://tuvi.vn/la-so-duong-nam-am-duong-nghich-ly-2-12-1910-ngo-13405?thang-xem=9&nam-xem=2026&day=1&hour=12&min=30&month=1&name=&year=1911&option=1)
+**Nguồn:** [Lá số tuvidauso.ai.studio #13405](https://tuvidauso.ai.studio/la-so-duong-nam-am-duong-nghich-ly-2-12-1910-ngo-13405?thang-xem=9&nam-xem=2026&day=1&hour=12&min=30&month=1&name=&year=1911&option=1)
 
 | Trường | Giá trị trên trang |
 |---|---|
@@ -1060,7 +1060,7 @@ Xuất PDF toàn bộ lá số, gồm 12 cung và phần thông tin trung tâm. 
 
 Trang hiển thị nhiều sao có tiền tố `L.`; nhóm quan sát được gồm: Lưu Lộc Tồn, Lưu Long Đức, Lưu Hóa Kỵ, Lưu Văn Khúc, Lưu Thiên Mã, Lưu Hóa Lộc, Lưu Tang Môn, Lưu Văn Xương, Lưu Hóa Khoa, Lưu Hồng Loan, Lưu Thiên Việt, Lưu Đào Hoa, Lưu Thiên Đức, Lưu Bạch Hổ, Lưu Hóa Quyền, Lưu Nguyệt Đức, Lưu Thiên Khốc, Lưu Thiên Hư, Lưu Kình Dương, Lưu Phúc Đức, Lưu Thái Tuế và Lưu Kiếp Sát.
 
-Danh sách này **không đồng nghĩa** toàn bộ đều thuộc đúng bộ 21 lưu diệu ban đầu. Nó là danh sách `observedExtras` để kiểm tra cách Tuvi.vn tách lớp. Các sao trong 21 list không thấy ở TV-001 không bị xóa; có thể chỉ không hiển thị trong mẫu này.
+Danh sách này **không đồng nghĩa** toàn bộ đều thuộc đúng bộ 21 lưu diệu ban đầu. Nó là danh sách `observedExtras` để kiểm tra cách tuvidauso.ai.studio tách lớp. Các sao trong 21 list không thấy ở TV-001 không bị xóa; có thể chỉ không hiển thị trong mẫu này.
 
 ### 11.4 Mục hiển thị có nhưng cần công thức riêng
 
@@ -1079,24 +1079,24 @@ Các mục trên phải có module/field riêng; không giả định tự phát
 |---|---|---|---|
 | P0 | 5.2 Can Chi tháng | Công thức cũ cho sai TV-001; Ngũ Hổ Độn cho Kỷ Sửu | Sửa công thức thành `mod(2*yearCan + lunarMonth + 1,10)` |
 | P0 | 6.4 Mệnh Chủ | TV-001: năm Tuất, Mệnh Mùi, kết quả Lộc Tồn; tra theo chi Mệnh cho ra sai | Lookup theo chi năm sinh; test 12 chi |
-| P0 | 6.19 Tuần/Triệt | MD hai cung; iztro Trung Châu có logic khác; Tuvi.vn chưa đủ mẫu phân biệt | Giữ candidate song song, chờ fixtures |
+| P0 | 6.19 Tuần/Triệt | MD hai cung; iztro Trung Châu có logic khác; tuvidauso.ai.studio chưa đủ mẫu phân biệt | Giữ candidate song song, chờ fixtures |
 | P0 | 6.9 Khôi/Việt | MD/iztro và TV-001 cho kết quả khác. Bộ fixture hiện đã bao phủ 10/10 Can năm và 10/10 Can ngày; cần đọc/transcribe vị trí Khôi/Việt trên các ảnh có Can phân biệt, chưa cần chụp lại chỉ để tăng độ phủ input | Chưa tự sửa; xác minh placement trước khi chốt |
 | P0 | 6.10 Hỏa/Linh | MD phụ thuộc giới tính/âm dương; iztro là candidate khác. Bộ fixture hiện đã phủ 12/12 giờ chi và đủ bốn tổ hợp âm/dương × giới tính; cần trích vị trí sao từ ảnh hiện có để so sánh, chỉ chụp thêm nếu ảnh không đọc được | Chưa chốt công thức |
 | P0 | 6.18 Thiên Trù | MD ghi Quý–Tuất; iztro ghi Quý–Hợi | Cập nhật candidate Quý–Hợi; fixture Can Quý đã có, cần transcribe vị trí Thiên Trù từ ảnh tương ứng |
-| P0 | Catalog 117 | Có lặp tên theo vòng và thiếu một số sao Tuvi.vn hiển thị | Dùng ID + Hán tự + scope; không đếm tên thuần |
-| P1 | 6.15 Thiên Y | MD có “Thiên Y cùng cung Thiên Riêu”; list 37 không có nhưng Tuvi.vn hiển thị riêng Thiên Y và Thiên Diêu | Thêm ID Thiên Y, cùng vị trí Thiên Diêu theo candidate |
+| P0 | Catalog 117 | Có lặp tên theo vòng và thiếu một số sao tuvidauso.ai.studio hiển thị | Dùng ID + Hán tự + scope; không đếm tên thuần |
+| P1 | 6.15 Thiên Y | MD có “Thiên Y cùng cung Thiên Riêu”; list 37 không có nhưng tuvidauso.ai.studio hiển thị riêng Thiên Y và Thiên Diêu | Thêm ID Thiên Y, cùng vị trí Thiên Diêu theo candidate |
 | P1 | 6.15 Thiên Vu/Thiên Nguyệt/Âm Sát | MD thiếu công thức | Bổ sung bảng tháng từ iztro với trạng thái candidate |
-| P1 | 6.14 Hàm Trì | User list có Hàm Trì; MD ghi Đào Hoa, Tuvi.vn cũng hiển thị Đào Hoa | Chuẩn alias 咸池/Đào Hoa, kiểm tra khác biệt với lưu niên |
+| P1 | 6.14 Hàm Trì | User list có Hàm Trì; MD ghi Đào Hoa, tuvidauso.ai.studio cũng hiển thị Đào Hoa | Chuẩn alias 咸池/Đào Hoa, kiểm tra khác biệt với lưu niên |
 | P1 | 6.14 Thiên Trù | Bảng Can Quý khác nguồn | Như trên |
 | P1 | 6.17 Đài Phụ/Thai Phụ | Hai tên có thể cùng 台輔 | Chuẩn một ID, hai alias |
 | P1 | 6.17 Phong Cáo | Lời khẩu quyết và code iztro mâu thuẫn về chiều; giờ Ngọ không phân biệt | Chờ giờ không đối xứng |
-| P1 | Giải Thần | MD đồng cung Phượng Các; iztro phân biệt Nguyệt Giải và Niên Giải | Bổ sung hai scope/nhãn riêng, đối chiếu Tuvi.vn |
+| P1 | Giải Thần | MD đồng cung Phượng Các; iztro phân biệt Nguyệt Giải và Niên Giải | Bổ sung hai scope/nhãn riêng, đối chiếu tuvidauso.ai.studio |
 | P1 | Vòng Bác Sĩ/Phi Liêm tạp | Phi Liêm hai chữ Hán khác nhau | Tách `fei-lian-boshi` và `fei-lian-misc` |
-| P1 | 48 thần sát | 24 sao cố định, 24 sao lưu niên trong iztro; Tuvi.vn còn có vòng Thái Tuế bản mệnh riêng | Tách natal/annual; không thay Thái Tuế bằng Tuế Tiền |
+| P1 | 48 thần sát | 24 sao cố định, 24 sao lưu niên trong iztro; tuvidauso.ai.studio còn có vòng Thái Tuế bản mệnh riêng | Tách natal/annual; không thay Thái Tuế bằng Tuế Tiền |
 | P1 | 21 lưu diệu | TV-001 cho thấy thêm Lưu Long Đức, Lưu Phúc Đức, Lưu Đức, Lưu Văn Xương/Khúc, Lưu Thiên Việt, Lưu Kiếp Sát... | Giữ 21 list baseline, thêm `observedExtras`, chờ thêm năm xem |
 | P1 | Tứ Hóa | MD biểu diễn một `hoa` duy nhất, không đủ tầng | Mảng transformation theo natal/decadal/annual/monthly/palace |
 | P2 | Cân Lượng | TV-001 có 3 lượng 4 chỉ; MD chưa có thuật toán | Tách module Cân Xương Tính Số; tra bảng riêng và test |
-| P2 | Lai Nhân Cung | TV-001 ghi Tử Tức; MD chưa có công thức | Tách module; phải tìm phương pháp Tuvi.vn và fixture |
+| P2 | Lai Nhân Cung | TV-001 ghi Tử Tức; MD chưa có công thức | Tách module; phải tìm phương pháp tuvidauso.ai.studio và fixture |
 | P2 | Đường Phù, Địa Giải, Quốc Ấn, Lưu Hà, Đẩu Quân | Hiển thị trong TV-001, MD có phần thiếu | Thêm catalog + công thức/fixture riêng |
 | P2 | Độ sáng | MD chưa có bảng đủ 12 cung | Chỉ nhập từ bảng nguồn đã xác minh, không suy ra bằng vị trí |
 
@@ -1109,7 +1109,7 @@ Các mục trên phải có module/field riêng; không giả định tự phát
 - 50 ngày dương lịch trong 1900–2100: Tết, giao thừa, ngày đầu/cuối tháng, tháng nhuận.
 - 23:00 / 23:59 / 00:00 / 00:59 / 01:00.
 - 10:00 → Tỵ; 11:00 → Ngọ.
-- Đối chiếu ngày âm và Can Chi với Tuvi.vn trên nhiều vùng thời gian trong năm.
+- Đối chiếu ngày âm và Can Chi với tuvidauso.ai.studio trên nhiều vùng thời gian trong năm.
 
 ### 13.2 Can Chi
 
@@ -1118,7 +1118,7 @@ Các mục trên phải có module/field riêng; không giả định tự phát
 - 12 giờ chi × ít nhất 10 Can ngày.
 - TV-001 bắt buộc trả Kỷ Sửu (tháng), Tân Mùi (ngày), Giáp Ngọ (giờ).
 
-### 13.3 Bộ fixture Tuvi.vn hiện có và khoảng trống
+### 13.3 Bộ fixture tuvidauso.ai.studio hiện có và khoảng trống
 
 **Mốc tối thiểu 20 fixture đã đạt.** Bộ hiện tại gồm:
 - `tests/fixtures/tuvi-vn-fixtures.json`: 20 fixture nền.
@@ -1144,7 +1144,7 @@ Các test tiếp theo cần tập trung vào từng công thức tranh chấp �
 
 ### 13.5 Quy tắc pass/fail
 
-- `verified`: fixture khớp toàn bộ các trường của nguồn Tuvi.vn; nếu có thay đổi phiên bản trang thì lưu snapshot ngày truy cập.
+- `verified`: fixture khớp toàn bộ các trường của nguồn tuvidauso.ai.studio; nếu có thay đổi phiên bản trang thì lưu snapshot ngày truy cập.
 - `candidate`: có công thức tham khảo, chưa đủ Tuvi fixtures.
 - `conflict`: có từ hai nguồn hoặc hai mô hình kết quả khác nhau.
 - `todo`: chưa có công thức hoặc chưa có fixture.
@@ -1170,13 +1170,13 @@ Không cần chụp thêm chỉ để tăng số lượng fixture. Mỗi ảnh m
 
 ## 15. Các điểm chưa được phép tự chốt
 
-- Công thức Thiên Khôi/Thiên Việt theo Can năm, Can ngày hay quy tắc khác của Tuvi.vn.
-- Chiều Hỏa Tinh/Linh Tinh theo Tuvi.vn.
-- Triệt của Tuvi.vn là hai cung theo bảng phổ thông hay biến thể một vị trí như một số source code Central Zhou.
+- Công thức Thiên Khôi/Thiên Việt theo Can năm, Can ngày hay quy tắc khác của tuvidauso.ai.studio.
+- Chiều Hỏa Tinh/Linh Tinh theo tuvidauso.ai.studio.
+- Triệt của tuvidauso.ai.studio là hai cung theo bảng phổ thông hay biến thể một vị trí như một số source code Central Zhou.
 - Tuần Không/Không Vong có một hay hai placement và có phải hai tên riêng không.
 - Công thức Đường Phù.
 - Công thức Cân Lượng và Lai Nhân Cung.
-- Danh mục đầy đủ của 21 lưu diệu trên Tuvi.vn và những sao lưu bổ sung.
+- Danh mục đầy đủ của 21 lưu diệu trên tuvidauso.ai.studio và những sao lưu bổ sung.
 - Có đưa cả Tướng Tiền và Tuế Tiền vào giao diện mặc định hay chỉ bật theo lớp Lưu Niên.
 - Bảng độ sáng đầy đủ cho các sao.
 
@@ -1202,10 +1202,10 @@ Không cần chụp thêm chỉ để tăng số lượng fixture. Mỗi ảnh m
 
 ## 17. Nguồn đã tra cứu trực tuyến
 
-> Các nguồn dưới đây được dùng để tìm công thức và phát hiện khác biệt. Trừ trang lá số Tuvi.vn, chúng không phải “nguồn chuẩn đầu ra” của dự án. Trang tài liệu iztro hiện hiển thị phiên bản 2.6.4 tại thời điểm rà soát; code `main` có thể thay đổi theo thời gian. Cần ghi phiên bản/commit trong hồ sơ kiểm thử nếu tham chiếu sâu vào mã nguồn.
+> Các nguồn dưới đây được dùng để tìm công thức và phát hiện khác biệt. Trừ trang lá số tuvidauso.ai.studio, chúng không phải “nguồn chuẩn đầu ra” của dự án. Trang tài liệu iztro hiện hiển thị phiên bản 2.6.4 tại thời điểm rà soát; code `main` có thể thay đổi theo thời gian. Cần ghi phiên bản/commit trong hồ sơ kiểm thử nếu tham chiếu sâu vào mã nguồn.
 
-1. **Tuvi.vn – TV-001, lá số 01/01/1911, 12:30, Nam, năm xem Bính Ngọ 2026:**  
-   https://tuvi.vn/la-so-duong-nam-am-duong-nghich-ly-2-12-1910-ngo-13405?thang-xem=9&nam-xem=2026&day=1&hour=12&min=30&month=1&name=&year=1911&option=1
+1. **tuvidauso.ai.studio – TV-001, lá số 01/01/1911, 12:30, Nam, năm xem Bính Ngọ 2026:**  
+   https://tuvidauso.ai.studio/la-so-duong-nam-am-duong-nghich-ly-2-12-1910-ngo-13405?thang-xem=9&nam-xem=2026&day=1&hour=12&min=30&month=1&name=&year=1911&option=1
 2. **iztro – An tinh quyết, cung vị, 14 chính tinh, phụ tinh và vòng sao:**  
    https://docs.iztro.com/learn/setup
 3. **iztro – 37 tạp diệu:**  
@@ -1218,10 +1218,10 @@ Không cần chụp thêm chỉ để tăng số lượng fixture. Mỗi ảnh m
    https://github.com/SylarLong/iztro/blob/main/src/star/location.ts
 7. **Lịch sử thay đổi iztro:**  
    https://github.com/SylarLong/iztro/blob/main/CHANGELOG.md
-8. **Bài Tuvi.vn về Thiên Khôi:**  
-   https://tuvi.vn/sao-thien-khoi-la-gi-y-nghia-chi-tiet-and-ung-dung-trong-tu-vi-hien-dai-a2560
-9. **Bài Tuvi.vn về Thiên Việt:**  
-   https://tuvi.vn/sao-thien-viet-la-gi-y-nghia-dac-diem-and-ung-dung-trong-tu-vi-a2561
+8. **Bài tuvidauso.ai.studio về Thiên Khôi:**  
+   https://tuvidauso.ai.studio/sao-thien-khoi-la-gi-y-nghia-chi-tiet-and-ung-dung-trong-tu-vi-hien-dai-a2560
+9. **Bài tuvidauso.ai.studio về Thiên Việt:**  
+   https://tuvidauso.ai.studio/sao-thien-viet-la-gi-y-nghia-dac-diem-and-ung-dung-trong-tu-vi-a2561
 10. **Tài liệu tham khảo về Tuần/Triệt và các cách gọi Không Vong:**  
     https://nhatnguyet.org/kien-thuc/bai-viet/tuan-triet-tren-la-so-tu-vi-e2d1b4
 11. **Bảng an sao tham khảo – Thiên Cơ Các:**  
@@ -1231,11 +1231,11 @@ Không cần chụp thêm chỉ để tăng số lượng fixture. Mỗi ảnh m
 
 ### Lưu ý về chất lượng nguồn
 
-- Tuvi.vn là mục tiêu tái tạo; trang tạo lá số có cấu trúc dữ liệu trực tiếp, nhưng không công bố đầy đủ mã nguồn/công thức an tất cả sao.
-- Các bài viết SEO của Tuvi.vn có thể không nhất quán với lá số máy tính. Ví dụ bài Thiên Khôi nêu một bảng theo Can khác với vị trí trên TV-001. Vì vậy ưu tiên **kết quả lá số trực tiếp**, không lấy bài giải nghĩa chung làm ground truth cho công thức.
-- iztro cung cấp công thức rõ, code và changelog; nhưng 48 thần sát phân rõ 24 sao cố định và 24 sao theo lưu niên, có các tùy chọn trường phái. Đây là nguồn kỹ thuật hữu ích, không phải chuẩn Tuvi.vn.
+- tuvidauso.ai.studio là mục tiêu tái tạo; trang tạo lá số có cấu trúc dữ liệu trực tiếp, nhưng không công bố đầy đủ mã nguồn/công thức an tất cả sao.
+- Các bài viết SEO của tuvidauso.ai.studio có thể không nhất quán với lá số máy tính. Ví dụ bài Thiên Khôi nêu một bảng theo Can khác với vị trí trên TV-001. Vì vậy ưu tiên **kết quả lá số trực tiếp**, không lấy bài giải nghĩa chung làm ground truth cho công thức.
+- iztro cung cấp công thức rõ, code và changelog; nhưng 48 thần sát phân rõ 24 sao cố định và 24 sao theo lưu niên, có các tùy chọn trường phái. Đây là nguồn kỹ thuật hữu ích, không phải chuẩn tuvidauso.ai.studio.
 - Nguồn cộng đồng/ebook có thể khác nhau về tên Hán, cách đếm và scope; không gộp dị bản vào engine chính khi chưa có fixture.
 
 ---
 
-**Kết thúc đặc tả v1.3.** Đây là tài liệu đã hợp nhất quyết định của người dùng, dữ liệu TV-001, danh mục sao người dùng gửi và kết quả tra cứu công thức. Các mục `CONFLICT`, `TODO_FIXTURE` và `MISSING_RULE` vẫn phải được giữ nguyên trạng thái cho đến khi có thêm dữ liệu Tuvi.vn; không được coi là đã hoàn tất chỉ vì đã tìm thấy một công thức trên internet.
+**Kết thúc đặc tả v1.3.** Đây là tài liệu đã hợp nhất quyết định của người dùng, dữ liệu TV-001, danh mục sao người dùng gửi và kết quả tra cứu công thức. Các mục `CONFLICT`, `TODO_FIXTURE` và `MISSING_RULE` vẫn phải được giữ nguyên trạng thái cho đến khi có thêm dữ liệu tuvidauso.ai.studio; không được coi là đã hoàn tất chỉ vì đã tìm thấy một công thức trên internet.

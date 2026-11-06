@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Palace, StarPlacement } from '../engine/types.js';
 import { StarLabel } from './StarLabel.js';
-import { getPalaceCanChiAbbr, getBranchElementInfo, getPalaceNameColor } from '../data/canChiHelper.js';
+import { getPalaceCanChiAbbr, getBranchElementInfo, getBranchElementColor } from '../data/canChiHelper.js';
 import type { RelationType, StarVisibilityFilters } from '../types/chartUI.js';
 
 interface PalaceCellProps {
@@ -46,7 +46,7 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
 }) => {
   const canChiAbbr = getPalaceCanChiAbbr(palace.stem, palace.branch);
   const branchElem = getBranchElementInfo(palace.branch);
-  const palaceNameColor = getPalaceNameColor(palace.name, isThan);
+  const branchColor = getBranchElementColor(palace.branch);
 
   // 14 chính tinh
   const MAIN_STAR_IDS = new Set([
@@ -140,7 +140,7 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
 
           {/* Ở giữa: TÊN CUNG */}
           <div className="text-center px-1">
-            <span className={`font-classical font-black text-[13px] md:text-[14px] uppercase tracking-wide ${palaceNameColor}`}>
+            <span className="font-classical font-black text-[13px] md:text-[14px] uppercase tracking-wide" style={{ color: branchColor }}>
               {displayName}
             </span>
           </div>

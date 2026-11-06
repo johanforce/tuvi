@@ -10,28 +10,32 @@ interface StarLabelProps {
 }
 
 export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = false }) => {
-  const meta = STAR_META[star.id];
+  const meta = STAR_META[star.id] ?? STAR_META[star.id.replace(/^luu-/, '')];
   let element = meta?.element;
 
   // Xử lý ngũ hành cho các sao đặc thù nếu chưa có trong metadata
   if (!element) {
-    if (star.id.includes('hoa-loc') || star.name.includes('Hóa Lộc')) element = 'moc';
+    if (star.id === 'luu-van-tinh') element = 'hoa';
+    else if (star.id.includes('hoa-loc') || star.name.includes('Hóa Lộc')) element = 'moc';
     else if (star.id.includes('hoa-quyen') || star.name.includes('Hóa Quyền')) element = 'thuy';
-    else if (star.id.includes('hoa-khoa') || star.name.includes('Hóa Khoa')) element = 'moc';
+    else if (star.id.includes('hoa-khoa') || star.name.includes('Hóa Khoa')) element = 'kim';
     else if (star.id.includes('hoa-ky') || star.name.includes('Hóa Kỵ')) element = 'thuy';
     else if (star.id.includes('bach-ho') || star.name.includes('Bạch Hổ')) element = 'kim';
     else if (star.id.includes('tang-mon') || star.name.includes('Tang Môn')) element = 'moc';
+    else if (star.name.includes('Thiếu Âm')) element = 'thuy';
+    else if (star.name.includes('Tử Phù')) element = 'kim';
     else if (star.id.includes('thai-tue') || star.name.includes('Thái Tuế')) element = 'hoa';
     else if (star.id.includes('thieu-duong') || star.name.includes('Thiếu Dương')) element = 'hoa';
-    else if (star.id.includes('thieu-am') || star.name.includes('Thiếu Âm')) element = 'thuy';
+    else if (star.id.includes('thieu-am')) element = 'thuy';
     else if (star.id.includes('quan-phu') || star.name.includes('Quan Phù')) element = 'hoa';
-    else if (star.id.includes('tu-phu') || star.name.includes('Tử Phù')) element = 'kim';
+    else if (star.id.includes('tu-phu')) element = 'kim';
     else if (star.id.includes('tue-pha') || star.name.includes('Tuế Phá')) element = 'hoa';
-    else if (star.id.includes('long-duc') || star.name.includes('Long Đức')) element = 'thuy';
+    else if (star.name.includes('Long Đức')) element = 'thuy';
     else if (star.id.includes('phuc-duc') || star.name.includes('Phúc Đức')) element = 'tho';
     else if (star.id.includes('dieu-khach') || star.name.includes('Điếu Khách')) element = 'hoa';
     else if (star.id.includes('truc-phu') || star.name.includes('Trực Phù')) element = 'hoa';
-    else if (star.id.includes('luc-si') || star.name.includes('Lực Sĩ')) element = 'hoa';
+    else if (star.id.includes('luc-si') || star.name.includes('Lực Sĩ')) element = 'thuy';
+    else if (star.name.includes('Quan Phủ')) element = 'hoa';
     else if (star.id.includes('thanh-long') || star.name.includes('Thanh Long')) element = 'thuy';
     else if (star.id.includes('tieu-hao') || star.name.includes('Tiểu Hao')) element = 'hoa';
     else if (star.id.includes('tuong-quan') || star.name.includes('Tướng Quân')) element = 'moc';
@@ -49,13 +53,13 @@ export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = fal
       case 'kim':
         return 'text-[#6b7280]'; // Xám bạc
       case 'moc':
-        return 'text-[#16a34a]'; // Xanh lá
+        return 'text-[#279653]'; // Xanh lá
       case 'thuy':
-        return 'text-[#111827]'; // Đen / Xanh thẫm
+        return 'text-[#2787CE]'; // Xanh dương
       case 'hoa':
-        return 'text-[#dc2626]'; // Đỏ tươi
+        return 'text-[#D94A40]'; // Đỏ
       case 'tho':
-        return 'text-[#d97706]'; // Cam / Vàng đất
+        return 'text-[#A87943]'; // Vàng đất
       default:
         return 'text-[#374151]';
     }

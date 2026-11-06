@@ -7,7 +7,7 @@ const p=(id:string,name:string,branch:number,status:StarPlacement['status']='CAN
 export function placeMonthStars(month:number):StarPlacement[] {
   const m=month-1;
   return [p('ta-phu','Tả Phù',4+m,'CANDIDATE_IZTRO'),p('huu-bat','Hữu Bật',10-m,'CANDIDATE_IZTRO'),p('thien-hinh','Thiên Hình',9+m,'CANDIDATE_IZTRO'),p('thien-dieu','Thiên Diêu',1+m,'CANDIDATE_IZTRO'),p('thien-y','Thiên Y',1+m,'CONFLICT'),
-    {...p('thien-vu','Thiên Vu',THIEN_VU_BY_MONTH[month-1]!,'CANDIDATE_SPEC'),note:'Quy tắc Trung Châu theo tháng sinh; chưa có fixture Tuvi.vn xác nhận trực tiếp.'},
+    {...p('thien-vu','Thiên Vu',THIEN_VU_BY_MONTH[month-1]!,'CANDIDATE_SPEC'),note:'Quy tắc Trung Châu theo tháng sinh; chưa có fixture tuvidauso.ai.studio xác nhận trực tiếp.'},
     p('am-sat','Âm Sát',([2,0,10,8,6,4,2,0,10,8,6,4] as number[])[month-1]!,'CANDIDATE_IZTRO'),
     p('thien-nguyet','Thiên Nguyệt',([10,5,4,2,7,3,11,7,2,6,10,2] as number[])[month-1]!,'CANDIDATE_IZTRO')];
 }
@@ -34,7 +34,7 @@ export function placeYearBranchStars(yearBranch:number,menhBranch:number,thanBra
     p('thien-tai','Thiên Tài',menhBranch+z,'CANDIDATE_IZTRO'),p('thien-tho','Thiên Thọ',thanBranch+z,'CANDIDATE_IZTRO'),
     p('co-than','Cô Thần',coQua.c,'VERIFIED_TUVIVN'),p('qua-tu','Quả Tú',coQua.q,'VERIFIED_TUVIVN')];
 }
-// Cặp Thiên Khôi/Thiên Việt theo quy ước đang khớp ảnh Tuvi.vn.
+// Cặp Thiên Khôi/Thiên Việt theo quy ước đang khớp ảnh tuvidauso.ai.studio.
 // Thứ tự cặp: [Thiên Khôi, Thiên Việt]. Các Can chưa có ảnh (Đinh, Mậu, Nhâm)
 // được nội suy theo nhóm Can cùng cặp; vẫn để CANDIDATE_SPEC cho tới khi có fixture.
 export const KHOI_VIET_TUVIVN_TABLE:Array<[number,number]>=[
@@ -53,7 +53,7 @@ export const KHOI_VIET_TUVIVN_OBSERVED = new Set([0,1,2,5,6,7,9]);
 // Quốc Ấn = Lộc Tồn + 8 (Giáp Tuất, Ất Hợi, Bính Sửu, Đinh Dần, Mậu Sửu, Kỷ Dần, Canh Thìn, Tân Tỵ, Nhâm Mùi, Quý Thân).
 const QUOC_AN=[10,11,1,2,1,2,4,5,7,8];
 const QUOC_AN_VERIFIED_STEMS=new Set([0,1,2,5,6,7,9]);
-// Thiên Trù theo Can năm. Quý = Tuất (Tuvi.vn, TV-002 và LEAP-04), KHÔNG phải Hợi như iztro.
+// Thiên Trù theo Can năm. Quý = Tuất (tuvidauso.ai.studio, TV-002 và LEAP-04), KHÔNG phải Hợi như iztro.
 const THIEN_TRU=[5,6,0,5,6,8,2,6,9,10];
 const THIEN_TRU_VERIFIED_STEMS=new Set([0,1,2,5,6,7,9]);
 const unverifiedNote='Chưa có fixture cho Can năm này; dùng bảng nhóm.';
@@ -67,7 +67,7 @@ export function placeYearStemStars(yearStem:number):StarPlacement[] {
   const kv=(id:string,name:string,i:0|1):StarPlacement=>{
     const verified=KHOI_VIET_TUVIVN_OBSERVED.has(st);
     const star=p(id,name,KHOI_VIET_TUVIVN_TABLE[st]![i],verified?'VERIFIED_TUVIVN':'CANDIDATE_SPEC');
-    return verified?star:{...star,note:'Vị trí nội suy theo nhóm Can trong bảng Tuvi.vn; chưa có ảnh fixture cho Can này.'};
+    return verified?star:{...star,note:'Vị trí nội suy theo nhóm Can trong bảng tuvidauso.ai.studio; chưa có ảnh fixture cho Can này.'};
   };
   const withNote=(star:StarPlacement,set:Set<number>):StarPlacement=>set.has(st)?star:{...star,note:unverifiedNote};
   const loc=locTon[st]!;
@@ -110,6 +110,6 @@ export function placeHoaLinh(yearBranch:number,hourBranch:number):StarPlacement[
   const group=Math.floor(yearBranch/3);
   const hoaStart=[1,2,3,9][group]!;
   const linhStart=[3,10,10,10][group]!;
-  // Both directions follow the candidate formula in v1.3; unresolved against Tuvi.vn.
+  // Both directions follow the candidate formula in v1.3; unresolved against tuvidauso.ai.studio.
   return [p('hoa-tinh','Hỏa Tinh',hoaStart+hourBranch,'CONFLICT'),p('linh-tinh','Linh Tinh',linhStart+hourBranch,'CONFLICT')];
 }

@@ -74,7 +74,7 @@ export const UnverifiedNotesSection: React.FC = () => {
 
         <div className="flex items-center gap-2 text-[12px] bg-amber-50 text-amber-900 px-3 py-1.5 rounded-lg border border-amber-200">
           <BookOpen className="w-4 h-4 text-amber-700" />
-          <span>Chuẩn đối chiếu: <strong>Tuvi.vn</strong></span>
+          <span>Chuẩn đối chiếu: <strong>tuvidauso.ai.studio</strong></span>
         </div>
       </div>
 
