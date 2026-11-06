@@ -78,14 +78,13 @@ export default function App() {
   };
 
   return (
-    <div className="app-shell min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#f7f3e8]">
       <Header
         onNewChart={() => setView('form')}
-        onExportPdf={handleExportPdf}
         showNewButton={view === 'chart'}
       />
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-2 md:px-6 py-6">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-2 md:px-6 py-4">
         {view === 'form' && (
           <BirthForm
             initialValues={currentInput}
@@ -123,7 +122,7 @@ export default function App() {
             )}
 
             {/* Khung bàn cờ lá số 4x4 truyền thống */}
-            <div id="la-so" className="chart-shell w-full border rounded-2xl shadow-xl p-2 md:p-4 overflow-hidden">
+            <div className="w-full bg-[#fdfbf7] border border-[#d8c8b0] rounded-2xl shadow-sm p-2 md:p-4 overflow-hidden">
               <ChartGrid
                 chart={chart}
                 selectedBranch={selectedBranch}
@@ -144,7 +143,7 @@ export default function App() {
 
             {/* QUAN TRỌNG THEO YÊU CẦU CỦA USER:
                 "lưu ý các sao nào chưa được kiểm chứng thì note lại bên dưới lá số tử vi gíup tôi" */}
-            <div id="dien-giai"><UnverifiedNotesSection /></div>
+            <UnverifiedNotesSection />
           </div>
         )}
       </main>

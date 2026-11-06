@@ -162,11 +162,6 @@ export const ChartGrid: React.FC<ChartGridProps> = ({
         }}
         className="chart-board relative bg-[#ffffff] border-2 border-[#111111] w-[1040px] shadow-2xl font-sans"
       >
-        <div className="chart-ribbon">
-          <span>✦ NAM PHÁI THẤU TRIỆT</span>
-          <strong>LÁ SỐ TỬ VI ĐẨU SỐ • TOÀN THƯ</strong>
-          <span>{chart.viewedYearCanChi.label}</span>
-        </div>
         {/* Lưới 4x4 gồm 12 cung + ô trung tâm */}
         <div className="grid grid-cols-4 grid-rows-4 w-full h-[980px] border-collapse relative">
           {Array.from({ length: 12 }, (_, i) => i).map(branch => {
@@ -236,7 +231,7 @@ export const ChartGrid: React.FC<ChartGridProps> = ({
         </div>
 
         {/* THANH CHÚ GIẢI DƯỚI ĐÁY LÁ SỐ (Y HỆT ẢNH FIXTURE) */}
-        <div className="chart-legend border-t px-4 py-2 flex items-center justify-between text-[11px] md:text-[11.5px] font-medium select-none">
+        <div className="border-t border-[#333333] bg-[#fbf9f4] px-4 py-1.5 flex items-center justify-between text-[11px] md:text-[11.5px] text-stone-800 font-medium select-none">
           {/* Bên trái: M:Miếu, V:Vượng, Đ:Đắc, B:Bình hòa, H:Hãm */}
           <div className="flex items-center gap-3">
             <span><strong className="text-[#dc2626]">M:</strong>Miếu</span>
