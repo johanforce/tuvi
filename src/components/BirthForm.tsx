@@ -119,66 +119,73 @@ export const BirthForm: React.FC<BirthFormProps> = ({
     setErrors({});
   };
 
+  const sampleBtn = 'btn btn-outline !px-3 !py-1.5 !text-[12px]';
+
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Cột trái: Giới thiệu & Triết lý */}
-        <div className="lg:col-span-5 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100/80 text-amber-900 border border-amber-300 rounded-full text-[12px] font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+    <div className="mx-auto max-w-5xl px-4 py-10">
+      <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
+        {/* Cột trái: Giới thiệu */}
+        <div className="space-y-5 lg:col-span-5">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-100/80 px-3 py-1 text-[12px] font-semibold text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+            <Sparkles className="h-3.5 w-3.5 text-amber-700 dark:text-amber-400" />
             <span>Thuật Toán Chuẩn Hóa Theo tuvidauso.ai.studio</span>
           </div>
 
-          <h1 className="font-classical text-3xl md:text-4xl font-black text-[#8c2d19] tracking-tight leading-tight">
-            LẬP LÁ SỐ TỬ VI
-          </h1>
+          <div className="flex items-start gap-4">
+            <div>
+              <h1 className="font-serif text-3xl font-bold leading-tight tracking-tight text-oriental-crimson dark:text-amber-400 md:text-4xl">
+                Lập Lá Số
+                <br />
+                Tử Vi Đẩu Số
+              </h1>
+              <hr className="gold-rule mt-3 w-40" />
+            </div>
+            <div className="imperial-seal mt-1 shrink-0" aria-hidden="true">命</div>
+          </div>
 
-          <p className="text-stone-600 text-[14px] leading-relaxed">
+          <p className="text-[14px] leading-relaxed text-stone-600 dark:text-slate-300">
             Nhập ngày giờ sinh dương lịch để lập lá số theo địa bàn 4x4 truyền thống. Toàn bộ 14 chính tinh, phụ tinh, vòng Tràng Sinh, Bác Sĩ, Thái Tuế và các lớp sao Lưu Niên v0.2.4 được hiển thị trực quan.
           </p>
 
-          <div className="bg-[#faf6ed] p-4 rounded-xl border border-[#d8c8b0] text-[13px] text-stone-700 space-y-2">
-            <h4 className="font-bold text-[#8c2d19] flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-              Điểm đặc trưng phiên bản này:
+          <div className="paper-inset space-y-2 p-4 text-[13px]">
+            <h4 className="flex items-center gap-1.5 font-serif font-bold text-oriental-crimson dark:text-amber-400">
+              <CheckCircle2 className="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
+              Điểm đặc trưng phiên bản này
             </h4>
-            <ul className="space-y-1.5 text-stone-600 text-[12.5px]">
-              <li>• Địa bàn chuẩn 4x4 truyền thống kèm Thiên Bàn 2x2.</li>
-              <li>• Minh bạch: Ghi chú đầy đủ các sao chưa kiểm chứng.</li>
-              <li>• Xuất file PDF khổ A4 ngang lưu trữ sắc nét.</li>
-              <li>• Múi giờ chuẩn Việt Nam UTC+7 (không hỏi nơi sinh).</li>
+            <ul className="space-y-1.5 text-[12.5px] text-stone-600 dark:text-slate-300">
+              <li className="flex gap-2"><span className="text-amber-600">◆</span>Địa bàn chuẩn 4x4 truyền thống kèm Thiên Bàn 2x2.</li>
+              <li className="flex gap-2"><span className="text-amber-600">◆</span>Minh bạch: Ghi chú đầy đủ các sao chưa kiểm chứng.</li>
+              <li className="flex gap-2"><span className="text-amber-600">◆</span>Xuất file PDF khổ A4 ngang lưu trữ sắc nét.</li>
+              <li className="flex gap-2"><span className="text-amber-600">◆</span>Múi giờ chuẩn Việt Nam UTC+7 (không hỏi nơi sinh).</li>
             </ul>
           </div>
 
-          {/* Nút thử nghiệm nhanh */}
-          <div className="pt-2">
-            <span className="text-[12px] text-stone-500 font-semibold block mb-2">Thử nghiệm nhanh với lá số mẫu:</span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => handleLoadSample('tv001')}
-                className="px-3 py-1.5 text-[12px] font-medium bg-white hover:bg-stone-50 border border-[#d8c8b0] rounded-lg text-stone-700 transition-colors cursor-pointer"
-              >
+          {/* Lá số mẫu */}
+          <div className="pt-1">
+            <span className="mb-2 block text-[12px] font-semibold text-amber-900 dark:text-amber-400">Thử nghiệm nhanh với lá số mẫu:</span>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={() => handleLoadSample('tv001')} className={sampleBtn}>
                 Mẫu TV-001 (1970)
               </button>
-              <button
-                type="button"
-                onClick={() => handleLoadSample('1999')}
-                className="px-3 py-1.5 text-[12px] font-medium bg-white hover:bg-stone-50 border border-[#d8c8b0] rounded-lg text-stone-700 transition-colors cursor-pointer"
-              >
+              <button type="button" onClick={() => handleLoadSample('1999')} className={sampleBtn}>
                 Mẫu 1999 (Kỷ Mão)
               </button>
             </div>
           </div>
         </div>
 
-        {/* Cột phải: Form nhập thông tin */}
-        <div className="lg:col-span-7 bg-[#fffdfa] border-2 border-[#b8a082] rounded-2xl p-6 shadow-lg">
+        {/* Cột phải: Form */}
+        <div className="paper-card-double p-6 sm:p-7 lg:col-span-7">
+          <div className="mb-5 flex items-center gap-2 border-b border-amber-900/15 pb-3 dark:border-slate-700">
+            <Calendar className="h-5 w-5 text-amber-700 dark:text-amber-400" />
+            <h2 className="font-serif text-lg font-bold text-oriental-crimson dark:text-amber-400">Thông tin đương số</h2>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             {/* Họ tên */}
             <div>
-              <label htmlFor="name" className="block text-[13.5px] font-bold text-stone-800 mb-1">
-                Họ và tên <span className="font-normal text-stone-600 text-[12px]">(không bắt buộc)</span>
+              <label htmlFor="name" className="field-label">
+                Họ và tên <span className="text-[12px] font-normal text-stone-500 dark:text-slate-400">(không bắt buộc)</span>
               </label>
               <div className="relative">
                 <input
@@ -187,46 +194,44 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                   value={name}
                   onChange={e => setName(e.target.value)}
                   placeholder="Ví dụ: Nguyễn Văn Tuệ"
-                  className="w-full pl-9 pr-3 py-2 text-[14px] bg-[#faf8f2] border border-[#d8c8b0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8c2d19] focus:bg-white text-stone-900"
+                  className="field"
                 />
-                <User className="w-4 h-4 text-stone-600 absolute left-3 top-3 pointer-events-none" />
+                <User className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-amber-700/70" />
               </div>
             </div>
 
             {/* Giới tính */}
             <div>
-              <label className="block text-[13.5px] font-bold text-stone-800 mb-1">
+              <span className="field-label">
                 Giới tính <span className="text-red-600">*</span>
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setGender('nam')}
-                  className={`py-2.5 px-4 rounded-lg font-bold text-[14px] border transition-all cursor-pointer ${
-                    gender === 'nam'
-                      ? 'bg-[#8c2d19] text-amber-50 border-[#8c2d19] shadow-xs'
-                      : 'bg-stone-50 text-stone-700 border-[#d8c8b0] hover:bg-stone-100'
-                  }`}
-                >
-                  Nam (Dương Nam / Âm Nam)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setGender('nu')}
-                  className={`py-2.5 px-4 rounded-lg font-bold text-[14px] border transition-all cursor-pointer ${
-                    gender === 'nu'
-                      ? 'bg-[#8c2d19] text-amber-50 border-[#8c2d19] shadow-xs'
-                      : 'bg-stone-50 text-stone-700 border-[#d8c8b0] hover:bg-stone-100'
-                  }`}
-                >
-                  Nữ (Dương Nữ / Âm Nữ)
-                </button>
+              </span>
+              <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Giới tính">
+                {([
+                  { v: 'nam', label: 'Nam', sub: 'Dương Nam / Âm Nam' },
+                  { v: 'nu', label: 'Nữ', sub: 'Dương Nữ / Âm Nữ' },
+                ] as const).map(opt => (
+                  <button
+                    key={opt.v}
+                    type="button"
+                    role="radio"
+                    aria-checked={gender === opt.v}
+                    onClick={() => setGender(opt.v)}
+                    className={`cursor-pointer rounded-xl border px-4 py-2.5 text-left transition-all ${
+                      gender === opt.v
+                        ? 'border-oriental-gold bg-gradient-to-br from-amber-700 to-oriental-gold text-white shadow-md shadow-amber-900/20'
+                        : 'border-[#e0d2b4] bg-white/60 text-stone-700 hover:bg-amber-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    <span className="block text-[14px] font-bold">{opt.label}</span>
+                    <span className={`block text-[11.5px] ${gender === opt.v ? 'text-amber-50/90' : 'text-stone-500 dark:text-slate-400'}`}>{opt.sub}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
             {/* Ngày sinh dương lịch */}
             <div>
-              <label htmlFor="solarDate" className="block text-[13.5px] font-bold text-stone-800 mb-1">
+              <label htmlFor="solarDate" className="field-label">
                 Ngày sinh dương lịch <span className="text-red-600">*</span>
               </label>
               <div className="relative">
@@ -236,31 +241,30 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                   min="1900-01-01"
                   max="2100-12-31"
                   value={solarDate}
+                  aria-invalid={!!errors.date}
                   onChange={e => {
                     setSolarDate(e.target.value);
                     if (errors.date) setErrors(prev => ({ ...prev, date: undefined }));
                   }}
-                  className={`w-full pl-9 pr-3 py-2 text-[14px] bg-[#faf8f2] border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8c2d19] focus:bg-white text-stone-900 ${
-                    errors.date ? 'border-red-500' : 'border-[#d8c8b0]'
-                  }`}
+                  className="field"
                 />
-                <Calendar className="w-4 h-4 text-stone-600 absolute left-3 top-3 pointer-events-none" />
+                <Calendar className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-amber-700/70" />
               </div>
               {errors.date && (
-                <p className="text-red-600 text-[12px] mt-1 font-medium">{errors.date}</p>
+                <p className="mt-1 text-[12px] font-medium text-red-600">{errors.date}</p>
               )}
-              <p className="text-[12px] text-stone-600 mt-1">
+              <p className="mt-1 text-[12px] text-stone-500 dark:text-slate-400">
                 Hệ thống tự động quy đổi chính xác sang Âm lịch và Can Chi tương ứng.
               </p>
             </div>
 
-            {/* Giờ sinh & Checkbox không rõ giờ */}
+            {/* Giờ sinh */}
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label htmlFor="time" className="block text-[13.5px] font-bold text-stone-800">
+              <div className="mb-1 flex items-center justify-between">
+                <label htmlFor="time" className="field-label !mb-0">
                   Giờ sinh (24 giờ, HH:mm) {!unknownTime && <span className="text-red-600">*</span>}
                 </label>
-                <label className="flex items-center gap-1.5 text-[12px] text-stone-600 cursor-pointer">
+                <label className="flex cursor-pointer items-center gap-1.5 text-[12px] text-stone-600 dark:text-slate-300">
                   <input
                     type="checkbox"
                     checked={unknownTime}
@@ -268,7 +272,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                       setUnknownTime(e.target.checked);
                       if (errors.time) setErrors(prev => ({ ...prev, time: undefined }));
                     }}
-                    className="rounded text-amber-700 focus:ring-amber-500"
+                    className="rounded border-amber-300 text-amber-600 focus:ring-amber-500"
                   />
                   <span>Không rõ giờ sinh</span>
                 </label>
@@ -280,29 +284,27 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                   type="time"
                   disabled={unknownTime}
                   value={time}
+                  aria-invalid={!!errors.time}
                   onChange={e => {
                     setTime(e.target.value);
                     if (errors.time) setErrors(prev => ({ ...prev, time: undefined }));
                   }}
-                  className={`w-full pl-9 pr-3 py-2 text-[14px] bg-[#faf8f2] border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8c2d19] focus:bg-white text-stone-900 disabled:opacity-50 disabled:bg-stone-200 ${
-                    errors.time ? 'border-red-500' : 'border-[#d8c8b0]'
-                  }`}
+                  className="field"
                 />
-                <Clock className="w-4 h-4 text-stone-600 absolute left-3 top-3 pointer-events-none" />
+                <Clock className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-amber-700/70" />
               </div>
 
               {errors.time && (
-                <p className="text-red-600 text-[12px] mt-1 font-medium">{errors.time}</p>
+                <p className="mt-1 text-[12px] font-medium text-red-600">{errors.time}</p>
               )}
 
-              {/* Trợ giúp giờ Can Chi */}
               {!unknownTime && hourHelper && (
-                <p className="text-[12px] font-semibold text-amber-800 mt-1">
+                <p className="mt-1.5 inline-block rounded-md bg-amber-100/80 px-2 py-0.5 text-[12px] font-semibold text-amber-900 dark:bg-amber-500/15 dark:text-amber-300">
                   Thuộc: {hourHelper}
                 </p>
               )}
               {unknownTime && (
-                <p className="text-[12px] text-amber-800 mt-1 italic">
+                <p className="mt-1 text-[12px] italic text-amber-800 dark:text-amber-300">
                   Lưu ý: Không rõ giờ sinh sẽ không an Mệnh/Thân, 14 chính tinh và các sao phụ thuộc giờ.
                 </p>
               )}
@@ -310,14 +312,14 @@ export const BirthForm: React.FC<BirthFormProps> = ({
 
             {/* Năm xem vận hạn */}
             <div>
-              <label htmlFor="viewedYear" className="block text-[13.5px] font-bold text-stone-800 mb-1">
-                Năm xem vận hạn & sao lưu niên
+              <label htmlFor="viewedYear" className="field-label">
+                Năm xem vận hạn &amp; sao lưu niên
               </label>
               <select
                 id="viewedYear"
                 value={viewedYear}
                 onChange={e => setViewedYear(parseInt(e.target.value, 10))}
-                className="w-full px-3 py-2 text-[14px] bg-[#faf8f2] border border-[#d8c8b0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8c2d19] focus:bg-white text-stone-900"
+                className="field no-icon"
               >
                 {Array.from({ length: 201 }, (_, i) => 1900 + i).map(y => (
                   <option key={y} value={y}>
@@ -325,24 +327,20 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                   </option>
                 ))}
               </select>
-              <p className="text-[12px] text-stone-600 mt-1">
+              <p className="mt-1 text-[12px] text-stone-500 dark:text-slate-400">
                 Lớp sao lưu niên và tiểu hạn sẽ được kích hoạt theo năm xem đã chọn.
               </p>
             </div>
 
-            {/* Nút hành động */}
-            <div className="pt-2 flex flex-col sm:flex-row gap-3">
+            {/* Hành động */}
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row">
               <button
                 type="submit"
-                className="flex-1 py-3 px-6 bg-[#8c2d19] hover:bg-[#722313] text-amber-50 font-classical font-black text-[15px] uppercase tracking-wider rounded-xl shadow-md transition-all cursor-pointer"
+                className="btn btn-primary flex-1 !rounded-xl !py-3 !text-[15px] font-serif font-bold uppercase tracking-wider"
               >
-                LẬP LÁ SỐ TỬ VI
+                Lập Lá Số Tử Vi
               </button>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="py-3 px-5 bg-white hover:bg-stone-50 text-stone-700 border border-[#d8c8b0] font-semibold text-[14px] rounded-xl transition-colors cursor-pointer"
-              >
+              <button type="button" onClick={handleReset} className="btn btn-outline !rounded-xl !px-5 !py-3 !text-[14px]">
                 Xóa thông tin
               </button>
             </div>

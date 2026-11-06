@@ -23,33 +23,35 @@ export const UnverifiedNotesSection: React.FC = () => {
     setExpandedId(prev => (prev === id ? null : id));
   };
 
+  const BADGE_BASE = 'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold';
+
   const getCategoryBadge = (cat: UnverifiedStarInfo['category']) => {
     switch (cat) {
       case 'conflict':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-800 bg-rose-50 border border-rose-300 px-2 py-0.5 rounded-full">
-            <AlertTriangle className="w-3 h-3 text-rose-600" />
+          <span className={`${BADGE_BASE} border-rose-300 bg-rose-50 text-rose-800 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-300`}>
+            <AlertTriangle className="h-3 w-3 text-rose-600" />
             Mâu thuẫn trường phái
           </span>
         );
       case 'annual_candidate':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple-800 bg-purple-50 border border-purple-300 px-2 py-0.5 rounded-full">
-            <HelpCircle className="w-3 h-3 text-purple-600" />
+          <span className={`${BADGE_BASE} border-purple-300 bg-purple-50 text-purple-800 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-300`}>
+            <HelpCircle className="h-3 w-3 text-purple-600" />
             Ứng viên sao lưu v0.2.4
           </span>
         );
       case 'brightness_unverified':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-700 bg-stone-100 border border-stone-300 px-2 py-0.5 rounded-full">
-            <HelpCircle className="w-3 h-3 text-stone-500" />
+          <span className={`${BADGE_BASE} border-stone-300 bg-stone-100 text-stone-700 dark:border-slate-600 dark:bg-slate-700/50 dark:text-slate-300`}>
+            <HelpCircle className="h-3 w-3 text-stone-500" />
             Độ sáng chưa kiểm chứng
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-300 px-2 py-0.5 rounded-full">
-            <ShieldAlert className="w-3 h-3 text-amber-600" />
+          <span className={`${BADGE_BASE} border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300`}>
+            <ShieldAlert className="h-3 w-3 text-amber-600" />
             Công thức ứng viên
           </span>
         );
@@ -57,79 +59,79 @@ export const UnverifiedNotesSection: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-[#fdfbf7] border-2 border-[#b8a082] rounded-2xl p-5 md:p-6 shadow-md mt-6 print-hide">
-      {/* Header phần ghi chú */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#e2d5c2] pb-4 mb-4">
+    <div className="paper-card-double print-hide mt-6 w-full p-5 md:p-6">
+      {/* Header */}
+      <div className="mb-4 flex flex-col justify-between gap-3 border-b border-amber-900/15 pb-4 dark:border-slate-700 md:flex-row md:items-center">
         <div>
-          <div className="flex items-center gap-2">
-            <ShieldAlert className="w-6 h-6 text-amber-700" />
-            <h3 className="font-classical font-black text-[18px] uppercase tracking-wider text-[#8c2d19]">
-              BẢNG GHI CHÚ CÁC SAO CHƯA ĐƯỢC KIỂM CHỨNG TRÊN LÁ SỐ
+          <div className="flex items-center gap-2.5">
+            <ShieldAlert className="h-6 w-6 text-amber-700 dark:text-amber-400" />
+            <h3 className="font-serif text-[17px] font-bold uppercase tracking-wider text-oriental-crimson dark:text-amber-400">
+              Bảng ghi chú các sao chưa được kiểm chứng
             </h3>
           </div>
-          <p className="text-[13px] text-stone-600 mt-1">
+          <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-slate-300">
             Minh bạch học thuật theo yêu cầu dự án: Toàn bộ sao mang tính ứng viên, mâu thuẫn trường phái hoặc chưa đối chiếu đa fixture được lưu ý chi tiết dưới đây.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-[12px] bg-amber-50 text-amber-900 px-3 py-1.5 rounded-lg border border-amber-200">
-          <BookOpen className="w-4 h-4 text-amber-700" />
+        <div className="paper-inset flex shrink-0 items-center gap-2 px-3 py-1.5 text-[12px] text-amber-900 dark:text-amber-300">
+          <BookOpen className="h-4 w-4 text-amber-700 dark:text-amber-400" />
           <span>Chuẩn đối chiếu: <strong>tuvidauso.ai.studio</strong></span>
         </div>
       </div>
 
       {/* Bộ lọc danh mục */}
-      <div className="flex flex-wrap gap-1.5 mb-5">
+      <div className="mb-5 flex flex-wrap gap-1.5">
         {categories.map(cat => (
           <button
             key={cat.key}
+            type="button"
             onClick={() => setSelectedCategory(cat.key)}
-            className={`px-3 py-1.5 text-[12px] font-medium rounded-lg border transition-colors cursor-pointer ${
-              selectedCategory === cat.key
-                ? 'bg-[#8c2d19] text-amber-50 border-[#8c2d19] shadow-xs'
-                : 'bg-white text-stone-700 border-[#d8c8b0] hover:bg-stone-50'
-            }`}
+            className="chip"
+            data-active={selectedCategory === cat.key}
           >
             {cat.label}
           </button>
         ))}
       </div>
 
-      {/* Danh sách các sao và chi tiết */}
+      {/* Danh sách */}
       <div className="space-y-2.5">
         {filteredStars.map(item => {
           const isExpanded = expandedId === item.id;
           return (
             <div
               key={item.id}
-              className="border border-[#e2d5c2] rounded-xl bg-white overflow-hidden shadow-2xs transition-shadow hover:shadow-xs"
+              className="overflow-hidden rounded-xl border border-amber-900/15 bg-white/70 shadow-xs transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800/60"
             >
               <button
+                type="button"
                 onClick={() => toggleExpand(item.id)}
-                className="w-full flex items-center justify-between p-3.5 text-left bg-stone-50/50 hover:bg-stone-50 transition-colors cursor-pointer"
+                aria-expanded={isExpanded}
+                className="flex w-full cursor-pointer items-center justify-between bg-amber-50/40 p-3.5 text-left transition-colors hover:bg-amber-50 dark:bg-transparent dark:hover:bg-slate-700/50"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                  <span className="font-bold text-[14px] text-stone-900">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                  <span className="font-serif text-[14.5px] font-bold text-stone-900 dark:text-slate-100">
                     {item.name}
                   </span>
                   {getCategoryBadge(item.category)}
-                  <span className="text-[12px] text-stone-500 line-clamp-1">
+                  <span className="line-clamp-1 text-[12px] text-stone-500 dark:text-slate-400">
                     {item.reason}
                   </span>
                 </div>
-                <div className="text-stone-400 ml-2">
-                  {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                <div className="ml-2 text-amber-700 dark:text-amber-400">
+                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </div>
               </button>
 
               {isExpanded && (
-                <div className="p-4 border-t border-[#e2d5c2] bg-[#fffdfa] text-[13px] leading-relaxed text-stone-700 space-y-2">
+                <div className="space-y-2 border-t border-amber-900/15 bg-[#fffdf8] p-4 text-[13px] leading-relaxed text-stone-700 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
                   <div>
-                    <strong className="text-stone-900">Thực trạng công thức: </strong>
+                    <strong className="text-oriental-crimson dark:text-amber-400">Thực trạng công thức: </strong>
                     {item.details}
                   </div>
-                  <div className="flex items-center gap-2 pt-1 text-[12px] text-stone-500 border-t border-stone-100">
-                    <span className="font-semibold text-stone-600">Nguồn trích dẫn / Căn cứ:</span>
+                  <div className="flex flex-wrap items-center gap-2 border-t border-dashed border-amber-900/20 pt-2 text-[12px] text-stone-500 dark:border-slate-700 dark:text-slate-400">
+                    <span className="font-semibold text-amber-900 dark:text-amber-300">Nguồn trích dẫn / Căn cứ:</span>
                     <span className="italic">{item.sourceNote}</span>
                   </div>
                 </div>
@@ -139,15 +141,15 @@ export const UnverifiedNotesSection: React.FC = () => {
         })}
       </div>
 
-      {/* Chú thích ngũ hành & ký hiệu */}
-      <div className="mt-5 pt-4 border-t border-[#e2d5c2] flex flex-wrap items-center justify-between gap-3 text-[12px] text-stone-600">
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="font-bold text-stone-800">Quy ước màu ngũ hành sao:</span>
-          <span className="inline-flex items-center gap-1 font-semibold text-slate-700"><span className="w-2.5 h-2.5 rounded-full bg-slate-500"></span> Kim</span>
-          <span className="inline-flex items-center gap-1 font-semibold text-emerald-800"><span className="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> Mộc</span>
-          <span className="inline-flex items-center gap-1 font-semibold text-blue-900"><span className="w-2.5 h-2.5 rounded-full bg-blue-700"></span> Thủy</span>
-          <span className="inline-flex items-center gap-1 font-semibold text-red-700"><span className="w-2.5 h-2.5 rounded-full bg-red-600"></span> Hỏa</span>
-          <span className="inline-flex items-center gap-1 font-semibold text-amber-800"><span className="w-2.5 h-2.5 rounded-full bg-amber-600"></span> Thổ</span>
+      {/* Chú thích */}
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-amber-900/15 pt-4 text-[12px] text-stone-600 dark:border-slate-700 dark:text-slate-300">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="font-serif font-bold text-stone-800 dark:text-slate-100">Quy ước màu ngũ hành sao:</span>
+          <span className="inline-flex items-center gap-1 font-semibold text-element-kim"><span className="h-2.5 w-2.5 rounded-full bg-element-kim" /> Kim</span>
+          <span className="inline-flex items-center gap-1 font-semibold text-element-moc"><span className="h-2.5 w-2.5 rounded-full bg-element-moc" /> Mộc</span>
+          <span className="inline-flex items-center gap-1 font-semibold text-element-thuy"><span className="h-2.5 w-2.5 rounded-full bg-element-thuy" /> Thủy</span>
+          <span className="inline-flex items-center gap-1 font-semibold text-element-hoa"><span className="h-2.5 w-2.5 rounded-full bg-element-hoa" /> Hỏa</span>
+          <span className="inline-flex items-center gap-1 font-semibold text-element-tho"><span className="h-2.5 w-2.5 rounded-full bg-element-tho" /> Thổ</span>
         </div>
         <div className="flex items-center gap-3">
           <span><strong>(?)</strong>: Độ sáng chưa kiểm chứng</span>

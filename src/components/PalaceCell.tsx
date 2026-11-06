@@ -95,86 +95,95 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
     }
   }
 
-  // Highlight style khi chọn hoặc xung chiếu, tam hợp
+  const isMenh = palace.name === 'Mệnh';
+
+  // Highlight khi chọn / xung chiếu / tam hợp (ring-inset để không bị overflow cắt mất)
   const getRelationBg = () => {
     switch (relation) {
       case 'selected':
-        return 'bg-[#fff9eb] ring-2 ring-[#d97706] shadow-sm z-10';
+        return 'bg-amber-100/80 ring-2 ring-inset ring-oriental-gold z-10';
       case 'opposite':
-        return 'bg-[#f0f7ff] ring-1 ring-[#3b82f6]';
+        return 'bg-sky-50/80 ring-1 ring-inset ring-sky-400/70';
       case 'trine':
-        return 'bg-[#f0fdf4] ring-1 ring-[#22c55e]';
+        return 'bg-emerald-50/80 ring-1 ring-inset ring-emerald-400/70';
       default:
-        return 'bg-white hover:bg-[#faf9f5]';
+        return isMenh
+          ? 'bg-red-50/60 ring-1 ring-inset ring-oriental-crimson/30 hover:bg-red-50'
+          : 'bg-transparent hover:bg-amber-50/70';
     }
   };
-
-  const displayName = isThan 
-    ? (palace.name === 'Mệnh' ? 'MỆNH<THÂN>' : `${palace.name.toUpperCase()}<THÂN>`)
-    : palace.name.toUpperCase();
 
   return (
     <div
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       style={{
         gridRow: `${gridRow} / span 1`,
         gridColumn: `${gridCol} / span 1`,
       }}
-      className={`palace-cell relative flex flex-col justify-between p-1.5 md:p-2 border border-[#333333] cursor-pointer transition-colors select-none overflow-hidden ${getRelationBg()}`}
+      className={`palace-cell relative flex cursor-pointer select-none flex-col justify-between overflow-hidden border-b border-r border-amber-900/25 p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-oriental-gold md:p-2 ${getRelationBg()}`}
       role="button"
       tabIndex={0}
       aria-label={`Cung ${palace.name} tại ${canChiAbbr}`}
     >
-      {/* 1. DÒNG HEADER: Can Chi góc trái, Tên cung ở giữa, Đại hạn & Tháng góc phải */}
       <div>
-        <div className="flex items-start justify-between border-b border-[#dddddd] pb-1 mb-1">
-          {/* Góc trái: Can Chi viết tắt & Âm dương ngũ hành của cung */}
+        {/* 1. HEADER: Can Chi (trái) • Tên cung (giữa) • Đại hạn & tháng (phải) */}
+        <div className="mb-1.5 flex items-start justify-between border-b border-amber-900/15 pb-1">
           <div className="text-left leading-tight">
-            <span className="font-bold text-[12px] text-stone-900 block font-serif">
+            <span className="block font-serif text-[12px] font-bold text-amber-900">
               {canChiAbbr}
             </span>
-            <span className="text-[10px] text-stone-600 block">
+            <span className="block text-[10px] font-medium" style={{ color: branchColor }}>
               {branchElem}
             </span>
           </div>
 
-          {/* Ở giữa: TÊN CUNG */}
-          <div className="text-center px-1">
-            <span className="font-classical font-black text-[13px] md:text-[14px] uppercase tracking-wide" style={{ color: branchColor }}>
-              {displayName}
+          <div className="flex flex-col items-center px-1">
+            <span
+              className={`font-classical text-[13px] font-extrabold uppercase tracking-wide md:text-[14px] ${
+                isMenh ? 'rounded bg-red-100/80 px-1.5 text-oriental-crimson' : ''
+              }`}
+              style={isMenh ? undefined : { color: branchColor }}
+            >
+              {palace.name.toUpperCase()}
             </span>
+            {isThan && (
+              <span className="mt-0.5 rounded bg-amber-600 px-1.5 text-[9px] font-bold leading-4 tracking-wider text-white">
+                THÂN
+              </span>
+            )}
           </div>
 
-          {/* Góc phải: Số tuổi Đại Hạn & Tháng âm lịch Th.X */}
           <div className="text-right leading-tight">
-            <span className="font-bold text-[12px] text-stone-900 block font-serif">
+            <span className="block font-serif text-[12px] font-bold text-stone-800">
               {daiHanAge !== undefined ? daiHanAge : '—'}
             </span>
-            <span className="text-[10px] text-stone-600 block">
-              Th.{monthIndex}
-            </span>
+            <span className="block text-[10px] text-stone-500">Th.{monthIndex}</span>
           </div>
         </div>
 
-        {/* 2. CHÍNH TINH (Căn giữa, nổi bật hàng đầu) */}
+        {/* 2. CHÍNH TINH — căn giữa, nổi bật */}
         {filters.main && mainStars.length > 0 && (
-          <div className="flex flex-col items-center justify-center gap-0.5 mb-1.5 pt-0.5 border-b border-[#f0f0f0] pb-1">
+          <div className="mb-1.5 flex flex-col items-center justify-center gap-0.5 border-b border-amber-900/10 pb-1.5 pt-0.5">
             {mainStars.map(star => (
               <StarLabel key={star.id} star={star} branch={palace.branch} isMain={true} />
             ))}
           </div>
         )}
 
-        {/* 3. HAI CỘT PHỤ TINH: Cát tinh bên trái, Hung sát tinh bên phải */}
-        <div className="grid grid-cols-2 gap-x-1.5 gap-y-0.5 min-h-[90px] text-[11px]">
-          {/* Cột trái: Cát tinh */}
+        {/* 3. HAI CỘT PHỤ TINH: Cát tinh (trái) • Hung sát tinh (phải) */}
+        <div className="grid min-h-[90px] grid-cols-2 gap-x-1.5 gap-y-0.5 text-[11px]">
           <div className="flex flex-col gap-0.5 text-left">
             {leftColumnStars.map((s, idx) => (
               <StarLabel key={`${s.id}-${idx}`} star={s} branch={palace.branch} />
             ))}
           </div>
 
-          {/* Cột phải: Hung / Sát / Hóa Kỵ */}
           <div className="flex flex-col gap-0.5 text-left">
             {rightColumnStars.map((s, idx) => (
               <StarLabel key={`${s.id}-${idx}`} star={s} branch={palace.branch} />
@@ -183,17 +192,11 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
         </div>
       </div>
 
-      {/* 4. DÒNG FOOTER CHÂN CUNG: ĐV.[Cung] trái, Vòng Tràng Sinh giữa, LN.[Cung] phải */}
-      <div className="pt-1 border-t border-[#dddddd] flex items-center justify-between text-[10px] text-stone-700 font-medium">
-        <span className="uppercase text-stone-800">
-          {daiVanName || ''}
-        </span>
-        <span className="font-bold text-stone-900">
-          {trangSinhStar?.name || '—'}
-        </span>
-        <span className="uppercase text-stone-800">
-          {luuNienName || ''}
-        </span>
+      {/* 4. FOOTER: ĐV.[Cung] • Tràng Sinh • LN.[Cung] */}
+      <div className="mt-2 flex items-center justify-between border-t border-dashed border-amber-900/25 pt-1 text-[10px] font-medium text-stone-500">
+        <span className="uppercase">{daiVanName || ''}</span>
+        <span className="font-bold text-amber-800">{trangSinhStar?.name || '—'}</span>
+        <span className="uppercase">{luuNienName || ''}</span>
       </div>
     </div>
   );

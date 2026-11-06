@@ -1,15 +1,17 @@
 @import "tailwindcss";
+@import "./tuvi-theme.css";
 
 @layer base {
   :root {
-    --parchment: #fcf8ee;
-    --parchment-border: #d4c2a5;
-    --cell-bg: #fffcf5;
-    --cell-border: #d8c8b0;
-    --ink: #1f1b18;
-    --ink-muted: #6b6055;
-    --imperial-red: #982218;
-    --imperial-gold: #b3740e;
+    color-scheme: light;
+    --parchment: #f7f2fa;
+    --parchment-border: #e7e0ec;
+    --cell-bg: #ffffff;
+    --cell-border: #cac4d0;
+    --ink: #1c1b1f;
+    --ink-muted: #625d67;
+    --imperial-red: #4f378b;
+    --imperial-gold: #6750a4;
     --royal-blue: #1e3a8a;
     --jade-green: #15803d;
     --earth-brown: #78350f;
@@ -17,14 +19,17 @@
   }
 
   body {
-    background-color: #f7f3e8;
-    background-image: 
-      radial-gradient(#e5dcce 1px, transparent 1px),
-      radial-gradient(#efe7dc 1px, #f7f3e8 1px);
-    background-size: 40px 40px;
-    background-position: 0 0, 20px 20px;
+    background-color: #f7f2fa;
+    background-image: none;
     color: var(--ink);
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 3px solid #6750a4;
+    outline-offset: 2px;
   }
 }
 

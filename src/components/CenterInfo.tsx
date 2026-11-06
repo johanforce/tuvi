@@ -84,170 +84,141 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
   const pTrine2 = BRANCH_ANCHOR_COORDS[trine2Br] || { x: 75, y: 0 };
 
   return (
-    <div 
+    <div
       style={{
         gridRow: '2 / span 2',
         gridColumn: '2 / span 2',
       }}
-      className="center-cell relative bg-[#fcf9f2] border border-[#333333] p-3 flex flex-col justify-between overflow-hidden select-none"
+      className="center-cell relative flex select-none flex-col justify-between overflow-hidden border-b border-r border-amber-900/25 bg-gradient-to-b from-[#fbf8f0] via-[#f7f1e1] to-[#f4ebe0] p-3 shadow-inner"
     >
-      {/* 1. ĐƯỜNG NỐI HÌNH HỌC CHUẨN XÁC TỪ CUNG THÂN
-          - Đường ĐỎ: Nối Cung Thân với Cung Đối Diện (Xung Chiếu)
-          - Đường TÍM: Nối Cung Thân với 2 Cung Tam Hợp tạo thành tam giác Tam Hợp */}
-      <svg 
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-50 z-0" 
-        viewBox="0 0 100 100" 
+      {/* Hoa văn vòng tròn đồng tâm (trang trí) */}
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-30"
+        viewBox="0 0 400 400"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+      >
+        <circle cx="200" cy="200" r="130" fill="none" stroke="#c59d5f" strokeWidth="1" />
+        <circle cx="200" cy="200" r="170" fill="none" stroke="#c59d5f" strokeWidth="0.75" strokeDasharray="2 4" />
+      </svg>
+
+      {/* ĐƯỜNG NỐI TỪ CUNG THÂN
+          - ĐỎ: Cung Thân ↔ cung đối diện (xung chiếu)
+          - TÍM: tam giác Tam Hợp của Cung Thân */}
+      <svg
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-60"
+        viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
-        {/* Đường TÍM: Tam giác Tam Hợp của Cung Thân */}
-        <polygon 
-          points={`${pThan.x},${pThan.y} ${pTrine1.x},${pTrine1.y} ${pTrine2.x},${pTrine2.y}`} 
-          fill="rgba(124, 58, 237, 0.03)" 
-          stroke="#7c3aed" 
-          strokeWidth="1.1" 
+        <polygon
+          points={`${pThan.x},${pThan.y} ${pTrine1.x},${pTrine1.y} ${pTrine2.x},${pTrine2.y}`}
+          fill="rgba(124, 58, 237, 0.04)"
+          stroke="#7c3aed"
+          strokeWidth="1"
+          strokeDasharray="3 2"
         />
-
-        {/* Đường ĐỎ: Nối Cung Thân với Cung Đối Diện */}
-        <line 
-          x1={pThan.x} 
-          y1={pThan.y} 
-          x2={pOpp.x} 
-          y2={pOpp.y} 
-          stroke="#dc2626" 
-          strokeWidth="1.1" 
-        />
-
-        {/* Các chấm tròn anchor tại các điểm nối */}
+        <line x1={pThan.x} y1={pThan.y} x2={pOpp.x} y2={pOpp.y} stroke="#dc2626" strokeWidth="1" />
         <circle cx={pThan.x} cy={pThan.y} r="1.5" fill="#dc2626" />
         <circle cx={pOpp.x} cy={pOpp.y} r="1.5" fill="#dc2626" />
         <circle cx={pTrine1.x} cy={pTrine1.y} r="1.4" fill="#7c3aed" />
         <circle cx={pTrine2.x} cy={pTrine2.y} r="1.4" fill="#7c3aed" />
       </svg>
 
-      {/* 2. CÁC NHÃN ĐỊA CHI PHÂN BỔ 4 CẠNH & 4 GÓC CHUẨN XÁC */}
-      {/* 4 Góc: Tỵ (trên-trái), Thân (trên-phải), Hợi (dưới-phải), Dần (dưới-trái) */}
-      <span className="absolute top-1 left-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Mùi</span>
-      <span className="absolute top-1 right-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Tuất</span>
-      <span className="absolute bottom-1 right-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Sửu</span>
-      <span className="absolute bottom-1 left-1.5 text-[10px] text-stone-600 font-serif z-10 pointer-events-none">Thìn</span>
+      {/* NHÃN ĐỊA CHI QUANH VIỀN */}
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 left-1.5 top-1">Mùi</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 right-1.5 top-1">Tuất</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 bottom-1 right-1.5">Sửu</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 bottom-1 left-1.5">Thìn</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 top-0.5 -translate-x-1/2" style={{ left: '25%' }}>Thân</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 top-0.5 -translate-x-1/2" style={{ left: '75%' }}>Dậu</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 right-1 -translate-y-1/2" style={{ top: '25%' }}>Hợi</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 right-1 -translate-y-1/2" style={{ top: '75%' }}>Tý</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 bottom-0.5 -translate-x-1/2" style={{ left: '25%' }}>Mão</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 bottom-0.5 -translate-x-1/2" style={{ left: '75%' }}>Dần</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 left-1 -translate-y-1/2" style={{ top: '25%' }}>Ngọ</span>
+      <span className="pointer-events-none absolute z-10 font-serif text-[10px] text-amber-900/60 left-1 -translate-y-1/2" style={{ top: '75%' }}>Tỵ</span>
 
-      {/* Cạnh trên: Ngọ (25%), Mùi (75%) */}
-      <span className="absolute top-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '25%' }}>Thân</span>
-      <span className="absolute top-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '75%' }}>Dậu</span>
-
-      {/* Cạnh phải: Dậu (25%), Tuất (75%) */}
-      <span className="absolute right-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '25%' }}>Hợi</span>
-      <span className="absolute right-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '75%' }}>Tý</span>
-
-      {/* Cạnh dưới: Sửu (25%), Tý (75%) */}
-      <span className="absolute bottom-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '25%' }}>Mão</span>
-      <span className="absolute bottom-0.5 -translate-x-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ left: '75%' }}>Dần</span>
-
-      {/* Cạnh trái: Thìn (25%), Mão (75%) */}
-      <span className="absolute left-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '25%' }}>Ngọ</span>
-      <span className="absolute left-1 -translate-y-1/2 text-[10px] text-stone-600 font-serif z-10 pointer-events-none" style={{ top: '75%' }}>Tỵ</span>
-
-      {/* 3. NỘI DUNG CHÍNH CỦA THIÊN BÀN */}
-      <div className="relative z-10 flex flex-col h-full justify-between px-3 py-1">
-        {/* Header trên cùng */}
-        <div className="text-center pt-1">
-          <h3 className="font-bold text-[12px] md:text-[13px] tracking-wider text-black uppercase font-sans">
-            TRANG TỬ VI CỔ HỌC HÀNG ĐẦU VIỆT NAM
-          </h3>
-          <a 
-            href="https://tuvidauso.ai.studio" 
-            target="_blank" 
+      {/* NỘI DUNG THIÊN BÀN */}
+      <div className="relative z-10 flex h-full flex-col justify-between px-3 py-1">
+        <div className="pt-1 text-center">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-900/80">
+            Trang Tử Vi Cổ Học Hàng Đầu Việt Nam
+          </p>
+          <a
+            href="https://tuvidauso.ai.studio"
+            target="_blank"
             rel="noreferrer"
-            className="text-[12px] text-[#0066cc] font-medium block hover:underline"
+            className="block font-mono text-[12px] text-blue-600 hover:underline"
           >
             https://tuvidauso.ai.studio
           </a>
-          <h2 className="font-serif font-black text-[22px] md:text-[24px] text-black tracking-wide mt-0.5 italic">
+          <h2 className="mt-1 font-serif text-[26px] font-bold tracking-wide text-oriental-crimson">
             Lá Số Tử Vi
           </h2>
+          <hr className="gold-rule mx-auto mt-1 w-2/3" />
         </div>
 
-        {/* Bảng dữ liệu hai cột chính xác theo ảnh fixture */}
-        <div className="text-[11.5px] md:text-[12px] leading-[1.45] text-stone-900 my-auto pl-2 pr-6 space-y-0.5">
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Họ tên:</span>
-            <span className="col-span-9 font-medium">{input.name || 'Lá số tuvidauso.ai.studio'}</span>
+        <div className="my-auto space-y-1 pl-2 pr-6 text-[12px] font-medium leading-[1.45] text-stone-800">
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Họ tên:</span>
+            <span className="col-span-9"><span className="font-serif text-sm font-bold text-oriental-crimson">{input.name || 'Lá số tuvidauso.ai.studio'}</span></span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Năm:</span>
-            <span className="col-span-4">{solarYearNum}</span>
-            <span className="col-span-5 font-medium">{yearCanChi.label}</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Năm:</span>
+            <span className="col-span-9">{solarYearNum} <span className="font-bold text-amber-900">{yearCanChi.label}</span></span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Tháng:</span>
-            <span className="col-span-4">{solarMonthNum} ({lunar.month}{lunar.isLeapMonth ? ' nhuận' : ''})</span>
-            <span className="col-span-5 font-medium">{monthCanChi.label}</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Tháng:</span>
+            <span className="col-span-9">{solarMonthNum} <span className="text-stone-500">(ÂL {lunar.month}{lunar.isLeapMonth ? ' nhuận' : ''})</span> <span className="font-semibold">{monthCanChi.label}</span></span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Ngày:</span>
-            <span className="col-span-4">{solarDayNum} ({lunar.day})</span>
-            <span className="col-span-5 font-medium">{dayCanChi.label}</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Ngày:</span>
+            <span className="col-span-9">{solarDayNum} <span className="text-stone-500">(ÂL {lunar.day})</span> <span className="font-semibold">{dayCanChi.label}</span></span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Giờ:</span>
-            <span className="col-span-4">{hourText}</span>
-            <span className="col-span-5 font-medium">{hourCanChi?.label || 'Chưa xác định'}</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Giờ:</span>
+            <span className="col-span-9">{hourText} <span className="font-semibold">{hourCanChi?.label || 'Chưa xác định'}</span></span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Năm xem:</span>
-            <span className="col-span-9 font-medium">{viewedYearCanChi.label} ({viewedYear}), {ageNominal} tuổi</span>
+          <div className="grid grid-cols-12 items-baseline border-t border-amber-900/10 pt-1">
+            <span className="col-span-3 font-semibold text-amber-900">Năm xem:</span>
+            <span className="col-span-9 font-semibold text-amber-900">{viewedYearCanChi.label} ({viewedYear}), {ageNominal} tuổi</span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Âm dương:</span>
-            <span className="col-span-9 font-medium">{genderLabel}</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Âm dương:</span>
+            <span className="col-span-9"><span className="font-bold text-blue-700">{genderLabel}</span></span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Bản mệnh:</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Bản mệnh:</span>
             <div className="col-span-9">
-              <span className="font-medium">{napAmLabel.split('(')[0]?.trim()} - {bureauName}</span>
+              <span className="font-bold text-element-thuy">{napAmLabel.split('(')[0]?.trim()}</span>
+              <span className="text-stone-400"> — </span>
+              <span className="font-bold text-element-kim">{bureauName}</span>
               {menhCucRelation && (
-                <div className="text-[11px] text-stone-700">({menhCucRelation})</div>
+                <span className="block text-[11px] font-semibold text-emerald-700">({menhCucRelation})</span>
               )}
             </div>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Cân lượng:</span>
-            <span className="col-span-9 font-medium">3 lượng 4 chỉ</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Cân lượng:</span>
+            <span className="col-span-9">3 lượng 4 chỉ</span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Chủ mệnh:</span>
-            <span className="col-span-9 font-medium">{chart.menhChu || 'Lộc Tồn'}</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Chủ mệnh:</span>
+            <span className="col-span-9">{chart.menhChu || 'Lộc Tồn'}</span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Chủ thân:</span>
-            <span className="col-span-9 font-medium">{chart.thanChu || 'Văn Xương'}</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Chủ thân:</span>
+            <span className="col-span-9">{chart.thanChu || 'Văn Xương'}</span>
           </div>
-
-          <div className="grid grid-cols-12">
-            <span className="col-span-3 font-bold text-black">Lai nhân cung:</span>
-            <span className="col-span-9 font-medium">{laiNhanPalace?.name || 'Tử Tức'}</span>
+          <div className="grid grid-cols-12 items-baseline">
+            <span className="col-span-3 font-semibold text-amber-900">Lai nhân cung:</span>
+            <span className="col-span-9"><span className="font-bold text-oriental-crimson">{laiNhanPalace?.name || 'Tử Tức'}</span></span>
           </div>
         </div>
 
-        {/* 4. CON DẤU TRIỆN ĐỎ TRUYỀN THỐNG (Square Imperial Seal Stamp) */}
+        {/* CON DẤU TRIỆN ĐỎ */}
         <div className="absolute bottom-2 right-2 z-20">
-          <div className="w-9 h-9 border-2 border-[#b91c1c] rounded-xs flex items-center justify-center p-0.5 bg-[#fcf9f2] shadow-2xs rotate-[-1deg]">
-            <div className="w-full h-full border border-[#b91c1c] flex items-center justify-center">
-              <span className="font-hanzi text-[#b91c1c] text-[18px] leading-none font-bold select-none">
-                印
-              </span>
-            </div>
-          </div>
+          <div className="imperial-seal" aria-hidden="true">印</div>
         </div>
       </div>
     </div>

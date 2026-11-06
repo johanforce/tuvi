@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass } from 'lucide-react';
+import { Compass, Plus } from 'lucide-react';
 
 interface HeaderProps {
   onNewChart?: () => void;
@@ -8,30 +8,32 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onNewChart, showNewButton = false }) => {
   return (
-    <header className="w-full bg-[#fcf8ee] border-b border-[#d8c8b0] py-3.5 px-4 shadow-2xs no-print">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#8c2d19] flex items-center justify-center text-amber-100 shadow-xs border border-[#722313]">
-            <Compass className="w-6 h-6 animate-spin-slow" />
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md no-print">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        {/* Thương hiệu */}
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-amber-700 to-oriental-gold text-white shadow-md shadow-amber-900/20">
+            <Compass className="h-6 w-6 animate-spin-slow" />
           </div>
           <div>
-            <h1 className="font-classical font-black text-xl md:text-2xl tracking-wide text-[#8c2d19] uppercase">
-              TỬ VI ĐẨU SỐ
+            <h1 className="text-lg font-bold tracking-tight text-slate-900 md:text-xl">
+              Tử Vi Đẩu Số
             </h1>
-            <p className="text-[12px] text-stone-500 font-medium">
-              Sơ Đồ Địa Bàn 4x4 • Phân Tầng Sao Lưu • Múi Giờ Việt Nam (UTC+7)
+            <p className="text-[11px] font-medium uppercase tracking-widest text-slate-500">
+              Địa Bàn 4×4 • Phân Tầng Sao Lưu • UTC+7
             </p>
           </div>
         </div>
 
-        {showNewButton && onNewChart && (
-          <button
-            onClick={onNewChart}
-            className="px-3.5 py-1.5 text-[13px] font-semibold text-[#8c2d19] bg-amber-50 hover:bg-amber-100 border border-[#8c2d19]/30 rounded-lg transition-colors cursor-pointer"
-          >
-            Lập lá số mới
-          </button>
-        )}
+        {/* Hành động */}
+        <div className="flex items-center gap-2.5">
+          {showNewButton && onNewChart && (
+            <button type="button" onClick={onNewChart} className="btn btn-primary">
+              <Plus className="h-4 w-4" />
+              Lập lá số mới
+            </button>
+          )}
+        </div>
       </div>
     </header>
   );

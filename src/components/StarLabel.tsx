@@ -47,25 +47,36 @@ export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = fal
     else if (star.id.includes('phuc-binh') || star.name.includes('Phục Binh')) element = 'hoa';
   }
 
-  // Lấy màu chữ chuẩn xác theo ngũ hành
-  const getTextColor = () => {
-    switch (element) {
-      case 'kim':
-        return 'text-[#6b7280]'; // Xám bạc
-      case 'moc':
-        return 'text-[#279653]'; // Xanh lá
-      case 'thuy':
-        return 'text-[#2787CE]'; // Xanh dương
-      case 'hoa':
-        return 'text-[#D94A40]'; // Đỏ
-      case 'tho':
-        return 'text-[#A87943]'; // Vàng đất
-      default:
-        return 'text-[#374151]';
-    }
+  // Màu chữ theo ngũ hành (lấy từ token trong tuvi-theme.css)
+  const ELEMENT_TEXT: Record<string, string> = {
+    kim: 'text-element-kim',
+    moc: 'text-element-moc',
+    thuy: 'text-element-thuy',
+    hoa: 'text-element-hoa',
+    tho: 'text-element-tho',
+  };
+  const textColor = (element && ELEMENT_TEXT[element]) || 'text-stone-600';
+
+  // Nhãn độ sáng: M Miếu, V Vượng, Đ Đắc, B Bình, H Hãm
+  const BRIGHTNESS_PILL: Record<string, string> = {
+    M: 'bg-rose-100 text-rose-700',
+    V: 'bg-blue-100 text-blue-700',
+    'Đ': 'bg-emerald-100 text-emerald-700',
+    B: 'bg-amber-100 text-amber-700',
+    H: 'bg-slate-200 text-slate-600',
+  };
+  const BRIGHTNESS_TEXT: Record<string, string> = {
+    M: 'text-rose-600',
+    V: 'text-blue-600',
+    'Đ': 'text-emerald-600',
+    B: 'text-amber-600',
+    H: 'text-slate-500',
   };
 
   const brightness = getStarBrightness(star.id, branch);
+  const brightnessKey = brightness ? String(brightness).charAt(0).toUpperCase() : '';
+  const pillClass = BRIGHTNESS_PILL[brightnessKey] || 'bg-stone-100 text-stone-600';
+  const brightnessTextClass = BRIGHTNESS_TEXT[brightnessKey] || 'text-stone-500';
   const sign = isMain ? getStarSign(star.id) : '';
 
   // Định dạng tên sao: nếu là sao lưu thì có tiền tố L.
@@ -74,34 +85,35 @@ export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = fal
   if (isAnnual && !displayName.startsWith('L.')) {
     displayName = displayName.replace(/^Lưu\s+/, 'L.');
   }
+  const isTransform = star.id.includes('hoa-') || star.name.includes('Hóa');
 
-  // 14 Chính tinh: hiển thị đậm, in hoa, kèm dấu + / - và độ sáng (M), (V), (Đ), (B), (H)
+  // 14 Chính tinh: đậm, cỡ lớn, kèm dấu + / - và nhãn độ sáng dạng huy hiệu
   if (isMain) {
     return (
-      <div 
-        className={`font-bold text-[12px] md:text-[13px] leading-tight select-none ${getTextColor()}`}
+      <div
+        className={`inline-flex items-center gap-1 text-[13px] font-bold leading-tight select-none md:text-sm ${textColor}`}
         title={`Chính tinh: ${star.name} (${element?.toUpperCase() || ''})`}
       >
-        <span>{sign}</span>
-        <span className="uppercase tracking-tight">{star.name}</span>
+        {sign && <span className="text-[11px] opacity-70">{sign}</span>}
+        <span className="tracking-tight">{star.name}</span>
         {brightness && (
-          <span className="text-[11px] font-semibold ml-0.5">
-            ({brightness})
+          <span className={`rounded px-1 text-[10px] font-semibold leading-[1.1rem] ${pillClass}`}>
+            {brightness}
           </span>
         )}
       </div>
     );
   }
 
-  // Phụ tinh: chữ thanh, gọn gàng, định dạng chính xác như fixture
+  // Phụ tinh: gọn, thanh; Tứ Hóa đậm hơn để dễ nhận
   return (
-    <div 
-      className={`text-[11px] md:text-[11.5px] leading-[1.3] font-medium whitespace-nowrap select-none ${getTextColor()}`}
+    <div
+      className={`whitespace-nowrap text-[11px] leading-[1.35] select-none md:text-[11.5px] ${isTransform ? 'font-bold' : 'font-medium'} ${textColor}`}
       title={`${star.name} (${element?.toUpperCase() || ''})`}
     >
       <span>{displayName}</span>
       {brightness && (
-        <span className="text-[10px] ml-0.5">
+        <span className={`ml-0.5 text-[10px] font-semibold ${brightnessTextClass}`}>
           ({brightness})
         </span>
       )}

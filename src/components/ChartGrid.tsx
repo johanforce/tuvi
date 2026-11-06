@@ -126,7 +126,7 @@ export const ChartGrid: React.FC<ChartGridProps> = ({
         position: 'absolute',
         left: `${edgeCol * 25}%`,
         top: `${(c1.row - 0.5) * 25}%`,
-        transform: 'translate(-50%, -50%)',
+        transform: 'translate(-50%, -50%) rotate(90deg)',
         zIndex: 50,
       };
     }
@@ -150,20 +150,41 @@ export const ChartGrid: React.FC<ChartGridProps> = ({
   const tuanPos = getBadgePosition(tuanBranches);
   const trietPos = getBadgePosition(trietBranches);
 
+  // Cặp cung nằm cạnh nhau theo chiều ngang có đường neo dọc, nên xoay
+  // nhãn để chiều dài của nhãn chạy song song với đường ranh giới đó.
+  const isVerticalAnchor = (branches: [number, number]): boolean => {
+    const first = GRID_COORDINATES[branches[0]];
+    const second = GRID_COORDINATES[branches[1]];
+    return Boolean(first && second && first.row === second.row && Math.abs(first.col - second.col) === 1);
+  };
+  const tuanVerticalAnchor = isVerticalAnchor(tuanBranches);
+  const trietVerticalAnchor = isVerticalAnchor(trietBranches);
+
+  // Huy hiệu Tuần / Triệt nằm trên đường ranh giới giữa hai cung
+  const VOID_BADGE =
+    'rounded border border-amber-400/50 bg-oriental-ink px-3 py-0.5 text-[11px] font-bold tracking-wider text-amber-200 shadow-md';
+
   return (
-    <div className="w-full overflow-x-auto p-1 md:p-3 flex flex-col items-center">
+    <div className="flex w-full flex-col items-center overflow-x-auto p-1 md:p-3">
       {/* VÙNG LÁ SỐ TỬ VI CHÍNH (FRAME 4X4) */}
-      <div 
+      <div
         id="tuvi-chart-container"
         style={{
           transform: `scale(${zoom})`,
           transformOrigin: 'top center',
           transition: 'transform 0.15s ease-out',
         }}
-        className="chart-board relative bg-[#ffffff] border-2 border-[#111111] w-[1040px] shadow-2xl font-sans"
+        className="chart-board relative w-[1040px] overflow-hidden rounded-2xl border-2 border-amber-900/40 bg-[#fcfaf4] font-sans shadow-celestial"
       >
+        {/* Dải tiêu đề hoàng gia */}
+        <div className="flex items-center justify-between border-b border-amber-600/30 bg-gradient-to-r from-amber-900 via-oriental-gold to-amber-900 px-4 py-1.5 font-serif text-xs font-semibold uppercase tracking-widest text-amber-100">
+          <span>Địa Bàn 4×4 • Thiên Bàn 2×2</span>
+          <span className="text-sm font-bold tracking-wider">Lá Số Tử Vi Đẩu Số • Toàn Thư</span>
+          <span>Năm xem: {chart.viewedYearCanChi.label}</span>
+        </div>
+
         {/* Lưới 4x4 gồm 12 cung + ô trung tâm */}
-        <div className="grid grid-cols-4 grid-rows-4 w-full h-[980px] border-collapse relative">
+        <div className="relative grid h-[980px] w-full grid-cols-4 grid-rows-4 border-l border-t border-amber-900/25">
           {Array.from({ length: 12 }, (_, i) => i).map(branch => {
             const palace = palaceByBranch.get(branch);
             if (!palace) return null;
@@ -206,69 +227,61 @@ export const ChartGrid: React.FC<ChartGridProps> = ({
           {/* Ô THIÊN BÀN TRUNG TÂM (CHIẾM VÙNG 2X2) */}
           <CenterInfo chart={chart} />
 
-          {/* HUY HIỆU ĐEN NẰM TRÊN ĐƯỜNG RANH GIỚI: TUẦN */}
+          {/* HUY HIỆU TUẦN / TRIỆT TRÊN ĐƯỜNG RANH GIỚI */}
           {sameVoidPair ? (
             tuanPos && (
-              <div style={tuanPos} className="flex gap-1 pointer-events-none select-none">
-                <span className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">Tuần</span>
-                <span className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">Triệt</span>
+              <div style={tuanPos} className={`pointer-events-none flex select-none gap-1 ${tuanVerticalAnchor ? 'flex-col' : ''}`}>
+                <span className={VOID_BADGE}>Tuần</span>
+                <span className={VOID_BADGE}>Triệt</span>
               </div>
             )
           ) : (
             <>
               {tuanPos && (
                 <div style={tuanPos} className="pointer-events-none select-none">
-                  <span className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">Tuần</span>
+                  <span className={VOID_BADGE}>Tuần</span>
                 </div>
               )}
               {trietPos && (
                 <div style={trietPos} className="pointer-events-none select-none">
-                  <span className="bg-black text-white text-[11px] font-bold px-3 py-0.5 rounded-sm shadow-md tracking-wider">Triệt</span>
+                  <span className={VOID_BADGE}>Triệt</span>
                 </div>
               )}
             </>
           )}
         </div>
 
-        {/* THANH CHÚ GIẢI DƯỚI ĐÁY LÁ SỐ (Y HỆT ẢNH FIXTURE) */}
-        <div className="border-t border-[#333333] bg-[#fbf9f4] px-4 py-1.5 flex items-center justify-between text-[11px] md:text-[11.5px] text-stone-800 font-medium select-none">
-          {/* Bên trái: M:Miếu, V:Vượng, Đ:Đắc, B:Bình hòa, H:Hãm */}
+        {/* THANH CHÚ GIẢI DƯỚI ĐÁY LÁ SỐ */}
+        <div className="flex select-none items-center justify-between border-t border-amber-900/25 bg-[#f7f1e1] px-4 py-2 text-[11.5px] font-medium text-stone-700">
+          {/* Độ sáng sao */}
           <div className="flex items-center gap-3">
-            <span><strong className="text-[#dc2626]">M:</strong>Miếu</span>
-            <span><strong className="text-[#dc2626]">V:</strong>Vượng</span>
-            <span><strong className="text-[#dc2626]">Đ:</strong>Đắc</span>
-            <span><strong className="text-[#dc2626]">B:</strong>Bình hòa</span>
-            <span><strong className="text-[#dc2626]">H:</strong>Hãm</span>
+            <span><strong className="text-rose-600">M</strong> Miếu</span>
+            <span><strong className="text-blue-600">V</strong> Vượng</span>
+            <span><strong className="text-emerald-600">Đ</strong> Đắc</span>
+            <span><strong className="text-amber-600">B</strong> Bình hòa</span>
+            <span><strong className="text-slate-500">H</strong> Hãm</span>
           </div>
 
-          {/* Ở giữa: 5 ô màu ngũ hành Kim, Mộc, Thủy, Hỏa, Thổ */}
+          {/* Ngũ hành */}
           <div className="flex items-center gap-3.5">
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-[#6b7280] inline-block border border-stone-400"></span>
-              Kim
+            <span className="flex items-center gap-1.5 font-semibold text-element-kim">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-element-kim" /> Kim
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-[#16a34a] inline-block border border-stone-400"></span>
-              Mộc
+            <span className="flex items-center gap-1.5 font-semibold text-element-moc">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-element-moc" /> Mộc
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-[#111827] inline-block border border-stone-400"></span>
-              Thủy
+            <span className="flex items-center gap-1.5 font-semibold text-element-thuy">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-element-thuy" /> Thủy
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-[#dc2626] inline-block border border-stone-400"></span>
-              Hỏa
+            <span className="flex items-center gap-1.5 font-semibold text-element-hoa">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-element-hoa" /> Hỏa
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-[#d97706] inline-block border border-stone-400"></span>
-              Thổ
+            <span className="flex items-center gap-1.5 font-semibold text-element-tho">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-element-tho" /> Thổ
             </span>
           </div>
 
-          {/* Bên phải: Mã lá số */}
-          <div className="text-stone-600 font-serif">
-            Lá số #13405
-          </div>
+          <div className="font-serif font-semibold text-amber-900">Lá số #13405</div>
         </div>
       </div>
     </div>
