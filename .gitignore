@@ -1,0 +1,29 @@
+# IDE
+.idea/
+.vscode/
+
+# AI Studio temporary files
+.aistudio/**/.tempmediaStorage/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+coverage/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+EOF
