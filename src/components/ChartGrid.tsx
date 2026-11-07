@@ -150,7 +150,7 @@ export const ChartGrid: React.FC<ChartGridProps> = ({
   addVoidBadge(trietBranches, 'Triệt');
 
   return (
-    <div className="flex w-full flex-col items-center overflow-x-auto p-1 md:p-3">
+    <div className="flex w-full flex-col items-start overflow-x-auto overscroll-x-contain touch-pan-x p-1 md:items-center md:p-3">
       {/* VÙNG LÁ SỐ TỬ VI CHÍNH (FRAME 4X4) */}
       <div
         id="tuvi-chart-container"
