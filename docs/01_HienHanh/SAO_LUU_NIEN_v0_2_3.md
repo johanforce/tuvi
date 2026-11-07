@@ -1,5 +1,7 @@
 # Sao lưu niên — triển khai ứng viên v0.2.3
 
+> **Ghi chú trạng thái:** Đây là bản ghi lịch sử trước khi người dùng xác nhận các công thức an sao đang triển khai. Không dùng nhãn “ứng viên” bên dưới làm trạng thái hiện hành; xem `SAO_LUU_NIEN_v0_2_4.md` để biết trạng thái mới.
+
 **Ngày:** 05/11/2026  
 **Phạm vi:** Lớp sao lưu theo Can Chi của năm xem, chưa bao gồm Đại Hạn, Tiểu Hạn hoặc Lưu Nguyệt.
 

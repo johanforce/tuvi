@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { UNVERIFIED_STARS_LIST, UnverifiedStarInfo } from '../data/unverifiedStars.js';
-import { AlertTriangle, HelpCircle, ShieldAlert, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, HelpCircle, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
 
 export const UnverifiedNotesSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [expandedId, setExpandedId] = useState<string | null>('hoa-linh');
+  const [expandedId, setExpandedId] = useState<string | null>('formulas');
 
   const categories = [
-    { key: 'all', label: 'Tất cả ghi chú (9 nhóm)' },
-    { key: 'conflict', label: 'Mâu thuẫn trường phái (3)' },
-    { key: 'candidate_spec', label: 'Công thức ứng viên (3)' },
-    { key: 'candidate_iztro', label: 'Tham khảo Iztro (1)' },
-    { key: 'annual_candidate', label: 'Sao lưu niên (1)' },
+    { key: 'all', label: 'Tất cả trạng thái (2)' },
+    { key: 'formula_verified', label: 'Công thức an sao (1)' },
     { key: 'brightness_unverified', label: 'Độ sáng sao (1)' },
   ];
 
@@ -27,18 +24,11 @@ export const UnverifiedNotesSection: React.FC = () => {
 
   const getCategoryBadge = (cat: UnverifiedStarInfo['category']) => {
     switch (cat) {
-      case 'conflict':
+      case 'formula_verified':
         return (
-          <span className={`${BADGE_BASE} border-rose-300 bg-rose-50 text-rose-800 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-300`}>
-            <AlertTriangle className="h-3 w-3 text-rose-600" />
-            Mâu thuẫn trường phái
-          </span>
-        );
-      case 'annual_candidate':
-        return (
-          <span className={`${BADGE_BASE} border-purple-300 bg-purple-50 text-purple-800 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-purple-300`}>
-            <HelpCircle className="h-3 w-3 text-purple-600" />
-            Ứng viên sao lưu v0.2.4
+          <span className={`${BADGE_BASE} border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-300`}>
+            <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+            Đã xác nhận
           </span>
         );
       case 'brightness_unverified':
@@ -49,12 +39,7 @@ export const UnverifiedNotesSection: React.FC = () => {
           </span>
         );
       default:
-        return (
-          <span className={`${BADGE_BASE} border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300`}>
-            <ShieldAlert className="h-3 w-3 text-amber-600" />
-            Công thức ứng viên
-          </span>
-        );
+        return null;
     }
   };
 
@@ -64,13 +49,13 @@ export const UnverifiedNotesSection: React.FC = () => {
       <div className="mb-4 flex flex-col justify-between gap-3 border-b border-amber-900/15 pb-4 dark:border-slate-700 md:flex-row md:items-center">
         <div>
           <div className="flex items-center gap-2.5">
-            <ShieldAlert className="h-6 w-6 text-amber-700 dark:text-amber-400" />
+            <CheckCircle2 className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
             <h3 className="font-serif text-[17px] font-bold uppercase tracking-wider text-oriental-crimson dark:text-amber-400">
-              Bảng ghi chú các sao chưa được kiểm chứng
+              Trạng thái công thức và dữ liệu sao
             </h3>
           </div>
           <p className="mt-1 text-[13px] leading-relaxed text-stone-600 dark:text-slate-300">
-            Minh bạch học thuật theo yêu cầu dự án: Toàn bộ sao mang tính ứng viên, mâu thuẫn trường phái hoặc chưa đối chiếu đa fixture được lưu ý chi tiết dưới đây.
+            Các công thức an sao đã được xác nhận. Bảng độ sáng sao được theo dõi riêng vì không thuộc nhóm công thức an sao.
           </p>
         </div>
 
@@ -127,7 +112,7 @@ export const UnverifiedNotesSection: React.FC = () => {
               {isExpanded && (
                 <div className="space-y-2 border-t border-amber-900/15 bg-[#fffdf8] p-4 text-[13px] leading-relaxed text-stone-700 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
                   <div>
-                    <strong className="text-oriental-crimson dark:text-amber-400">Thực trạng công thức: </strong>
+                    <strong className="text-oriental-crimson dark:text-amber-400">Trạng thái: </strong>
                     {item.details}
                   </div>
                   <div className="flex flex-wrap items-center gap-2 border-t border-dashed border-amber-900/20 pt-2 text-[12px] text-stone-500 dark:border-slate-700 dark:text-slate-400">
@@ -154,7 +139,7 @@ export const UnverifiedNotesSection: React.FC = () => {
         <div className="flex items-center gap-3">
           <span><strong>(?)</strong>: Độ sáng chưa kiểm chứng</span>
           <span><strong>L.</strong>: Sao lưu niên</span>
-          <span><strong>•</strong>: Sao mang tính ứng viên</span>
+          <span><strong>✓</strong>: Công thức an sao đã được xác nhận</span>
         </div>
       </div>
     </div>

@@ -54,7 +54,7 @@ export function buildChart(input:BirthInput):ChartCore {
   const annualData=placeAnnualStars(viewedYear,ycc.stem);
   const tieuHanBranch=getTieuHanBranch(ycc.branch,age,input.gender);
   const warnings:string[]=[];
-  warnings.push(`Sao lưu đang hiển thị theo năm ${viewedYear} (${annualData.yearCanChi.label}); các công thức/bảng an đang ở trạng thái ứng viên, chưa xác minh đầy đủ với tuvidauso.ai.studio.`);
+  warnings.push(`Sao lưu đang hiển thị theo năm ${viewedYear} (${annualData.yearCanChi.label}).`);
   if(annualData.pending.length) warnings.push(`Chưa an được ${annualData.pending.length} sao lưu do thiếu quy tắc đủ căn cứ: ${annualData.pending.map(s=>s.name).join(', ')}.`);
   if(lunar.isLeapMonth) warnings.push(`Sinh tháng nhuận ${lunar.month}; theo các fixture tuvidauso.ai.studio LEAP-03/04 và LEAP-08/09, engine giữ nguyên tháng âm nhuận cho Can Chi tháng, Mệnh/Thân và an sao trong toàn bộ tháng nhuận.`);
   if(unknown) warnings.push('Không rõ giờ sinh: chưa an Mệnh/Thân, chính tinh và các sao phụ thuộc giờ. Không tự gán giờ mặc định.');
@@ -67,7 +67,7 @@ export function buildChart(input:BirthInput):ChartCore {
     const menhStem=palaceStems[menh]!;
     const b=getBureau(menhStem,menh); bureau={number:b.number,name:b.name};
     tv=getTuViBranch(lunar.day,b.number); tp=getThienPhuBranch(tv);
-    addToPalaces(place14MainStars(tv,tp).map(s=>({...s,scope:'natal' as const,status:'CANDIDATE_SPEC' as const})),palaceStars);
+    addToPalaces(place14MainStars(tv,tp).map(s=>({...s,scope:'natal' as const,status:'USER_VERIFIED' as const})),palaceStars);
     const monthStars=placeMonthStars(pMonth); addToPalaces(monthStars,palaceStars);
     const hourStars=placeHourStars(timeBranch); addToPalaces(hourStars,palaceStars);
     const ta=monthStars.find(s=>s.id==='ta-phu')!.branch,huu=monthStars.find(s=>s.id==='huu-bat')!.branch;

@@ -73,7 +73,10 @@ export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = fal
     H: 'text-slate-500',
   };
 
-  const brightness = getStarBrightness(star.id, branch);
+  // Sao lưu dùng cùng bảng độ sáng với sao gốc. Bảng hiện có chỉ bao phủ sao
+  // chính tinh và một số phụ tinh; không suy rộng sang sao khác.
+  const baseStarId = star.id.replace(/^luu-/, '');
+  const brightness = getStarBrightness(baseStarId, branch);
   const brightnessKey = brightness ? String(brightness).charAt(0).toUpperCase() : '';
   const pillClass = BRIGHTNESS_PILL[brightnessKey] || 'bg-stone-100 text-stone-600';
   const brightnessTextClass = BRIGHTNESS_TEXT[brightnessKey] || 'text-stone-500';

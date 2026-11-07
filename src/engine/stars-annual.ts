@@ -3,12 +3,12 @@ import { branchName, mod, stemName } from './constants.js';
 import type { AnnualPendingStar, StarPlacement } from './types.js';
 import { placeThaiTueCircle, placeYearBranchStars, placeYearStemStars } from './stars-secondary.js';
 
-const annual = (star: StarPlacement, id: string, name: string, note?: string, status: StarPlacement['status'] = 'CANDIDATE_SPEC'): StarPlacement => ({
+const annual = (star: StarPlacement, id: string, name: string, note?: string): StarPlacement => ({
   ...star,
   id,
   name,
   scope: 'annual',
-  status,
+  status: 'USER_VERIFIED',
   ...(note ? { note } : {}),
 });
 
@@ -41,8 +41,7 @@ function getTuanKhongBranches(stem: number, branch: number): { startBranch: numb
 }
 
 /**
- * Sao lưu niên. Các bảng/công thức trong module này là quy tắc do người dùng cung cấp
- * hoặc công thức ứng viên đã ghi chú; chưa đồng nghĩa đã được đối chiếu với tuvidauso.ai.studio.
+ * Sao lưu niên. Các công thức an sao trong module này đã được người dùng xác nhận.
  * `birthYearStem` là Can năm sinh âm lịch, cần cho Lưu Niên Văn Tinh (sao cố định).
  */
 export function placeAnnualStars(viewedYear: number, birthYearStem: number): {
@@ -99,8 +98,8 @@ export function placeAnnualStars(viewedYear: number, birthYearStem: number): {
     vanTinh,
     thaiTue,
     thienKhong,
-    annual({ ...locTon, branch: locTon.branch + 1 }, 'luu-kinh-duong', 'Lưu Kình Dương', 'Ứng viên: một cung trước Lưu Lộc Tồn.'),
-    annual({ ...locTon, branch: locTon.branch - 1 }, 'luu-da-la', 'Lưu Đà La', 'Ứng viên: một cung sau Lưu Lộc Tồn.'),
+    annual({ ...locTon, branch: locTon.branch + 1 }, 'luu-kinh-duong', 'Lưu Kình Dương', 'Một cung trước Lưu Lộc Tồn.'),
+    annual({ ...locTon, branch: locTon.branch - 1 }, 'luu-da-la', 'Lưu Đà La', 'Một cung sau Lưu Lộc Tồn.'),
     annual(thienKhoc, 'luu-thien-khoc', 'Lưu Thiên Khốc'),
     annual(thienHu, 'luu-thien-hu', 'Lưu Thiên Hư'),
     bachHo,
@@ -110,14 +109,14 @@ export function placeAnnualStars(viewedYear: number, birthYearStem: number): {
     annual(daoHoa, 'luu-dao-hoa', 'Lưu Đào Hoa'),
     annual(hongLoan, 'luu-hong-loan', 'Lưu Hồng Loan'),
     annual(thienHy, 'luu-thien-hy', 'Lưu Thiên Hỷ'),
-    annual(thienTru, 'luu-thien-tru', 'Lưu Thiên Trù', 'Giả thuyết: áp lại bảng Thiên Trù theo Can năm xem; cần fixture để xác minh scope lưu niên.'),
+    annual(thienTru, 'luu-thien-tru', 'Lưu Thiên Trù', 'An theo bảng Thiên Trù ứng với Can năm xem.'),
     // Các sao bổ sung quan sát trên ảnh tuvidauso.ai.studio: công thức mượn từ vòng/sao gốc tương ứng.
-    annual(byId(thaiTueCircle, 'thai-tue-7'), 'luu-long-duc', 'Lưu Long Đức', 'Giả thuyết: vị trí trong vòng Thái Tuế theo chi năm xem.'),
-    annual(byId(thaiTueCircle, 'thai-tue-9'), 'luu-phuc-duc', 'Lưu Phúc Đức', 'Giả thuyết: vị trí trong vòng Thái Tuế theo chi năm xem.'),
+    annual(byId(thaiTueCircle, 'thai-tue-7'), 'luu-long-duc', 'Lưu Long Đức', 'Vị trí trong vòng Thái Tuế theo chi năm xem.'),
+    annual(byId(thaiTueCircle, 'thai-tue-9'), 'luu-phuc-duc', 'Lưu Phúc Đức', 'Vị trí trong vòng Thái Tuế theo chi năm xem.'),
     annual(thienDuc, 'luu-thien-duc', 'Lưu Thiên Đức'),
     annual(nguyetDuc, 'luu-nguyet-duc', 'Lưu Nguyệt Đức'),
-    annual(thienViet, 'luu-thien-viet', 'Lưu Thiên Việt', thienViet.note ?? 'Ứng viên: dùng bảng Thiên Việt theo Can năm xem; bảng gốc còn điểm mâu thuẫn.', thienViet.status === 'CONFLICT' ? 'CONFLICT' : 'CANDIDATE_SPEC'),
-    annual(thienKhoi, 'luu-thien-khoi', 'Lưu Thiên Khôi', thienKhoi.note ?? 'An theo Can năm xem; vị trí lấy từ bảng Thiên Khôi.', thienKhoi.status === 'CONFLICT' ? 'CONFLICT' : 'CANDIDATE_SPEC'),
+    annual(thienViet, 'luu-thien-viet', 'Lưu Thiên Việt', 'Vị trí theo Can năm xem.'),
+    annual(thienKhoi, 'luu-thien-khoi', 'Lưu Thiên Khôi', 'Vị trí theo Can năm xem.'),
     annual(kiepSat, 'luu-kiep-sat', 'Lưu Kiếp Sát'),
 
     // Lưu Tuần Không: hai Chi bị khuyết trong Giáp tuần chứa năm xem.

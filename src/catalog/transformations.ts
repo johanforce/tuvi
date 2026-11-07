@@ -17,14 +17,14 @@ const TABLE:Record<number,[string,string,string,string]>={
 const NAMES=['Hóa Lộc','Hóa Quyền','Hóa Khoa','Hóa Kỵ'];
 export function placeBirthTransformations(yearStem:number,starBranches:Map<string,number>):StarPlacement[]{
   const row=TABLE[mod(yearStem,10)]!;
-  return row.map((id,i)=>({id:`hoa-${['loc','quyen','khoa','ky'][i]}`,name:NAMES[i]!,branch:starBranches.get(id)??-1,scope:'natal' as const,status:'CANDIDATE_SPEC' as const,note:`Tứ Hóa theo Can năm sinh; sao đích ${id}`})).filter(x=>x.branch>=0);
+  return row.map((id,i)=>({id:`hoa-${['loc','quyen','khoa','ky'][i]}`,name:NAMES[i]!,branch:starBranches.get(id)??-1,scope:'natal' as const,status:'USER_VERIFIED' as const,note:`Tứ Hóa theo Can năm sinh; sao đích ${id}`})).filter(x=>x.branch>=0);
 }
 
 /** Lưu Tứ Hóa: dùng Can năm xem, bám lên vị trí sao gốc của lá số.
  * Bảng cùng cấu trúc với Tứ Hóa bản mệnh; vị trí sao đích không di chuyển.
- * Chưa có fixture tuvidauso.ai.studio đa năm nên trạng thái chỉ là công thức ứng viên.
+ * Công thức an Lưu Tứ Hóa đã được người dùng xác nhận.
  */
 export function placeAnnualTransformations(yearStem:number,starBranches:Map<string,number>):StarPlacement[]{
   const row=TABLE[mod(yearStem,10)]!;
-  return row.map((id,i)=>({id:`luu-hoa-${['loc','quyen','khoa','ky'][i]}`,name:`Lưu ${NAMES[i]}`,branch:starBranches.get(id)??-1,scope:'annual' as const,status:'CANDIDATE_SPEC' as const,note:`Can năm xem; gắn lên sao gốc ${id}. Chưa xác minh riêng với tuvidauso.ai.studio.`})).filter(x=>x.branch>=0);
+  return row.map((id,i)=>({id:`luu-hoa-${['loc','quyen','khoa','ky'][i]}`,name:`Lưu ${NAMES[i]}`,branch:starBranches.get(id)??-1,scope:'annual' as const,status:'USER_VERIFIED' as const,note:`Can năm xem; gắn lên sao gốc ${id}.`})).filter(x=>x.branch>=0);
 }

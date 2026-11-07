@@ -8,7 +8,7 @@ export function makeCanChi(stem:number,branch:number):CanChi {
 }
 export function yearCanChi(lunarYear:number):CanChi { return makeCanChi(lunarYear+6,lunarYear+8); }
 export function monthCanChi(yearStem:number,placementMonth:number):CanChi {
-  // Formula explicitly marked candidate in v1.3; TV-001: Canh + month 12 => Kỷ Sửu.
+  // Công thức Can tháng đã được người dùng xác nhận.
   const stem=mod(2*yearStem+placementMonth+1,10);
   const branch=mod(placementMonth+1,12);
   return makeCanChi(stem,branch);

@@ -46,7 +46,7 @@ export const PalaceDetailPanel: React.FC<PalaceDetailPanelProps> = ({
   const TABS: { key: 'palace' | 'annual' | 'reading'; label: string; icon: React.ReactNode }[] = [
     { key: 'palace', label: 'Chi tiết Cung & Tam Phương', icon: <Compass className="h-4 w-4" /> },
     { key: 'annual', label: `Sao Lưu Niên ${chart.viewedYear}`, icon: <Calendar className="h-4 w-4" /> },
-    { key: 'reading', label: 'Luận giải Gemini', icon: <Sparkles className="h-4 w-4" /> },
+    { key: 'reading', label: 'Luận giải', icon: <Sparkles className="h-4 w-4" /> },
   ];
 
   const relatedCards = [

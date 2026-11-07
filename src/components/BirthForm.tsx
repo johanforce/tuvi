@@ -154,7 +154,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
             </h4>
             <ul className="space-y-1.5 text-[12.5px] text-stone-600 dark:text-slate-300">
               <li className="flex gap-2"><span className="text-amber-600">◆</span>Địa bàn chuẩn 4x4 truyền thống kèm Thiên Bàn 2x2.</li>
-              <li className="flex gap-2"><span className="text-amber-600">◆</span>Minh bạch: Ghi chú đầy đủ các sao chưa kiểm chứng.</li>
+              <li className="flex gap-2"><span className="text-amber-600">◆</span>Các công thức an sao đã được xác nhận; độ sáng được theo dõi riêng.</li>
               <li className="flex gap-2"><span className="text-amber-600">◆</span>Xuất file PDF khổ A4 ngang lưu trữ sắc nét.</li>
               <li className="flex gap-2"><span className="text-amber-600">◆</span>Múi giờ chuẩn Việt Nam UTC+7 (không hỏi nơi sinh).</li>
             </ul>

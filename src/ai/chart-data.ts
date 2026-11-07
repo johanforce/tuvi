@@ -1,9 +1,20 @@
 import { STAR_META } from '../catalog/star-metadata.js';
+import { getStarBrightness } from '../data/brightness.js';
 import { BRANCH_NAMES, STEM_NAMES } from '../engine/constants.js';
 import type { ChartCore } from '../engine/types.js';
 
-/** Chuyển lá số engine thành dữ liệu có nguồn gốc và trạng thái kiểm chứng rõ ràng. */
-export function makeReadingData(chart: ChartCore) {
+export interface GreatFortuneSelection {
+  direction: 1 | -1;
+  decadeIndex: number;
+  startAge: number;
+  endAge: number;
+  yearInDecade?: number;
+  branch: number;
+}
+
+/** Chuyển lá số engine thành dữ liệu luận giải; trạng thái công thức đã được xác nhận. */
+export function makeReadingData(chart: ChartCore, selectedFortune?: GreatFortuneSelection) {
+  const brightnessLabels: Record<string, string> = { M: 'Miếu', V: 'Vượng', 'Đ': 'Đắc', B: 'Bình', H: 'Hãm' };
   const trietByStem: Record<number, [number, number]> = {
     0: [8, 9], 1: [6, 7], 2: [4, 5], 3: [2, 3], 4: [0, 1],
     5: [8, 9], 6: [6, 7], 7: [4, 5], 8: [2, 3], 9: [0, 1],
@@ -17,7 +28,7 @@ export function makeReadingData(chart: ChartCore) {
   const triet = trietByStem[chart.yearCanChi.stem] ?? [];
 
   return {
-    source: 'buildChart engine; mỗi sao giữ status và note từ engine',
+    source: 'buildChart engine; các công thức an sao đã được người dùng xác nhận',
     chart: {
       viewedYear: chart.viewedYear,
       viewedYearCanChi: chart.viewedYearCanChi.label,
@@ -26,10 +37,26 @@ export function makeReadingData(chart: ChartCore) {
       menhChu: chart.menhChu ?? null,
       thanChu: chart.thanChu ?? null,
       bureau: chart.bureau ?? null,
-      greatFortuneCurrent: chart.greatFortune ? {
-        branch: BRANCH_NAMES[chart.greatFortune.branch],
-        yearInDecade: chart.greatFortune.yearInDecade,
+      greatFortuneCurrent: (selectedFortune ?? chart.greatFortune) ? {
+        branch: BRANCH_NAMES[(selectedFortune ?? chart.greatFortune)!.branch],
+        palace: chart.palaces.find(p => p.branch === (selectedFortune ?? chart.greatFortune)!.branch)?.name ?? null,
+        canChi: (() => {
+          const palace = chart.palaces.find(p => p.branch === (selectedFortune ?? chart.greatFortune)!.branch);
+          return palace ? `${STEM_NAMES[palace.stem]} ${BRANCH_NAMES[palace.branch]}` : null;
+        })(),
+        startAge: (selectedFortune ?? chart.greatFortune)!.startAge,
+        endAge: (selectedFortune ?? chart.greatFortune)!.endAge,
+        startYear: chart.lunar.year + (selectedFortune ?? chart.greatFortune)!.startAge - 1,
+        endYear: chart.lunar.year + (selectedFortune ?? chart.greatFortune)!.endAge - 1,
+        yearInDecade: selectedFortune?.yearInDecade ?? (!selectedFortune ? chart.greatFortune?.yearInDecade : null),
+        decadeIndex: (selectedFortune ?? chart.greatFortune)!.decadeIndex,
+        decadeNumber: (selectedFortune ?? chart.greatFortune)!.decadeIndex + 1,
+        direction: (selectedFortune ?? chart.greatFortune)!.direction,
       } : null,
+      minorFortuneCurrent: {
+        branch: BRANCH_NAMES[chart.tieuHanBranch],
+        palace: chart.palaces.find(p => p.branch === chart.tieuHanBranch)?.name ?? null,
+      },
       tuanBranches: tuan.map(b => BRANCH_NAMES[b]),
       trietBranches: triet.map(b => BRANCH_NAMES[b]),
       palaces: chart.palaces.map(p => ({
@@ -46,7 +73,7 @@ export function makeReadingData(chart: ChartCore) {
           scope: s.scope,
           status: s.status,
           note: s.note ?? null,
-          brightness: STAR_META[s.id]?.brightness ?? null,
+          brightness: brightnessLabels[getStarBrightness(s.id.replace(/^luu-/, ''), s.branch) ?? ''] ?? null,
           brightnessStatus: STAR_META[s.id]?.brightnessStatus ?? 'UNVERIFIED',
         })),
       })),
@@ -55,8 +82,9 @@ export function makeReadingData(chart: ChartCore) {
     },
     knownLimits: [
       'Chưa có bảng độ sáng sao đầy đủ đã xác minh.',
-      'Trạng thái an sao có thể là ứng viên/chưa kiểm chứng; phải đọc status và note từng sao.',
-      'Payload chỉ có đại hạn hiện tại; không có bảng đại hạn trọn đời đã kiểm chứng.',
+      'Một số sao chưa có bảng độ sáng đầy đủ.',
+      'Payload chỉ có cung Đại Hạn đã chọn; không có danh sách sao riêng hoặc Tứ Hóa riêng của tầng Đại Hạn.',
+      'Tiểu Hạn hiện có vị trí cung, không có danh sách sao riêng của tầng Tiểu Hạn.',
     ],
   };
 }

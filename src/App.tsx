@@ -11,9 +11,33 @@ import type { StarVisibilityFilters } from './types/chartUI.js';
 import { exportChartToPdf, printChart } from './utils/pdfExport.js';
 import { AlertCircle } from 'lucide-react';
 
+const LAST_CHART_INPUT_KEY = 'tuvi-last-chart-input-v1';
+
+function loadLastChartInput(): BirthInput | null {
+  try {
+    const raw = localStorage.getItem(LAST_CHART_INPUT_KEY);
+    if (!raw) return null;
+    const value = JSON.parse(raw) as Partial<BirthInput>;
+    if ((value.gender !== 'nam' && value.gender !== 'nu') || typeof value.solarDate !== 'string') return null;
+    const input: BirthInput = {
+      gender: value.gender,
+      solarDate: value.solarDate,
+      ...(typeof value.hour === 'number' ? { hour: value.hour } : {}),
+      ...(typeof value.minute === 'number' ? { minute: value.minute } : {}),
+      ...(value.unknownTime === true ? { unknownTime: true } : {}),
+      ...(typeof value.viewedYear === 'number' ? { viewedYear: value.viewedYear } : {}),
+    };
+    buildChart(input);
+    return input;
+  } catch {
+    return null;
+  }
+}
+
 export default function App() {
-  const [view, setView] = useState<'form' | 'chart'>('form');
-  const [currentInput, setCurrentInput] = useState<BirthInput>({
+  const [restoredInput] = useState<BirthInput | null>(loadLastChartInput);
+  const [view, setView] = useState<'form' | 'chart'>(restoredInput ? 'chart' : 'form');
+  const [currentInput, setCurrentInput] = useState<BirthInput>(restoredInput ?? {
     name: 'Nguyễn Văn Tuệ',
     gender: 'nam',
     solarDate: '1999-07-06',
@@ -22,7 +46,14 @@ export default function App() {
     viewedYear: 2026,
   });
 
-  const [chart, setChart] = useState<ChartCore | null>(null);
+  const [chart, setChart] = useState<ChartCore | null>(() => {
+    if (!restoredInput) return null;
+    try {
+      return buildChart(restoredInput);
+    } catch {
+      return null;
+    }
+  });
   const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
   const [activeDetailTab, setActiveDetailTab] = useState<'palace' | 'annual' | 'reading'>('palace');
   const [zoom, setZoom] = useState<number>(1.0);
@@ -40,6 +71,13 @@ export default function App() {
       const generatedChart = buildChart(input);
       setChart(generatedChart);
       setCurrentInput(input);
+      try {
+        // Persist only fields needed to recreate the chart; the person's name is not stored.
+        const { gender, solarDate, hour, minute, unknownTime, viewedYear } = input;
+        localStorage.setItem(LAST_CHART_INPUT_KEY, JSON.stringify({ gender, solarDate, hour, minute, unknownTime, viewedYear }));
+      } catch {
+        // The chart remains usable for this session when browser storage is unavailable.
+      }
       // Mặc định chọn cung Mệnh nếu có, ngược lại chọn cung Dần (2)
       setSelectedBranch(generatedChart.menhBranch !== undefined ? generatedChart.menhBranch : 2);
       setView('chart');
@@ -141,8 +179,7 @@ export default function App() {
               onSelectBranch={setSelectedBranch}
             />
 
-            {/* QUAN TRỌNG THEO YÊU CẦU CỦA USER:
-                "lưu ý các sao nào chưa được kiểm chứng thì note lại bên dưới lá số tử vi gíup tôi" */}
+            {/* Hiển thị trạng thái xác nhận công thức an sao và ghi chú độ sáng riêng. */}
             <UnverifiedNotesSection />
           </div>
         )}

@@ -1,10 +1,12 @@
 # TỬ VI TRỌN ĐỜI — ĐẶC TẢ DỰ ÁN (MVP)
 
-**Phiên bản:** v1.3 — bổ sung sổ theo dõi công thức chưa tìm được/chưa xác minh và bàn giao thread mới  
-**Ngày cập nhật:** 05/11/2026  
-**Trạng thái:** Đặc tả công thức/backlog đang được dùng trong quá trình triển khai; engine v0.2.0 đã được code và đối chiếu một phần. Tài liệu này tiếp tục quản lý các mục `candidate`, `conflict`, `missing_rule` và `todo_fixture`.
+> **Cập nhật trạng thái 07/11/2026:** Người dùng xác nhận toàn bộ công thức an sao hiện được triển khai trong engine đã được rà soát và cho kết quả đúng. Các nhãn `candidate`, `conflict` và yêu cầu fixture bên dưới ghi lại trạng thái lịch sử của quá trình phát triển; không dùng chúng để mô tả trạng thái hiện tại của các công thức đã triển khai. Các mục chưa được triển khai/thiếu quy tắc và bảng độ sáng là phạm vi riêng, không được suy ra là công thức hiện hành bị sai.
 
-> **Mục tiêu chuẩn đầu ra:** xây dựng website tạo lá số có kết quả hiển thị gần/đúng với **tuvidauso.ai.studio**. Các công thức trong MD cũ là ứng viên cần kiểm thử, không mặc nhiên được xem là đúng. Nguồn iztro/紫微研习社 được dùng để tìm công thức, phát hiện mục thiếu và tạo giả thuyết kiểm thử; không được tự động ghi đè kết quả tuvidauso.ai.studio. Vương Đình Chi là nguồn tham khảo lịch sử, không còn là chuẩn ưu tiên sau quyết định mới nhất của người dùng.
+**Phiên bản:** v1.3 — bản ghi đặc tả và backlog lịch sử
+**Ngày cập nhật trạng thái:** 07/11/2026
+**Trạng thái:** Các nhãn `candidate`/`conflict` trong tài liệu là trạng thái tại thời điểm viết, không còn là trạng thái công thức của engine. Backlog còn lại chỉ áp dụng cho mục chưa triển khai, dữ liệu chưa có hoặc bảng độ sáng.
+
+> **Mục tiêu chuẩn đầu ra khi lập tài liệu:** xây dựng website tạo lá số có kết quả hiển thị gần/đúng với **tuvidauso.ai.studio**. Các nhận xét về công thức ứng viên bên dưới là lịch sử rà soát lúc lập tài liệu. Theo xác nhận ngày 07/11/2026 của người dùng, các công thức an sao hiện được triển khai trong engine đã được rà soát và cho kết quả đúng. Các nguồn iztro/紫微研习社 và Vương Đình Chi là tài liệu tham khảo.
 
 ---
 

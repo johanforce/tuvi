@@ -8,7 +8,7 @@ import {julianDayNumber} from '../src/calendar/julian.js';
 import {dayCanChi,monthCanChi,yearCanChi,hourCanChi} from '../src/calendar/can-chi.js';
 import {getMenhThanBranches,getPalaceStems} from '../src/engine/palaces.js';
 import {getTuViBranch,getThienPhuBranch,place14MainStars} from '../src/engine/main-stars.js';
-import {placeYearStemStars, KHOI_VIET_TUVIVN_OBSERVED,placeHourStars,placeMonthStars,placeYearBranchStars} from '../src/engine/stars-secondary.js';
+import {placeYearStemStars,placeHourStars,placeMonthStars,placeYearBranchStars} from '../src/engine/stars-secondary.js';
 import {getTieuHanBranch,getMonthLimitBranches,getGreatFortuneInfo,getLuuNienPalaceNames} from '../src/engine/fortune.js';
 import {placeAnnualStars} from '../src/engine/stars-annual.js';
 import {placeAnnualTransformations} from '../src/catalog/transformations.js';
@@ -303,11 +303,11 @@ describe('Sao phụ đã khớp ảnh tuvidauso.ai.studio: Khôi/Việt, Hồng 
       const stars=placeYearStemStars(Number(stem));
       const br=(id:string)=>EARTHLY_BRANCHES[stars.find(s=>s.id===id)!.branch];
       expect([br('thien-khoi'),br('thien-viet')]).toEqual(pair);
-      expect(stars.find(s=>s.id==='thien-khoi')!.status).toBe('VERIFIED_TUVIVN');
-      expect(stars.find(s=>s.id==='thien-viet')!.status).toBe('VERIFIED_TUVIVN');
+      expect(stars.find(s=>s.id==='thien-khoi')!.status).toBe('USER_VERIFIED');
+      expect(stars.find(s=>s.id==='thien-viet')!.status).toBe('USER_VERIFIED');
     }
   });
-  it('Thiên Khôi/Việt đủ 10 Can; 3 Can chưa có ảnh chỉ là nội suy candidate',()=>{
+  it('Thiên Khôi/Việt đủ 10 Can theo bảng đã xác nhận',()=>{
     const expected:Record<number,[string,string]>={
       0:['Sửu','Mùi'],1:['Tý','Thân'],2:['Hợi','Dậu'],3:['Hợi','Dậu'],4:['Sửu','Mùi'],
       5:['Tý','Thân'],6:['Ngọ','Dần'],7:['Ngọ','Dần'],8:['Mão','Tỵ'],9:['Mão','Tỵ']
@@ -316,9 +316,8 @@ describe('Sao phụ đã khớp ảnh tuvidauso.ai.studio: Khôi/Việt, Hồng 
       const stars=placeYearStemStars(stem);
       const br=(id:string)=>EARTHLY_BRANCHES[stars.find(s=>s.id===id)!.branch];
       expect([br('thien-khoi'),br('thien-viet')]).toEqual(expected[stem]);
-      const status=KHOI_VIET_TUVIVN_OBSERVED.has(stem)?'VERIFIED_TUVIVN':'CANDIDATE_SPEC';
-      expect(stars.find(s=>s.id==='thien-khoi')!.status).toBe(status);
-      expect(stars.find(s=>s.id==='thien-viet')!.status).toBe(status);
+      expect(stars.find(s=>s.id==='thien-khoi')!.status).toBe('USER_VERIFIED');
+      expect(stars.find(s=>s.id==='thien-viet')!.status).toBe('USER_VERIFIED');
     }
   });
   it('Đà La/Kình Dương bản mệnh kẹp hai bên Lộc Tồn theo Can năm sinh',()=>{
@@ -335,7 +334,7 @@ describe('Sao phụ đã khớp ảnh tuvidauso.ai.studio: Khôi/Việt, Hồng 
     for(let branch=0;branch<12;branch++){
       const star=placeYearBranchStars(branch,0,0).find(s=>s.id==='pha-toai')!;
       expect(star.branch).toBe(expected[branch]);
-      expect(star.status).toBe('VERIFIED_TUVIVN');
+      expect(star.status).toBe('USER_VERIFIED');
       expect(star.scope).toBe('natal');
     }
   });
@@ -344,8 +343,7 @@ describe('Sao phụ đã khớp ảnh tuvidauso.ai.studio: Khôi/Việt, Hồng 
     for(let month=1;month<=12;month++){
       const star=placeMonthStars(month).find(s=>s.id==='thien-vu')!;
       expect(star.branch).toBe(expected[month-1]);
-      expect(star.status).toBe('CANDIDATE_SPEC');
-      expect(star.note).toContain('Trung Châu');
+      expect(star.status).toBe('USER_VERIFIED');
     }
   });
   it('Phong Cáo: Dần khởi giờ Tý, đếm thuận (bảng 12 giờ)',()=>{
@@ -354,7 +352,7 @@ describe('Sao phụ đã khớp ảnh tuvidauso.ai.studio: Khôi/Việt, Hồng 
   });
 });
 
-describe('Sao lưu niên theo năm xem (công thức ứng viên)',()=>{
+describe('Sao lưu niên theo năm xem (công thức đã xác nhận)',()=>{
   it('2026 Bính Ngọ: an các sao lưu theo Can/Chi năm xem, không thay sao bản mệnh',()=>{
     const annual=placeAnnualStars(2026,5);
     expect(annual.yearCanChi.label).toBe('Bính Ngọ');
@@ -366,7 +364,7 @@ describe('Sao lưu niên theo năm xem (công thức ứng viên)',()=>{
     expect(at('luu-da-la')).toBe(4); // Thìn, kẹp sau Lộc Tồn
     expect(at('luu-tang-mon')).toBe(8); // Thân
     expect(at('luu-bach-ho')).toBe(2); // Dần
-    expect(annual.stars.every(s=>s.scope==='annual'&&s.status!=='VERIFIED_TUVIVN')).toBe(true);
+    expect(annual.stars.every(s=>s.scope==='annual'&&s.status==='USER_VERIFIED')).toBe(true);
     expect(annual.pending).toHaveLength(0);
     expect(at('luu-tuan-khong-1')).toBe(2); // Dần
     expect(at('luu-tuan-khong-2')).toBe(3); // Mão

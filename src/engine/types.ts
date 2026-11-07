@@ -1,5 +1,5 @@
 import type { Gender } from './constants.js';
-export type VerificationStatus='MATCH_TV001'|'VERIFIED_TUVIVN'|'CANDIDATE_SPEC'|'CANDIDATE_IZTRO'|'CONFLICT'|'MISSING_RULE'|'UNKNOWN_TIME';
+export type VerificationStatus='USER_VERIFIED'|'MISSING_RULE'|'UNKNOWN_TIME';
 export interface BirthInput { name?:string; gender:Gender; solarDate:string; hour?:number; minute?:number; unknownTime?:boolean; viewedYear?:number; }
 export interface AnnualPendingStar { id:string; name:string; status:'MISSING_RULE'; note:string; }
 export interface LunarInfo { day:number; month:number; year:number; isLeapMonth:boolean; placementMonth:number; }
