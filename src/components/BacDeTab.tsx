@@ -196,11 +196,7 @@ export const BacDeTab: React.FC<BacDeTabProps> = ({ number, showResult, onNumber
       <header>
         <h2 className="font-serif text-2xl font-bold text-oriental-crimson">Quẻ thẻ đền Hệ xã Thụy Ninh, Thái Thụy</h2>
         <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-stone-500">
-          <time dateTime="2018-01-17">17/01/2018</time>
-          <a className="underline decoration-amber-700 underline-offset-2" href="https://ngocsac.wordpress.com/author/ngocsac/" target="_blank" rel="noreferrer">ngocsac</a>
-          <a className="underline decoration-amber-700 underline-offset-2" href="https://ngocsac.wordpress.com/2018/01/17/que%CC%89-the%CC%89-den-he%CC%A3-xa%CC%83-thu%CC%A3y-ninh-thai-thuy/#respond" target="_blank" rel="noreferrer">Bình luận về bài viết này</a>
-          <a className="underline decoration-amber-700 underline-offset-2" href="https://ngocsac.wordpress.com/2018/01/17/que%CC%89-the%CC%89-den-he%CC%A3-xa%CC%83-thu%CC%A3y-ninh-thai-thuy/#comments" target="_blank" rel="noreferrer">Go to comments</a>
-        </div>
+          <time dateTime="2018-01-17">11/07/2026</time></div>
       </header>
 
       <div className="space-y-4 text-sm leading-7 text-stone-700">
@@ -261,7 +257,6 @@ export const BacDeTab: React.FC<BacDeTabProps> = ({ number, showResult, onNumber
         <p>Tức là: Muốn được thành việc, nên cúng vái thần và tổ đường ở nhà, phòng mùa hạ có trở ngại.</p>
         <p>Những phần khác cũng tương tự là 4 câu thơ như vậy.</p>
         <p className="border-t border-amber-900/10 pt-4">Tôi hy vọng thẻ đền Hệ cũng như thẻ tại một số đền khác như đền Mẫu (Hưng Yên), đền Cờn (Nghệ An) cũng được dịch ra Quốc ngữ cho mọi người được biết, hạn chế việc lợi dụng tán thẻ tràn lan, không chính xác.</p>
-        <p className="text-xs text-stone-500">Nguồn nội dung và hình ảnh: <a className="underline decoration-amber-700 underline-offset-2" href="https://ngocsac.wordpress.com/2018/01/17/que%CC%89-the%CC%89-den-he%CC%A3-xa%CC%83-thu%CC%A3y-ninh-thai-thuy/" target="_blank" rel="noreferrer">bài viết Quẻ thẻ đền Hệ xã Thụy Ninh, Thái Thụy</a>.</p>
       </div>
     </section>
   </div>;

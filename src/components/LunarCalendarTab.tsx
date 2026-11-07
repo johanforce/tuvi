@@ -69,6 +69,7 @@ function getDayEvents(day: number, month: number, leap: boolean, solarMonth: num
   if (day === 15) events.push('Ngày Rằm');
   if (!leap) {
     if (month === 1 && day === 1) events.push('Tết Nguyên Đán');
+    else if (month === 1 && day >= 2 && day <= 5) events.push(`Tết Nguyên Đán · Mùng ${day}`);
     if (month === 3 && day === 3) events.push('Tết Hàn Thực');
     if (month === 5 && day === 5) events.push('Tết Đoan Ngọ');
     if (month === 7 && day === 15) events.push('Vu Lan');
@@ -77,8 +78,10 @@ function getDayEvents(day: number, month: number, leap: boolean, solarMonth: num
     if (month === 12 && day === 23) events.push('Ông Công Ông Táo');
   }
   if (solarMonth === 1 && solarDay === 1) events.push('Tết Dương lịch');
+  if (solarMonth === 11 && solarDay === 24) events.push('Ngày Văn hóa Việt Nam');
   if (solarMonth === 4 && solarDay === 30) events.push('Ngày Giải phóng miền Nam');
   if (solarMonth === 5 && solarDay === 1) events.push('Quốc tế Lao động');
+  if (solarMonth === 9 && solarDay === 1) events.push('Nghỉ lễ Quốc khánh');
   if (solarMonth === 9 && solarDay === 2) events.push('Quốc khánh');
   return events;
 }
@@ -214,16 +217,16 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
         : 'Không thuộc nhóm xung hoặc hợp đang xét.'
     : '';
 
-  return <div className="mx-auto max-w-6xl space-y-5 px-4 py-7">
+  return <div className="mx-auto max-w-6xl space-y-4 px-2 py-4 sm:space-y-5 sm:px-4 sm:py-7">
     <section className="paper-card-double overflow-hidden">
-      <div className="bg-gradient-to-r from-red-950 via-red-900 to-red-950 px-5 py-6 text-white sm:px-8">
+      <div className="bg-gradient-to-r from-red-950 via-red-900 to-red-950 px-4 py-5 text-white sm:px-8 sm:py-6">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">Lịch âm Việt Nam · Múi giờ UTC+7</p>
-        <h1 className="mt-1 font-serif text-3xl font-bold">Xem lịch âm</h1>
+        <h1 className="mt-1 font-serif text-2xl font-bold sm:text-3xl">Xem lịch âm</h1>
         <p className="mt-2 text-sm text-red-100">Tra ngày âm dương, Can Chi, giờ Hoàng đạo, tiết khí và ngày lễ.</p>
       </div>
-      <div className="flex flex-wrap items-end gap-3 p-5 sm:px-8">
+      <div className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-end gap-2 p-3 sm:flex sm:flex-wrap sm:gap-3 sm:px-8 sm:py-5">
         <button type="button" aria-label="Ngày trước" title="Ngày trước" onClick={() => onDateChange(shiftDate(date, -1))} className="btn btn-outline !px-3"><ChevronLeft className="h-4 w-4" /></button>
-        <div className="w-full sm:max-w-xs">
+        <div className="w-full min-w-0 sm:max-w-xs">
           <label htmlFor="calendar-date" className="field-label">Chọn ngày dương lịch</label>
           <input id="calendar-date" type="date" min="1900-01-01" max="2100-12-31" value={date} onChange={event => event.target.value && onDateChange(event.target.value)} className="field" />
         </div>
@@ -231,21 +234,21 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
         <button type="button" onClick={() => {
           const today = new Date();
           onDateChange(`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`);
-        }} className="btn btn-outline">Hôm nay</button>
+        }} className="btn btn-outline col-span-3 justify-self-center sm:col-span-1 sm:justify-self-auto">Hôm nay</button>
       </div>
     </section>
 
-    <section className="paper-card p-4 sm:p-5" aria-label="Lịch tháng">
+    <section className="paper-card p-2.5 sm:p-5" aria-label="Lịch tháng">
       <div className="mb-3 flex items-center justify-between gap-3">
         <button type="button" aria-label="Tháng trước" onClick={() => changeDisplayedMonth(-1)} className="btn btn-outline !px-3"><ChevronLeft className="h-4 w-4" /></button>
-        <div className="text-center">
-          <h2 className="font-serif text-lg font-bold text-oriental-crimson">Tháng {displayedMonth.month}/{displayedMonth.year}</h2>
-          <p className="mt-0.5 text-xs font-medium text-stone-700">Tháng {info.lunar.month === 12 ? 'Chạp' : String(info.lunar.month).padStart(2, '0')}{info.lunar.isLeapMonth ? ' nhuận' : ''}({info.lunarMonthLength === 30 ? 'Đủ' : 'Thiếu'}) {info.monthCanChi.label}, Năm {info.yearCanChi.label}</p>
+        <div className="min-w-0 flex-1 text-center">
+          <h2 className="font-serif text-base font-bold text-oriental-crimson sm:text-lg">Tháng {displayedMonth.month}/{displayedMonth.year}</h2>
+          <p className="mt-0.5 break-words text-[10px] font-medium text-stone-700 sm:text-xs">Tháng {info.lunar.month === 12 ? 'Chạp' : String(info.lunar.month).padStart(2, '0')}{info.lunar.isLeapMonth ? ' nhuận' : ''}({info.lunarMonthLength === 30 ? 'Đủ' : 'Thiếu'}) {info.monthCanChi.label}, Năm {info.yearCanChi.label}</p>
         </div>
         <button type="button" aria-label="Tháng sau" onClick={() => changeDisplayedMonth(1)} className="btn btn-outline !px-3"><ChevronRight className="h-4 w-4" /></button>
       </div>
       <div className="grid grid-cols-7 text-center text-xs font-semibold text-stone-500">{['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map(day => <div key={day} className={`py-2 ${day === 'T7' || day === 'CN' ? 'text-red-700' : ''}`}>{day}</div>)}</div>
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-0.5 sm:gap-1">
         {monthDays.map(cell => {
           const weekday = new Date(`${cell.iso}T00:00:00Z`).getUTCDay();
           const weekend = weekday === 0 || weekday === 6;
@@ -253,8 +256,8 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
           <span className={`absolute left-1.5 top-1 text-lg font-bold leading-none ${weekend ? 'text-red-700' : 'text-stone-800'}`}>{cell.day}</span>
           <span className={`mt-4 block text-xs font-semibold leading-tight sm:text-sm ${cell.lunarDay === 1 ? 'text-red-800' : 'text-stone-700'}`}>{String(cell.lunarDay).padStart(2, '0')}/{String(cell.lunarMonth).padStart(2, '0')}{cell.leap ? '*' : ''}</span>
           <span className="block whitespace-nowrap text-[10px] font-medium leading-tight tracking-tight text-stone-600">{cell.dayCanChi}</span>
-          {cell.culturalLabels.map(label => <span key={label} className="mt-0.5 block break-words text-[10px] font-semibold leading-tight text-pink-900">{label}</span>)}
-          {cell.solarTerms.length > 0 && <span className="mt-1 block break-words text-[9px] font-semibold leading-tight text-amber-800">{cell.solarTerms.join(' · ')}</span>}
+          {cell.culturalLabels.map(label => <span key={label} className="mt-0.5 block break-words text-[8px] font-semibold leading-tight text-pink-900 sm:text-[10px]">{label}</span>)}
+          {cell.solarTerms.length > 0 && <span className="mt-1 block break-words text-[8px] font-semibold leading-tight text-amber-800 sm:text-[9px]">{cell.solarTerms.join(' · ')}</span>}
           <span aria-hidden="true" className={`absolute right-1 top-1 h-1.5 w-1.5 rounded-full ${cell.markerColor}`} />
         </button>;
         })}
@@ -264,12 +267,12 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
         <span className="inline-flex items-center gap-1.5"><i aria-hidden="true" className="h-2 w-2 rounded-full bg-amber-400" />Hoàng đạo</span>
         <span className="inline-flex items-center gap-1.5"><i aria-hidden="true" className="h-2 w-2 rounded-full bg-red-600" />Thanh Long Hoàng đạo</span>
         <span className="inline-flex items-center gap-1.5"><i aria-hidden="true" className="h-3 w-3 rounded-sm border border-pink-200 bg-pink-100" />Ngày nghỉ lễ trong năm</span>
-        <span>Số nhỏ là ngày âm · Dòng dưới là Can Chi ngày</span>
+        <span>Số nhỏ là ngày âm</span>
       </div>
     </section>
 
-    <section className="paper-card p-5 sm:p-7">
-      <div className="mb-4 flex items-center gap-2"><CalendarDays className="h-5 w-5 text-red-900" /><h2 className="font-serif text-xl font-bold text-oriental-crimson">Thông tin ngày {formatSolarDate(date)}</h2></div>
+    <section className="paper-card p-4 sm:p-7">
+      <div className="mb-4 flex items-center gap-2"><CalendarDays className="h-5 w-5 shrink-0 text-red-900" /><h2 className="font-serif text-lg font-bold text-oriental-crimson sm:text-xl">Thông tin ngày {formatSolarDate(date)}</h2></div>
       <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
         {[
           ['Ngày dương lịch', `${formatSolarDate(date)} · ${info.monthName} âm · ${info.monthCanChi.label}`],
@@ -285,8 +288,8 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
       </dl>
     </section>
 
-    <div className="grid gap-5 lg:grid-cols-2">
-      <section className="paper-card space-y-4 p-5 sm:p-6">
+    <div className="grid gap-4 sm:gap-5 lg:grid-cols-2">
+      <section className="paper-card space-y-4 p-4 sm:p-6">
         <div className="flex items-center gap-2"><Sun className="h-5 w-5 text-amber-700" /><h2 className="font-serif text-xl font-bold text-oriental-crimson">Ngày tốt, ngày cần lưu ý</h2></div>
         <div className="flex flex-wrap gap-2">
           <span className={`${badges} ${info.isHoangDao ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-amber-300 bg-amber-50 text-amber-900'}`}>{info.isHoangDao ? 'Hoàng đạo' : 'Hắc đạo'} · {info.dayGod}</span>
@@ -312,7 +315,7 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
         <p className="text-xs leading-5 text-stone-500">Đối chiếu tuổi chỉ xét địa chi theo năm sinh nhập vào với chi ngày; người sinh trước Tết âm lịch có thể thuộc Can Chi năm trước. Cách này chưa thay thế chọn tuổi theo ngày sinh và can chi đầy đủ. Gợi ý mục đích dựa trên 12 Trực, không phải kết luận tổng hợp từ sao tốt/xấu.</p>
       </section>
 
-      <section className="paper-card space-y-4 p-5 sm:p-6">
+      <section className="paper-card space-y-4 p-4 sm:p-6">
         <div className="flex items-center gap-2"><Clock3 className="h-5 w-5 text-amber-700" /><h2 className="font-serif text-xl font-bold text-oriental-crimson">Giờ trong ngày</h2></div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {allHours.map(branch => {
@@ -327,7 +330,7 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
         <p className="text-xs leading-5 text-stone-500">Giờ tốt xuất hành theo Lục Diệu/Khổng Minh chưa được tính. Có thể đối chiếu Can Chi giờ với tuổi để cân nhắc thêm.</p>
       </section>
 
-      <section className="paper-card space-y-4 p-5 sm:p-6">
+      <section className="paper-card space-y-4 p-4 sm:p-6">
         <div className="flex items-center gap-2"><Compass className="h-5 w-5 text-red-900" /><h2 className="font-serif text-xl font-bold text-oriental-crimson">Nên làm và nên tránh</h2></div>
         <p className="text-xs text-stone-500">Gợi ý theo Trực {TRUC_NAMES[mod(info.dayCanChi.branch - info.seasonalMonthBranch)]} · tháng tiết khí {BRANCH_NAMES[info.seasonalMonthBranch]}</p>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -337,7 +340,7 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
         <p className="text-xs leading-5 text-stone-500">Danh sách dựa trên ý nghĩa phổ biến của 12 Trực; các sách lịch có thể xếp việc nên/kiêng khác nhau.</p>
       </section>
 
-      <section className="paper-card space-y-4 p-5 sm:p-6">
+      <section className="paper-card space-y-4 p-4 sm:p-6">
         <div className="flex items-center gap-2"><Compass className="h-5 w-5 text-red-900" /><h2 className="font-serif text-xl font-bold text-oriental-crimson">Phong thủy và xuất hành</h2></div>
         <dl className="grid gap-3 sm:grid-cols-2">
           <div><dt className="text-xs text-stone-500">Nạp âm ngày</dt><dd className="text-sm font-semibold">{info.dayNapAm}</dd></div>
@@ -349,16 +352,13 @@ export const LunarCalendarTab: React.FC<LunarCalendarTabProps> = ({ date, onDate
         </dl>
         <p className="text-xs leading-5 text-stone-500">Hướng xuất hành, Hỷ thần, Tài thần và tuổi hợp/xung theo năm sinh cụ thể cần bảng quy tắc riêng, hiện chưa được tích hợp.</p>
       </section>
-    </div>
-
-    <div className="grid gap-5 lg:grid-cols-2">
-      <section className="paper-card space-y-3 p-5 sm:p-6">
+      <section className="order-first paper-card space-y-3 p-4 sm:p-6 lg:order-none">
         <h2 className="font-serif text-xl font-bold text-oriental-crimson">Ngày lễ và sự kiện văn hóa</h2>
         {info.events.length > 0 ? <ul className="flex flex-wrap gap-2">{info.events.map(event => <li key={event} className="inline-flex rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-950">{event}</li>)}</ul> : <p className="text-sm text-stone-500">Không có ngày lễ/sự kiện văn hóa đã khai báo trùng ngày này.</p>}
         <p className="text-xs text-stone-500">Các lễ âm lịch được đánh dấu theo ngày âm phổ biến; ngày giỗ tổ và lễ hội địa phương có thể khác nhau theo vùng.</p>
       </section>
 
-      <section className="paper-card space-y-3 p-5 sm:p-6">
+      <section className="paper-card space-y-3 p-4 sm:p-6">
         <div className="flex items-center gap-2"><Sunrise className="h-5 w-5 text-amber-700" /><h2 className="font-serif text-xl font-bold text-oriental-crimson">Tiết khí</h2></div>
         <p className="text-sm text-stone-700">Ngày này thuộc tiết <strong>{info.currentTerm?.name ?? 'Chưa xác định'}</strong>{info.currentTerm ? `, bắt đầu ${solarTermTime(info.currentTerm)}.` : '.'}</p>
         {info.nextTerm && <p className="text-sm text-stone-700">Tiết tiếp theo: <strong>{info.nextTerm.name}</strong>, bắt đầu {solarTermTime(info.nextTerm)}.</p>}
