@@ -9,9 +9,9 @@ const app = express();
 app.use(express.json({ limit: '256kb' }));
 
 app.post('/api/bac-de/reading', async (req, res) => {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
   if (!apiKey) {
-    res.status(503).json({ error: 'Máy chủ chưa được cấu hình GEMINI_API_KEY.' });
+    res.status(503).json({ error: 'Chưa cấu hình GEMINI_API_KEY. Vui lòng thêm API key trong Settings > Secrets của AI Studio.' });
     return;
   }
 
@@ -29,11 +29,17 @@ app.post('/api/bac-de/reading', async (req, res) => {
       return;
     }
 
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        },
+      },
+    });
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-3.1-flash-lite',
       contents: `Hãy luận giải thẻ Bắc Đế đền Hệ số ${number} dựa riêng trên dữ liệu thẻ bên dưới. Nêu ý chính của bài thơ, liên hệ tích quẻ và các phương diện có dữ liệu. Giải thích lời khuyên bằng tiếng Việt hiện đại, rõ ràng, có phần thuận lợi, điều nên thận trọng và gợi ý ứng xử thực tế. Phân biệt nội dung nguyên bản với phần diễn giải của bạn; không khẳng định tương lai chắc chắn, không tự thêm dữ liệu không có trong thẻ. Với phần đoán bệnh, chỉ tóm lược nội dung văn bản cổ và khuyên tìm chuyên gia y tế, không chẩn đoán hoặc thay tư vấn điều trị. Trình bày bằng Markdown ngắn gọn, dễ đọc.\n\nDỮ LIỆU THẺ:\n${JSON.stringify({ id: card.id, rating: card.rating, title: card.title, tich: card.tich, thi: card.thi, sections: card.sections })}`,
-      config: { temperature: 0.3 },
     });
     res.json({ text: response.text ?? '' });
   } catch (error) {
@@ -43,9 +49,9 @@ app.post('/api/bac-de/reading', async (req, res) => {
 });
 
 app.post('/api/tuvi/reading', async (req, res) => {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
   if (!apiKey) {
-    res.status(503).json({ error: 'Máy chủ chưa được cấu hình GEMINI_API_KEY.' });
+    res.status(503).json({ error: 'Chưa cấu hình GEMINI_API_KEY. Vui lòng thêm API key trong Settings > Secrets của AI Studio.' });
     return;
   }
 
@@ -129,13 +135,19 @@ app.post('/api/tuvi/reading', async (req, res) => {
     const outputInstruction = section === 'great_fortune'
       ? 'Bắt buộc trả lời đúng cấu trúc tiêu đề Markdown và các gạch đầu dòng ngắn trong mục 6. Không trả lời bằng các đoạn văn xuôi dài.'
       : '';
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        },
+      },
+    });
     const geminiRequest = {
-      model: 'gemini-3.5-flash',
+      model: 'gemini-3.1-flash-lite',
       contents: `DỮ LIỆU CUNG VÀ AN SAO (đã loại thông tin cá nhân):\n${JSON.stringify(chartData)}`,
       config: {
         systemInstruction: `${prompt}\n\n${sectionInstruction}\n\n${outputInstruction}`,
-        temperature: 0.2,
       },
     };
     if (process.env.DEBUG_GEMINI_REQUEST === '1') {
@@ -166,5 +178,5 @@ if (isProduction) {
 }
 
 const port = Number(process.env.PORT ?? 3000);
-const host = process.env.HOST ?? (isProduction ? '0.0.0.0' : '127.0.0.1');
+const host = process.env.HOST ?? '0.0.0.0';
 app.listen(port, host, () => console.log(`TuVi app listening on http://${host}:${port}`));

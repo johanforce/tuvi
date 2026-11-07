@@ -6,7 +6,7 @@ export interface LunarInfo { day:number; month:number; year:number; isLeapMonth:
 export interface StarPlacement { id:string; name:string; branch:number; scope:'natal'|'annual'; status:VerificationStatus; note?:string; }
 export interface Palace { branch:number; name:string; stem:number; stars:StarPlacement[]; }
 export interface MonthLimitLabel { branch:number; month:number; label:string; }
-export interface GreatFortuneInfo { direction:1|-1; decadeIndex:number; startAge:number; endAge:number; yearInDecade:number; branch:number; luuNienMenhBranch:number; }
+export interface GreatFortuneInfo { direction:1|-1; decadeIndex:number; startAge:number; endAge:number; yearInDecade:number; branch:number; luuNienMenhBranch?:number; }
 export interface LuuNienPalaceLabel { branch:number; name:string; }
 export interface ChartCore {
   age:number; tieuHanBranch:number; monthLimitPalaces?:MonthLimitLabel[]; greatFortune?:GreatFortuneInfo; luuNienPalaces?:LuuNienPalaceLabel[];
