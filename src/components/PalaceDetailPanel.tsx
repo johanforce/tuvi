@@ -88,7 +88,7 @@ export const PalaceDetailPanel: React.FC<PalaceDetailPanelProps> = ({
                     ({STEM_NAMES[selectedPalace.stem]} {BRANCH_NAMES[selectedPalace.branch]})
                   </span>
                   {chart.thanBranch === selectedPalace.branch && (
-                    <span className="rounded bg-amber-600 px-2 py-0.5 text-[11px] font-bold tracking-wide text-white">
+                    <span className="text-[11px] font-bold tracking-wide text-oriental-crimson">
                       THÂN CƯ CUNG NÀY
                     </span>
                   )}
@@ -151,11 +151,11 @@ export const PalaceDetailPanel: React.FC<PalaceDetailPanelProps> = ({
       {/* Tab 2: Lớp Sao Lưu Niên */}
       {activeTab === 'annual' && (
         <div className="space-y-3">
-          <div className="rounded-xl border border-purple-200 bg-purple-50/80 p-3 dark:border-purple-500/30 dark:bg-purple-500/10">
-            <h4 className="font-serif text-[15px] font-bold text-purple-950 dark:text-purple-200">
+          <div className="rounded-xl border border-red-200 bg-red-50/80 p-3 dark:border-red-500/30 dark:bg-red-500/10">
+            <h4 className="font-serif text-[15px] font-bold text-red-950 dark:text-red-200">
               Lớp Sao Lưu Niên {chart.viewedYear} ({chart.viewedYearCanChi.label})
             </h4>
-            <p className="mt-0.5 text-[12px] text-purple-800 dark:text-purple-300">
+            <p className="mt-0.5 text-[12px] text-red-800 dark:text-red-300">
               Các sao lưu được tính toán theo Can Chi năm xem và Can năm sinh (v0.2.4).
             </p>
           </div>

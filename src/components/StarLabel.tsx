@@ -57,20 +57,13 @@ export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = fal
   };
   const textColor = (element && ELEMENT_TEXT[element]) || 'text-stone-600';
 
-  // Nhãn độ sáng: M Miếu, V Vượng, Đ Đắc, B Bình, H Hãm
-  const BRIGHTNESS_PILL: Record<string, string> = {
-    M: 'bg-rose-100 text-rose-700',
-    V: 'bg-blue-100 text-blue-700',
-    'Đ': 'bg-emerald-100 text-emerald-700',
-    B: 'bg-amber-100 text-amber-700',
-    H: 'bg-slate-200 text-slate-600',
-  };
+  // Mỗi mức độ sáng hiển thị bằng ký hiệu rút gọn, không dùng nền badge.
   const BRIGHTNESS_TEXT: Record<string, string> = {
-    M: 'text-rose-600',
-    V: 'text-blue-600',
-    'Đ': 'text-emerald-600',
-    B: 'text-amber-600',
-    H: 'text-slate-500',
+    M: 'text-rose-700',
+    V: 'text-blue-700',
+    'Đ': 'text-emerald-700',
+    B: 'text-red-800',
+    H: 'text-slate-600',
   };
 
   // Sao lưu dùng cùng bảng độ sáng với sao gốc. Bảng hiện có chỉ bao phủ sao
@@ -78,7 +71,6 @@ export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = fal
   const baseStarId = star.id.replace(/^luu-/, '');
   const brightness = getStarBrightness(baseStarId, branch);
   const brightnessKey = brightness ? String(brightness).charAt(0).toUpperCase() : '';
-  const pillClass = BRIGHTNESS_PILL[brightnessKey] || 'bg-stone-100 text-stone-600';
   const brightnessTextClass = BRIGHTNESS_TEXT[brightnessKey] || 'text-stone-500';
   const sign = isMain ? getStarSign(star.id) : '';
 
@@ -94,13 +86,13 @@ export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = fal
   if (isMain) {
     return (
       <div
-        className={`inline-flex items-center gap-1 text-[13px] font-bold leading-tight select-none md:text-sm ${textColor}`}
+        className={`inline-flex max-w-full min-w-0 flex-nowrap items-center justify-center gap-1 whitespace-nowrap text-[12px] font-bold leading-tight select-none md:text-[13px] ${textColor}`}
         title={`Chính tinh: ${star.name} (${element?.toUpperCase() || ''})`}
       >
         {sign && <span className="text-[11px] opacity-70">{sign}</span>}
-        <span className="tracking-tight">{star.name}</span>
+        <span className="shrink-0 text-center tracking-tight">{star.name}</span>
         {brightness && (
-          <span className={`rounded px-1 text-[10px] font-semibold leading-[1.1rem] ${pillClass}`}>
+          <span className={`shrink-0 text-[10px] font-semibold ${brightnessTextClass}`}>
             {brightness}
           </span>
         )}
@@ -111,7 +103,7 @@ export const StarLabel: React.FC<StarLabelProps> = ({ star, branch, isMain = fal
   // Phụ tinh: gọn, thanh; Tứ Hóa đậm hơn để dễ nhận
   return (
     <div
-      className={`whitespace-nowrap text-[11px] leading-[1.35] select-none md:text-[11.5px] ${isTransform ? 'font-bold' : 'font-medium'} ${textColor}`}
+      className={`max-w-full min-w-0 break-words text-[11px] leading-[1.35] select-none md:text-[11.5px] ${isTransform ? 'font-bold' : 'font-medium'} ${textColor}`}
       title={`${star.name} (${element?.toUpperCase() || ''})`}
     >
       <span>{displayName}</span>

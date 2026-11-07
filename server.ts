@@ -8,6 +8,40 @@ import { createServer as createViteServer } from 'vite';
 const app = express();
 app.use(express.json({ limit: '256kb' }));
 
+app.post('/api/bac-de/reading', async (req, res) => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    res.status(503).json({ error: 'Máy chủ chưa được cấu hình GEMINI_API_KEY.' });
+    return;
+  }
+
+  const number = Number(req.body?.number);
+  if (!Number.isInteger(number) || number < 1 || number > 51) {
+    res.status(400).json({ error: 'Số quẻ phải nằm trong khoảng 1–51.' });
+    return;
+  }
+
+  try {
+    const cardList = JSON.parse(await readFile(resolve('src/51_que_bac_de.json'), 'utf8')) as Array<Record<string, any>>;
+    const card = cardList.find(item => item.id === number);
+    if (!card) {
+      res.status(404).json({ error: `Chưa có dữ liệu cho quẻ số ${number}.` });
+      return;
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.5-flash',
+      contents: `Hãy luận giải thẻ Bắc Đế đền Hệ số ${number} dựa riêng trên dữ liệu thẻ bên dưới. Nêu ý chính của bài thơ, liên hệ tích quẻ và các phương diện có dữ liệu. Giải thích lời khuyên bằng tiếng Việt hiện đại, rõ ràng, có phần thuận lợi, điều nên thận trọng và gợi ý ứng xử thực tế. Phân biệt nội dung nguyên bản với phần diễn giải của bạn; không khẳng định tương lai chắc chắn, không tự thêm dữ liệu không có trong thẻ. Với phần đoán bệnh, chỉ tóm lược nội dung văn bản cổ và khuyên tìm chuyên gia y tế, không chẩn đoán hoặc thay tư vấn điều trị. Trình bày bằng Markdown ngắn gọn, dễ đọc.\n\nDỮ LIỆU THẺ:\n${JSON.stringify({ id: card.id, rating: card.rating, title: card.title, tich: card.tich, thi: card.thi, sections: card.sections })}`,
+      config: { temperature: 0.3 },
+    });
+    res.json({ text: response.text ?? '' });
+  } catch (error) {
+    console.error('Bắc Đế reading request failed:', error instanceof Error ? error.message : 'unknown error');
+    res.status(502).json({ error: 'Không thể tạo luận giải lúc này. Vui lòng thử lại.' });
+  }
+});
+
 app.post('/api/tuvi/reading', async (req, res) => {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {

@@ -7,6 +7,20 @@ interface CenterInfoProps {
   chart: ChartCore;
 }
 
+const ELEMENT_TEXT_CLASSES: Record<'Kim' | 'Mộc' | 'Thủy' | 'Hỏa' | 'Thổ', string> = {
+  Kim: 'text-element-kim',
+  Mộc: 'text-element-moc',
+  Thủy: 'text-element-thuy',
+  Hỏa: 'text-element-hoa',
+  Thổ: 'text-element-tho',
+};
+
+function getElementTextClass(label: string): string {
+  const element = (Object.keys(ELEMENT_TEXT_CLASSES) as Array<keyof typeof ELEMENT_TEXT_CLASSES>)
+    .find(name => label.includes(name));
+  return element ? ELEMENT_TEXT_CLASSES[element] : 'text-stone-600';
+}
+
 /**
  * TỌA ĐỘ HÌNH HỌC CHUẨN XÁC CỦA 12 ĐỊA CHI TRÊN ĐƯỜNG BIÊN Ô THIÊN BÀN (2x2):
  * - Nếu ở 4 góc (Tứ Sinh: Dần, Thân, Tỵ, Hợi) -> lấy điểm góc trong (0,0; 100,0; 100,100; 0,100).
@@ -59,6 +73,8 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
   // Bản mệnh Nạp âm & Cục
   const napAmLabel = getNapAm(yearCanChi.label);
   const bureauName = chart.bureau?.name || 'Chưa xác định';
+  const napAmTextClass = getElementTextClass(napAmLabel);
+  const bureauTextClass = getElementTextClass(bureauName);
   const menhCucRelation = getMenhCucRelation(napAmLabel, bureauName);
 
   // Tuổi mụ
@@ -89,17 +105,23 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
         gridRow: '2 / span 2',
         gridColumn: '2 / span 2',
       }}
-      className="center-cell relative flex select-none flex-col justify-between overflow-hidden border-b border-r border-amber-900/25 bg-gradient-to-b from-[#fbf8f0] via-[#f7f1e1] to-[#f4ebe0] p-3 shadow-inner"
+      className="center-cell relative flex select-none flex-col justify-between overflow-hidden border-b border-r border-red-900/20 bg-gradient-to-b from-[#fffafa] via-[#fff3f3] to-[#fce9e9] p-3 shadow-inner"
     >
-      {/* Hoa văn vòng tròn đồng tâm (trang trí) */}
+      {/* Biểu tượng âm dương làm nền trang trí */}
       <svg
-        className="pointer-events-none absolute inset-0 h-full w-full opacity-30"
+        className="pointer-events-none absolute inset-0 h-full w-full"
         viewBox="0 0 400 400"
         preserveAspectRatio="xMidYMid meet"
         aria-hidden="true"
       >
-        <circle cx="200" cy="200" r="130" fill="none" stroke="#c59d5f" strokeWidth="1" />
-        <circle cx="200" cy="200" r="170" fill="none" stroke="#c59d5f" strokeWidth="0.75" strokeDasharray="2 4" />
+        <g opacity="0.18">
+          <circle cx="200" cy="200" r="120" fill="#fffafa" stroke="#8a1c1c" strokeWidth="3" />
+          <path d="M 200 80 A 120 120 0 0 1 200 320 L 200 80 Z" fill="#8a1c1c" />
+          <circle cx="200" cy="140" r="60" fill="#fffafa" />
+          <circle cx="200" cy="260" r="60" fill="#8a1c1c" />
+          <circle cx="200" cy="140" r="15" fill="#8a1c1c" />
+          <circle cx="200" cy="260" r="15" fill="#fffafa" />
+        </g>
       </svg>
 
       {/* ĐƯỜNG NỐI TỪ CUNG THÂN
@@ -112,16 +134,16 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
       >
         <polygon
           points={`${pThan.x},${pThan.y} ${pTrine1.x},${pTrine1.y} ${pTrine2.x},${pTrine2.y}`}
-          fill="rgba(124, 58, 237, 0.04)"
-          stroke="#7c3aed"
+          fill="rgba(179, 38, 30, 0.04)"
+          stroke="#b3261e"
           strokeWidth="1"
           strokeDasharray="3 2"
         />
         <line x1={pThan.x} y1={pThan.y} x2={pOpp.x} y2={pOpp.y} stroke="#dc2626" strokeWidth="1" />
         <circle cx={pThan.x} cy={pThan.y} r="1.5" fill="#dc2626" />
         <circle cx={pOpp.x} cy={pOpp.y} r="1.5" fill="#dc2626" />
-        <circle cx={pTrine1.x} cy={pTrine1.y} r="1.4" fill="#7c3aed" />
-        <circle cx={pTrine2.x} cy={pTrine2.y} r="1.4" fill="#7c3aed" />
+        <circle cx={pTrine1.x} cy={pTrine1.y} r="1.4" fill="#b3261e" />
+        <circle cx={pTrine2.x} cy={pTrine2.y} r="1.4" fill="#b3261e" />
       </svg>
 
       {/* NHÃN ĐỊA CHI QUANH VIỀN */}
@@ -190,9 +212,9 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
           <div className="grid grid-cols-12 items-baseline">
             <span className="col-span-3 font-semibold text-amber-900">Bản mệnh:</span>
             <div className="col-span-9">
-              <span className="font-bold text-element-thuy">{napAmLabel.split('(')[0]?.trim()}</span>
+              <span className={`font-bold ${napAmTextClass}`}>{napAmLabel.split('(')[0]?.trim()}</span>
               <span className="text-stone-400"> — </span>
-              <span className="font-bold text-element-kim">{bureauName}</span>
+              <span className={`font-bold ${bureauTextClass}`}>{bureauName}</span>
               {menhCucRelation && (
                 <span className="block text-[11px] font-semibold text-emerald-700">({menhCucRelation})</span>
               )}

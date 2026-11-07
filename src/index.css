@@ -4,14 +4,14 @@
 @layer base {
   :root {
     color-scheme: light;
-    --parchment: #f7f2fa;
-    --parchment-border: #e7e0ec;
+    --parchment: #fff7f7;
+    --parchment-border: #f0dada;
     --cell-bg: #ffffff;
-    --cell-border: #cac4d0;
+    --cell-border: #e5c8c8;
     --ink: #1c1b1f;
-    --ink-muted: #625d67;
-    --imperial-red: #4f378b;
-    --imperial-gold: #6750a4;
+    --ink-muted: #625454;
+    --imperial-red: #7f1d1d;
+    --imperial-gold: #b3261e;
     --royal-blue: #1e3a8a;
     --jade-green: #15803d;
     --earth-brown: #78350f;
@@ -19,7 +19,7 @@
   }
 
   body {
-    background-color: #f7f2fa;
+    background-color: #fff7f7;
     background-image: none;
     color: var(--ink);
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -28,14 +28,14 @@
 
 @layer base {
   :focus-visible {
-    outline: 3px solid #6750a4;
+    outline: 3px solid #b3261e;
     outline-offset: 2px;
   }
 }
 
 /* Kiểu chữ tiêu đề truyền thống */
 .font-classical {
-  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-family: 'Roboto', 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
 .font-hanzi {
@@ -97,7 +97,7 @@
   }
 
   .center-cell {
-    background: #faf8f2 !important;
-    border: 1.5px solid #8c2d19 !important;
+    background: #fff4f4 !important;
+    border: 1.5px solid #8a1c1c !important;
   }
 }

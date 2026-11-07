@@ -83,7 +83,7 @@ export const ChartToolbar: React.FC<ChartToolbarProps> = ({
               type="checkbox"
               checked={filters[key]}
               onChange={() => onToggleFilter(key)}
-              className="h-3.5 w-3.5 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
+              className="h-3.5 w-3.5 rounded border-red-300 text-red-800 focus:ring-red-600"
             />
             <span>{label}</span>
           </label>

@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { BirthInput } from '../engine/types.js';
 import { Calendar, Clock, User, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface BirthFormProps {
   initialValues?: Partial<BirthInput>;
   onSubmit: (data: BirthInput) => void;
+  onValuesChange?: (data: BirthInput) => void;
 }
 
 export const BirthForm: React.FC<BirthFormProps> = ({
   initialValues,
   onSubmit,
+  onValuesChange,
 }) => {
   const [name, setName] = useState(initialValues?.name || '');
   const [gender, setGender] = useState<'nam' | 'nu'>(initialValues?.gender || 'nam');
@@ -22,6 +24,19 @@ export const BirthForm: React.FC<BirthFormProps> = ({
   const [unknownTime, setUnknownTime] = useState(initialValues?.unknownTime || false);
   const [viewedYear, setViewedYear] = useState<number>(initialValues?.viewedYear || 2026);
   const [errors, setErrors] = useState<{ date?: string; time?: string; gender?: string }>({});
+
+  useEffect(() => {
+    if (!onValuesChange) return;
+    const [hour, minute] = time.split(':').map(Number);
+    onValuesChange({
+      name: name.trim() || undefined,
+      gender,
+      solarDate,
+      ...(Number.isInteger(hour) && Number.isInteger(minute) ? { hour, minute } : {}),
+      unknownTime,
+      viewedYear,
+    });
+  }, [gender, name, onValuesChange, solarDate, time, unknownTime, viewedYear]);
 
   // Tính địa chi giờ sinh trợ giúp
   const getHourBranchName = (timeStr: string) => {
@@ -127,7 +142,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
         {/* Cột trái: Giới thiệu */}
         <div className="space-y-5 lg:col-span-5">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-100/80 px-3 py-1 text-[12px] font-semibold text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
-            <Sparkles className="h-3.5 w-3.5 text-amber-700 dark:text-amber-400" />
+            <Sparkles className="h-3.5 w-3.5 text-red-800 dark:text-red-300" />
             <span>Thuật Toán Chuẩn Hóa Theo tuvidauso.ai.studio</span>
           </div>
 
@@ -144,7 +159,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
           </div>
 
           <p className="text-[14px] leading-relaxed text-stone-600 dark:text-slate-300">
-            Nhập ngày giờ sinh dương lịch để lập lá số theo địa bàn 4x4 truyền thống. Toàn bộ 14 chính tinh, phụ tinh, vòng Tràng Sinh, Bác Sĩ, Thái Tuế và các lớp sao Lưu Niên v0.2.4 được hiển thị trực quan.
+            Nhập ngày giờ sinh dương lịch để lập lá số theo địa bàn truyền thống. Toàn bộ 14 chính tinh, phụ tinh, vòng Tràng Sinh, Bác Sĩ, Thái Tuế và các lớp sao Lưu Niên v0.2.4 được hiển thị trực quan.
           </p>
 
           <div className="paper-inset space-y-2 p-4 text-[13px]">
@@ -153,10 +168,10 @@ export const BirthForm: React.FC<BirthFormProps> = ({
               Điểm đặc trưng phiên bản này
             </h4>
             <ul className="space-y-1.5 text-[12.5px] text-stone-600 dark:text-slate-300">
-              <li className="flex gap-2"><span className="text-amber-600">◆</span>Địa bàn chuẩn 4x4 truyền thống kèm Thiên Bàn 2x2.</li>
-              <li className="flex gap-2"><span className="text-amber-600">◆</span>Các công thức an sao đã được xác nhận; độ sáng được theo dõi riêng.</li>
-              <li className="flex gap-2"><span className="text-amber-600">◆</span>Xuất file PDF khổ A4 ngang lưu trữ sắc nét.</li>
-              <li className="flex gap-2"><span className="text-amber-600">◆</span>Múi giờ chuẩn Việt Nam UTC+7 (không hỏi nơi sinh).</li>
+              <li className="flex gap-2"><span className="text-red-800">◆</span>Địa bàn chuẩn 4x4 truyền thống kèm Thiên Bàn 2x2.</li>
+              <li className="flex gap-2"><span className="text-red-800">◆</span>Các công thức an sao đã được xác nhận; độ sáng được theo dõi riêng.</li>
+              <li className="flex gap-2"><span className="text-red-800">◆</span>Xuất file PDF khổ A4 ngang lưu trữ sắc nét.</li>
+              <li className="flex gap-2"><span className="text-red-800">◆</span>Múi giờ chuẩn Việt Nam UTC+7 (không hỏi nơi sinh).</li>
             </ul>
           </div>
 
@@ -177,7 +192,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
         {/* Cột phải: Form */}
         <div className="paper-card-double p-6 sm:p-7 lg:col-span-7">
           <div className="mb-5 flex items-center gap-2 border-b border-amber-900/15 pb-3 dark:border-slate-700">
-            <Calendar className="h-5 w-5 text-amber-700 dark:text-amber-400" />
+            <Calendar className="h-5 w-5 text-red-800 dark:text-red-300" />
             <h2 className="font-serif text-lg font-bold text-oriental-crimson dark:text-amber-400">Thông tin đương số</h2>
           </div>
 
@@ -196,7 +211,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                   placeholder="Ví dụ: Nguyễn Văn Tuệ"
                   className="field"
                 />
-                <User className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-amber-700/70" />
+                <User className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-red-800/70" />
               </div>
             </div>
 
@@ -218,8 +233,8 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                     onClick={() => setGender(opt.v)}
                     className={`cursor-pointer rounded-xl border px-4 py-2.5 text-left transition-all ${
                       gender === opt.v
-                        ? 'border-oriental-gold bg-gradient-to-br from-amber-700 to-oriental-gold text-white shadow-md shadow-amber-900/20'
-                        : 'border-[#e0d2b4] bg-white/60 text-stone-700 hover:bg-amber-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
+                        ? 'border-oriental-gold bg-gradient-to-br from-red-950 to-oriental-gold text-white shadow-md shadow-red-900/20'
+                        : 'border-[#f0dada] bg-white/60 text-stone-700 hover:bg-red-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
                     <span className="block text-[14px] font-bold">{opt.label}</span>
@@ -248,7 +263,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                   }}
                   className="field"
                 />
-                <Calendar className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-amber-700/70" />
+                <Calendar className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-red-800/70" />
               </div>
               {errors.date && (
                 <p className="mt-1 text-[12px] font-medium text-red-600">{errors.date}</p>
@@ -272,7 +287,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                       setUnknownTime(e.target.checked);
                       if (errors.time) setErrors(prev => ({ ...prev, time: undefined }));
                     }}
-                    className="rounded border-amber-300 text-amber-600 focus:ring-amber-500"
+                    className="rounded border-red-300 text-red-800 focus:ring-red-600"
                   />
                   <span>Không rõ giờ sinh</span>
                 </label>
@@ -291,7 +306,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
                   }}
                   className="field"
                 />
-                <Clock className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-amber-700/70" />
+                <Clock className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-red-800/70" />
               </div>
 
               {errors.time && (

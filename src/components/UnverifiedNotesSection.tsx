@@ -60,7 +60,7 @@ export const UnverifiedNotesSection: React.FC = () => {
         </div>
 
         <div className="paper-inset flex shrink-0 items-center gap-2 px-3 py-1.5 text-[12px] text-amber-900 dark:text-amber-300">
-          <BookOpen className="h-4 w-4 text-amber-700 dark:text-amber-400" />
+          <BookOpen className="h-4 w-4 text-red-800 dark:text-red-300" />
           <span>Chuẩn đối chiếu: <strong>tuvidauso.ai.studio</strong></span>
         </div>
       </div>
@@ -104,7 +104,7 @@ export const UnverifiedNotesSection: React.FC = () => {
                     {item.reason}
                   </span>
                 </div>
-                <div className="ml-2 text-amber-700 dark:text-amber-400">
+                <div className="ml-2 text-red-800 dark:text-red-300">
                   {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </div>
               </button>

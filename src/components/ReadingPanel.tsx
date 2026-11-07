@@ -215,7 +215,7 @@ export function ReadingPanel({ chart }: { chart: ChartCore }) {
             setSection(item.id);
             try { localStorage.setItem(sectionStorageKey, item.id); } catch { /* optional preference */ }
           }}
-          className={`tab ${section === item.id ? 'border-amber-700 text-amber-900 dark:text-amber-300' : ''}`}
+          className={`tab ${section === item.id ? 'border-red-800 text-red-950 dark:text-red-300' : ''}`}
         >
           {item.label}{cached ? ' · Đã lưu' : ''}
         </button>;
@@ -253,7 +253,7 @@ export function ReadingPanel({ chart }: { chart: ChartCore }) {
           onClick={() => {
             setTopicSection(item.id);
           }}
-          className={`tab ${topicSection === item.id ? 'border-amber-700 text-amber-900 dark:text-amber-300' : ''}`}
+          className={`tab ${topicSection === item.id ? 'border-red-800 text-red-950 dark:text-red-300' : ''}`}
         >
           {item.label}{cached ? ' · Đã lưu' : ''}
         </button>;
@@ -262,7 +262,7 @@ export function ReadingPanel({ chart }: { chart: ChartCore }) {
 
     <div className="paper-inset p-4">
       <div className="flex items-center gap-2.5 font-serif text-base font-bold text-oriental-crimson dark:text-amber-400">
-        <ScrollText className="h-5 w-5 text-amber-600" aria-hidden="true" />
+        <ScrollText className="h-5 w-5 text-red-800" aria-hidden="true" />
         <h4>Luận giải: {section === 'key_areas' ? TOPICS.find(item => item.id === topicSection)?.label : selectedSection.label}</h4>
       </div>
       <p className="mt-2 text-sm leading-relaxed text-stone-700 dark:text-slate-300">
@@ -276,7 +276,7 @@ export function ReadingPanel({ chart }: { chart: ChartCore }) {
     </div>
 
     {loading && <div role="status" aria-live="polite" className="paper-card flex items-center justify-center gap-3 p-8 text-sm text-stone-600 dark:text-slate-300">
-      <LoaderCircle className="h-5 w-5 animate-spin text-amber-700" /> Gemini đang phân tích dữ liệu cho mục này…
+      <LoaderCircle className="h-5 w-5 animate-spin text-red-800" /> Gemini đang phân tích dữ liệu cho mục này…
     </div>}
 
     {error && <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/50 dark:text-red-200">{error}</p>}

@@ -47,6 +47,60 @@ function getLeapMonthOffset(a11:number,tz=7):number {
   return i-1;
 }
 export interface LunarDate { day:number; month:number; year:number; isLeapMonth:boolean; }
+
+export const SOLAR_TERM_NAMES = [
+  'Lập Xuân', 'Vũ Thủy', 'Kinh Trập', 'Xuân Phân', 'Thanh Minh', 'Cốc Vũ',
+  'Lập Hạ', 'Tiểu Mãn', 'Mang Chủng', 'Hạ Chí', 'Tiểu Thử', 'Đại Thử',
+  'Lập Thu', 'Xử Thử', 'Bạch Lộ', 'Thu Phân', 'Hàn Lộ', 'Sương Giáng',
+  'Lập Đông', 'Tiểu Tuyết', 'Đại Tuyết', 'Đông Chí', 'Tiểu Hàn', 'Đại Hàn',
+] as const;
+
+export interface SolarTermMoment {
+  index: number;
+  name: typeof SOLAR_TERM_NAMES[number];
+  localDate: string;
+  localDateTime: string;
+}
+
+/** Solar-term instants, found from apparent solar longitude in fixed UTC+7. */
+export function solarTermsForYear(year:number,tz=7):SolarTermMoment[] {
+  const jdAtLocalMidnight = (y:number, month:number, day:number) => Date.UTC(y,month,day)/86400000+2440587.5-tz/24;
+  const toDegrees = (jd:number) => sunLongitude(jd)*180/PI;
+  const start=jdAtLocalMidnight(year,0,1)-0.5;
+  const end=jdAtLocalMidnight(year+1,0,1)+0.5;
+  const events:SolarTermMoment[]=[];
+  const step=0.5;
+
+  for(let left=start;left<end;left+=step){
+    const right=Math.min(left+step,end);
+    const leftDegrees=toDegrees(left);
+    let rightDegrees=toDegrees(right);
+    if(rightDegrees<leftDegrees) rightDegrees+=360;
+
+    for(let index=0;index<SOLAR_TERM_NAMES.length;index++){
+      const base=(315+index*15)%360;
+      for(let cycle=0;cycle<=1;cycle++){
+        const target=base+cycle*360;
+        if(target<=leftDegrees||target>rightDegrees) continue;
+        let low=left,high=right;
+        for(let iteration=0;iteration<32;iteration++){
+          const mid=(low+high)/2;
+          const raw=toDegrees(mid);
+          const adjusted=raw+360*Math.round((target-raw)/360);
+          if(adjusted<target) low=mid; else high=mid;
+        }
+        const instant=(low+high)/2;
+        const local=new Date((instant+tz/24-2440587.5)*86400000);
+        const pad=(value:number)=>String(value).padStart(2,'0');
+        const localDate=`${local.getUTCFullYear()}-${pad(local.getUTCMonth()+1)}-${pad(local.getUTCDate())}`;
+        const localDateTime=`${localDate}T${pad(local.getUTCHours())}:${pad(local.getUTCMinutes())}:${pad(local.getUTCSeconds())}+07:00`;
+        events.push({index,name:SOLAR_TERM_NAMES[index]!,localDate,localDateTime});
+      }
+    }
+  }
+  return events.sort((a,b)=>a.localDateTime.localeCompare(b.localDateTime));
+}
+
 export function solarToLunar(day:number,month:number,year:number,tz=7):LunarDate {
   const dayNumber=julianDayNumber(day,month,year);
   const k=Math.floor((dayNumber-2415021.076998695)/29.530588853);

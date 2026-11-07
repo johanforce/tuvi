@@ -16,6 +16,12 @@ interface PalaceCellProps {
   onClick: () => void;
   gridRow: number;
   gridCol: number;
+  voidBadges: VoidBadgePlacement[];
+}
+
+export interface VoidBadgePlacement {
+  side: 'right' | 'bottom';
+  labels: string[];
 }
 
 const HUNG_SAT_STAR_IDS = new Set([
@@ -43,6 +49,7 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
   onClick,
   gridRow,
   gridCol,
+  voidBadges,
 }) => {
   const canChiAbbr = getPalaceCanChiAbbr(palace.stem, palace.branch);
   const branchElem = getBranchElementInfo(palace.branch);
@@ -101,15 +108,15 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
   const getRelationBg = () => {
     switch (relation) {
       case 'selected':
-        return 'bg-amber-100/80 ring-2 ring-inset ring-oriental-gold z-10';
+        return 'bg-red-50 ring-2 ring-inset ring-oriental-gold z-10';
       case 'opposite':
         return 'bg-sky-50/80 ring-1 ring-inset ring-sky-400/70';
       case 'trine':
         return 'bg-emerald-50/80 ring-1 ring-inset ring-emerald-400/70';
       default:
         return isMenh
-          ? 'bg-red-50/60 ring-1 ring-inset ring-oriental-crimson/30 hover:bg-red-50'
-          : 'bg-transparent hover:bg-amber-50/70';
+          ? 'bg-transparent ring-1 ring-inset ring-oriental-crimson/30 hover:bg-red-50/60'
+          : 'bg-transparent hover:bg-red-50/60';
     }
   };
 
@@ -126,16 +133,16 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
         gridRow: `${gridRow} / span 1`,
         gridColumn: `${gridCol} / span 1`,
       }}
-      className={`palace-cell relative flex cursor-pointer select-none flex-col justify-between overflow-hidden border-b border-r border-amber-900/25 p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-oriental-gold md:p-2 ${getRelationBg()}`}
+      className={`palace-cell relative flex min-w-0 cursor-pointer select-none flex-col justify-between border-b border-r border-red-900/25 p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-oriental-gold md:p-2 ${getRelationBg()}`}
       role="button"
       tabIndex={0}
       aria-label={`Cung ${palace.name} tại ${canChiAbbr}`}
     >
-      <div>
+      <div className="min-w-0">
         {/* 1. HEADER: Can Chi (trái) • Tên cung (giữa) • Đại hạn & tháng (phải) */}
-        <div className="mb-1.5 flex items-start justify-between border-b border-amber-900/15 pb-1">
+        <div className="mb-1.5 flex items-center justify-between border-b border-red-900/15 pb-1">
           <div className="text-left leading-tight">
-            <span className="block font-serif text-[12px] font-bold text-amber-900">
+            <span className="block font-sans text-[12px] font-bold text-red-950">
               {canChiAbbr}
             </span>
             <span className="block text-[10px] font-medium" style={{ color: branchColor }}>
@@ -143,24 +150,24 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
             </span>
           </div>
 
-          <div className="flex flex-col items-center px-1">
+          <div className="flex min-w-0 flex-col items-center justify-center self-center px-1 text-center">
             <span
-              className={`font-classical text-[13px] font-extrabold uppercase tracking-wide md:text-[14px] ${
-                isMenh ? 'rounded bg-red-100/80 px-1.5 text-oriental-crimson' : ''
+              className={`max-w-full break-words font-sans text-[13px] font-extrabold uppercase tracking-wide md:text-[14px] ${
+                isMenh ? 'text-oriental-crimson' : ''
               }`}
               style={isMenh ? undefined : { color: branchColor }}
             >
               {palace.name.toUpperCase()}
             </span>
             {isThan && (
-              <span className="mt-0.5 rounded bg-amber-600 px-1.5 text-[9px] font-bold leading-4 tracking-wider text-white">
+              <span className="mt-0.5 text-[12px] font-extrabold leading-4 tracking-wide text-oriental-crimson md:text-[13px]">
                 THÂN
               </span>
             )}
           </div>
 
           <div className="text-right leading-tight">
-            <span className="block font-serif text-[12px] font-bold text-stone-800">
+            <span className="block font-sans text-[12px] font-bold text-stone-800">
               {daiHanAge !== undefined ? daiHanAge : '—'}
             </span>
             <span className="block text-[10px] text-stone-500">Th.{monthIndex}</span>
@@ -169,7 +176,7 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
 
         {/* 2. CHÍNH TINH — căn giữa, nổi bật */}
         {filters.main && mainStars.length > 0 && (
-          <div className="mb-1.5 flex flex-col items-center justify-center gap-0.5 border-b border-amber-900/10 pb-1.5 pt-0.5">
+          <div className="mb-1.5 flex flex-col items-center justify-center gap-0.5 border-b border-red-900/10 pb-1.5 pt-0.5">
             {mainStars.map(star => (
               <StarLabel key={star.id} star={star} branch={palace.branch} isMain={true} />
             ))}
@@ -177,14 +184,14 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
         )}
 
         {/* 3. HAI CỘT PHỤ TINH: Cát tinh (trái) • Hung sát tinh (phải) */}
-        <div className="grid min-h-[90px] grid-cols-2 gap-x-1.5 gap-y-0.5 text-[11px]">
-          <div className="flex flex-col gap-0.5 text-left">
+        <div className="grid min-h-[90px] min-w-0 grid-cols-2 gap-x-1.5 gap-y-0.5 text-[11px]">
+          <div className="flex min-w-0 flex-col gap-0.5 text-left">
             {leftColumnStars.map((s, idx) => (
               <StarLabel key={`${s.id}-${idx}`} star={s} branch={palace.branch} />
             ))}
           </div>
 
-          <div className="flex flex-col gap-0.5 text-left">
+          <div className="flex min-w-0 flex-col gap-0.5 text-left">
             {rightColumnStars.map((s, idx) => (
               <StarLabel key={`${s.id}-${idx}`} star={s} branch={palace.branch} />
             ))}
@@ -193,11 +200,27 @@ export const PalaceCell: React.FC<PalaceCellProps> = ({
       </div>
 
       {/* 4. FOOTER: ĐV.[Cung] • Tràng Sinh • LN.[Cung] */}
-      <div className="mt-2 flex items-center justify-between border-t border-dashed border-amber-900/25 pt-1 text-[10px] font-medium text-stone-500">
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-x-1 border-t border-dashed border-red-900/25 pt-1 text-[10px] font-medium text-stone-500">
         <span className="uppercase">{daiVanName || ''}</span>
-        <span className="font-bold text-amber-800">{trangSinhStar?.name || '—'}</span>
+        <span className="font-bold text-red-900">{trangSinhStar?.name || '—'}</span>
         <span className="uppercase">{luuNienName || ''}</span>
       </div>
+
+      {voidBadges.map(({ side, labels }, index) => (
+        <div
+          key={`${side}-${index}`}
+          className={`pointer-events-none absolute z-50 flex select-none gap-1 ${side === 'right' ? 'flex-col' : 'flex-row'}`}
+          style={side === 'right'
+            ? { top: '50%', right: 0, transform: 'translate(50%, -50%) rotate(90deg)' }
+            : { left: '50%', bottom: 0, transform: 'translate(-50%, 50%)' }}
+        >
+          {labels.map(label => (
+            <span key={label} className="rounded border border-red-300/60 bg-oriental-ink px-2 py-0 text-[9px] font-bold leading-3 tracking-wide text-red-100 shadow-md">
+              {label}
+            </span>
+          ))}
+        </div>
+      ))}
     </div>
   );
 };

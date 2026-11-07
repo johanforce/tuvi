@@ -30,7 +30,7 @@ const BRANCH_ELEMENT_INFO: Record<number, string> = {
   11: '-Thủy', // Hợi
 };
 const BRANCH_ELEMENT_COLORS: Record<string, string> = {
-  Kim: '#5b666e', Mộc: '#279653', Thủy: '#2787CE', Hỏa: '#D94A40', Thổ: '#FFD700',
+  Kim: '#475569', Mộc: '#166534', Thủy: '#1d4ed8', Hỏa: '#b42318', Thổ: '#805600',
 };
 
 export function getPalaceCanChiAbbr(stem: number, branch: number): string {
@@ -51,7 +51,7 @@ export function getBranchElementColor(branch: number): string {
 // Màu tiêu đề cung như trong fixture tuvidauso.ai.studio
 export function getPalaceNameColor(palaceName: string, isThan: boolean): string {
   if (palaceName.includes('Mệnh') || isThan) {
-    return 'text-[#d97706]'; // Cam / hổ phách
+    return 'text-[#7f1d1d]'; // Đỏ sẫm, đủ tương phản trên nền sáng
   }
   switch (palaceName) {
     case 'Huynh Đệ':
@@ -64,7 +64,7 @@ export function getPalaceNameColor(palaceName: string, isThan: boolean): string 
       return 'text-[#16a34a]'; // Xanh lá
     case 'Điền Trạch':
     case 'Tử Tức':
-      return 'text-[#d97706]'; // Cam
+      return 'text-[#7f1d1d]'; // Đỏ sẫm
     case 'Phụ Mẫu':
     case 'Phúc Đức':
       return 'text-[#4b5563]'; // Xám chì
