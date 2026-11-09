@@ -1,0 +1,3415 @@
+{
+  "version": "1.4.0",
+  "locale": "vi-VN",
+  "title": "Kho quy tắc luận giải Tử Vi bản địa",
+  "description": "Kho quy tắc luận giải cục bộ theo cung, sao, Tứ Hóa, độ sáng được truyền từ lá số (trạng thái xác minh được theo dõi riêng), Tuần/Triệt, tam phương và tam phương tứ chính. Nội dung là diễn giải hiện đại để tham khảo, không phải nguyên văn cổ thư.",
+  "interpretivePrinciples": [
+    "Đọc sao trong cung và thế liên hệ, không lấy một sao đơn lẻ làm kết luận cho toàn lá số.",
+    "Đối chiếu chính tinh, phụ tinh và nhãn độ sáng có trên lá số; trạng thái xác minh nguồn được theo dõi riêng, không dùng để bỏ qua nhãn đã có.",
+    "Không chuyển các câu đoán cổ về bệnh tật, sinh tử, số con, hình phạt hoặc định mệnh thành kết luận dành cho người dùng.",
+    "Diễn giải theo xu hướng và cách ứng xử có thể cân nhắc; không khẳng định sự kiện chắc chắn."
+  ],
+  "sources": [
+    {
+      "id": "ziwei-quanshu-wikisource",
+      "title": "Tử Vi Đẩu Số Toàn Thư, bản chữ Hán trên Wikisource",
+      "url": "https://zh.wikisource.org/wiki/%E7%B4%AB%E5%BE%AE%E6%96%97%E6%95%B8%E5%85%A8%E6%9B%B8",
+      "relatedChapters": [
+        "卷一：太微賦（同躔須辨生剋、得失，不可一概而論）",
+        "卷一：斗數準繩、斗數發微論（兼看同宮、對照與三方吉凶）",
+        "卷二：十二宮諸星論",
+        "卷三：論諸星同垣各司所宜"
+      ],
+      "role": "Nguồn cổ thư để đối chiếu thuật ngữ, ý nghĩa sao và nguyên tắc phối hợp. Các đoạn được viện dẫn nhấn mạnh phải xét sao đồng cung cùng sinh khắc, cát hung và cung chiếu; không đưa ra công thức luận Tuần/Triệt theo từng tổ hợp. Phần diễn giải Tuần/Triệt trong ứng dụng là tổng hợp hiện đại từ nguyên tắc phối hợp này, không phải lời cổ thư. Lời đoán cổ cực đoan, định mệnh hoặc lỗi thời bị loại khỏi nội dung ứng dụng."
+    },
+    {
+      "id": "project-topic-guides",
+      "title": "Các bảng kiến giải biên soạn trong dự án",
+      "files": [
+        "src/02-ban-than-va-gia-dinh.md",
+        "src/03-tinh-cam.md",
+        "src/04-su-nghiep-tai-chinh.md",
+        "src/05-quan-he-moi-truong.md",
+        "src/06-suc-khoe.md"
+      ],
+      "role": "Cơ sở trực tiếp để tạo các quy tắc tiếng Việt trong database."
+    },
+    {
+      "id": "supplement-1-4-0",
+      "title": "Bổ sung biên soạn v1.4.0",
+      "role": "Mô tả chính tinh theo cung, Tứ Hóa theo cung, sao phụ/vòng sao/sao lưu niên, tổ hợp sao. Diễn giải hiện đại, chưa đối chiếu từng mục với cổ thư."
+    }
+  ],
+  "topics": {
+    "chart_foundation": {
+      "label": "Mệnh và nền tảng cá nhân",
+      "palaces": [
+        "Mệnh"
+      ]
+    },
+    "personal_family": {
+      "label": "Gia đình và nền tảng",
+      "palaces": [
+        "Phụ Mẫu",
+        "Huynh Đệ",
+        "Phúc Đức",
+        "Điền Trạch"
+      ]
+    },
+    "love": {
+      "label": "Tình cảm và con cái",
+      "palaces": [
+        "Phu Thê",
+        "Tử Tức"
+      ]
+    },
+    "career_finance": {
+      "label": "Sự nghiệp, tài chính và học vấn",
+      "palaces": [
+        "Quan Lộc",
+        "Tài Bạch"
+      ]
+    },
+    "environment": {
+      "label": "Quan hệ xã hội và môi trường",
+      "palaces": [
+        "Nô Bộc",
+        "Thiên Di"
+      ]
+    },
+    "health": {
+      "label": "Chăm sóc bản thân",
+      "palaces": [
+        "Tật Ách"
+      ]
+    }
+  },
+  "starClasses": {
+    "mainStarIds": [
+      "tu-vi",
+      "thien-co",
+      "thai-duong",
+      "vu-khuc",
+      "thien-dong",
+      "liem-trinh",
+      "thien-phu",
+      "thai-am",
+      "tham-lang",
+      "cu-mon",
+      "thien-tuong",
+      "thien-luong",
+      "that-sat",
+      "pha-quan"
+    ],
+    "transformationIds": [
+      "hoa-loc",
+      "hoa-quyen",
+      "hoa-khoa",
+      "hoa-ky"
+    ],
+    "placementLabels": {
+      "oneMainStar": "Chính tinh tọa thủ",
+      "multipleMainStars": "Chính tinh đồng cung",
+      "noMainStar": "Vô chính diệu",
+      "otherStars": "Phụ tinh đồng cung",
+      "transformations": "Tứ Hóa tọa cung"
+    },
+    "emptyPalaceNote": "Khi cung vô chính diệu, đọc thêm chính tinh ở đối cung theo cách luận của trường phái đang dùng; cần xét phụ tinh, tam phương tứ chính và các yếu tố chế hóa, không suy từ một cung đơn lẻ."
+  },
+  "palaceProfiles": {
+    "Mệnh": "Nền tảng tính cách, cách lựa chọn và chủ động ứng xử. Luận cùng Thân, tam phương tứ chính và các sao thực có trong cung.",
+    "Phụ Mẫu": "Quan hệ với cha mẹ, sự nuôi dưỡng, học vấn ban đầu và sự hỗ trợ từ bề trên.",
+    "Phúc Đức": "Đời sống tinh thần, nếp nhà, sự gắn kết họ hàng và khả năng tìm điểm tựa nội tâm.",
+    "Điền Trạch": "Nơi ở, tài sản tích lũy, sự ổn định của không gian sống; không đồng nhất với dòng tiền Tài Bạch.",
+    "Quan Lộc": "Cách làm việc, vai trò nghề nghiệp, môi trường phát triển và trách nhiệm đảm nhận.",
+    "Nô Bộc": "Bạn bè, đồng nghiệp, người hỗ trợ và cách duy trì quan hệ hợp tác.",
+    "Thiên Di": "Cách ứng xử ngoài môi trường quen thuộc, việc đi lại và cơ hội từ bên ngoài.",
+    "Tật Ách": "Theo lối luận truyền thống, cung này gợi thói quen chăm sóc bản thân và điểm cần giữ cân bằng; không dùng để chẩn đoán.",
+    "Tài Bạch": "Cách tạo thu nhập, quản lý dòng tiền và ứng xử với nguồn lực tài chính.",
+    "Tử Tức": "Mối quan hệ cha mẹ–con cái, sự đồng hành và cách nuôi dưỡng; không suy ra số lượng hay khả năng sinh con.",
+    "Phu Thê": "Cách gắn bó, nhu cầu trong quan hệ và hình ảnh quan hệ lâu dài; không kết luận chắc chắn kết hôn hay đổ vỡ.",
+    "Huynh Đệ": "Quan hệ anh chị em và những người thân cận có tính đồng hành, hỗ trợ."
+  },
+  "starProfiles": {
+    "tu-vi": {
+      "name": "Tử Vi",
+      "han": "紫微",
+      "core": "Tổ chức, điều phối, trách nhiệm và mong muốn giữ vai trò chủ động.",
+      "strength": "Biết quy tụ nguồn lực, chịu trách nhiệm và nhìn toàn cục.",
+      "watchout": "Dễ ôm quyền hoặc kỳ vọng người khác theo khuôn mình đặt ra."
+    },
+    "thien-co": {
+      "name": "Thiên Cơ",
+      "han": "天機",
+      "core": "Tư duy, tính toán, kỹ năng xoay xở và khả năng tìm phương án.",
+      "strength": "Nhanh học, giỏi phân tích và thích nghi.",
+      "watchout": "Dễ suy tính nhiều hoặc đổi hướng trước khi theo đuổi đủ lâu."
+    },
+    "thai-duong": {
+      "name": "Thái Dương",
+      "han": "太陽",
+      "core": "Sự chủ động, công khai, tinh thần đóng góp và nhu cầu được ghi nhận.",
+      "strength": "Thẳng thắn, có tinh thần hỗ trợ và dễ đứng ra gánh việc.",
+      "watchout": "Có thể làm quá sức hoặc chú ý nhiều đến sự công nhận bên ngoài."
+    },
+    "vu-khuc": {
+      "name": "Vũ Khúc",
+      "han": "武曲",
+      "core": "Tính thực tế, kỷ luật, năng lực quản trị nguồn lực và theo đuổi mục tiêu.",
+      "strength": "Quyết đoán, bền bỉ và chú trọng kết quả cụ thể.",
+      "watchout": "Dễ cứng rắn, khô khan hoặc đặt hiệu quả lên trên cảm xúc."
+    },
+    "thien-dong": {
+      "name": "Thiên Đồng",
+      "han": "天同",
+      "core": "Sự mềm mỏng, cảm thông, linh hoạt và nhu cầu về môi trường dễ chịu.",
+      "strength": "Dễ hòa hợp, biết chia sẻ và thích ứng với người khác.",
+      "watchout": "Có thể ngại va chạm hoặc trì hoãn quyết định khó."
+    },
+    "liem-trinh": {
+      "name": "Liêm Trinh",
+      "han": "廉貞",
+      "core": "Nguyên tắc, ranh giới, sức hút cá nhân và khả năng làm việc trong khuôn khổ.",
+      "strength": "Có ý thức trách nhiệm, biết giữ tiêu chuẩn và theo đuổi điều mình tin.",
+      "watchout": "Dễ căng thẳng khi nguyên tắc bị thử thách hoặc khi quan hệ thiếu rõ ràng."
+    },
+    "thien-phu": {
+      "name": "Thiên Phủ",
+      "han": "天府",
+      "core": "Tích lũy, bảo toàn nguồn lực, sự ổn định và khả năng chăm lo.",
+      "strength": "Thận trọng, có tổ chức và biết giữ nền tảng lâu dài.",
+      "watchout": "Đôi khi quá an toàn hoặc chậm thay đổi khi hoàn cảnh đã khác."
+    },
+    "thai-am": {
+      "name": "Thái Âm",
+      "han": "太陰",
+      "core": "Sự quan sát, chiều sâu cảm xúc, tính riêng tư và xu hướng vun bồi.",
+      "strength": "Tinh tế, kiên nhẫn và giỏi nhận ra nhu cầu chưa nói thành lời.",
+      "watchout": "Dễ giữ lo lắng trong lòng hoặc suy nghĩ kéo dài."
+    },
+    "tham-lang": {
+      "name": "Tham Lang",
+      "han": "貪狼",
+      "core": "Giao tiếp, trải nghiệm, sức hút xã hội và nhiều mối quan tâm.",
+      "strength": "Linh hoạt, dễ kết nối và có khả năng phát triển nhiều kỹ năng.",
+      "watchout": "Dễ phân tán sức lực hoặc theo đuổi quá nhiều mục tiêu cùng lúc."
+    },
+    "cu-mon": {
+      "name": "Cự Môn",
+      "han": "巨門",
+      "core": "Ngôn ngữ, đặt câu hỏi, phân tích và làm rõ điều còn khuất.",
+      "strength": "Có khả năng phản biện, nghiên cứu và phát hiện điểm chưa hợp lý.",
+      "watchout": "Lời nói dễ bị hiểu là chỉ trích; nên kiểm tra cách diễn đạt và dữ kiện."
+    },
+    "thien-tuong": {
+      "name": "Thiên Tướng",
+      "han": "天相",
+      "core": "Phối hợp, phục vụ, công bằng và giữ cho công việc vận hành hài hòa.",
+      "strength": "Biết hỗ trợ, cân nhắc nhiều phía và làm cầu nối.",
+      "watchout": "Dễ phụ thuộc đánh giá của người khác hoặc ngại tự quyết."
+    },
+    "thien-luong": {
+      "name": "Thiên Lương",
+      "han": "天梁",
+      "core": "Kinh nghiệm, bảo hộ, cố vấn và ý thức về chuẩn mực.",
+      "strength": "Điềm tĩnh, đáng tin và có xu hướng giúp người khác tháo gỡ vấn đề.",
+      "watchout": "Có thể quá lo xa hoặc khuyên bảo khi người khác chưa cần."
+    },
+    "that-sat": {
+      "name": "Thất Sát",
+      "han": "七殺",
+      "core": "Quyết đoán, tự chủ, chịu áp lực và xử lý tình huống khó.",
+      "strength": "Dám nhận việc khó, phản ứng nhanh và có năng lực hành động độc lập.",
+      "watchout": "Dễ nóng vội hoặc xem nhẹ nhu cầu phối hợp."
+    },
+    "pha-quan": {
+      "name": "Phá Quân",
+      "han": "破軍",
+      "core": "Đổi mới, tháo bỏ cách cũ và tái cấu trúc khi cần.",
+      "strength": "Dám thử hướng mới và không ngại bắt đầu lại.",
+      "watchout": "Dễ thay đổi trước khi tính đủ chi phí và tính liên tục."
+    },
+    "ta-phu": {
+      "name": "Tả Phù",
+      "han": "左輔",
+      "core": "Sự hỗ trợ, cộng tác và khả năng tổ chức công việc cùng người khác.",
+      "strength": "Biết góp sức và phối hợp.",
+      "watchout": "Cần phân định rõ phần việc để tránh ôm trách nhiệm thay người khác."
+    },
+    "huu-bat": {
+      "name": "Hữu Bật",
+      "han": "右弼",
+      "core": "Sự trợ giúp, kết nối và khả năng làm hậu thuẫn.",
+      "strength": "Dễ tìm được người cùng giải quyết việc.",
+      "watchout": "Không nên dựa hoàn toàn vào sự hỗ trợ bên ngoài."
+    },
+    "van-xuong": {
+      "name": "Văn Xương",
+      "han": "文昌",
+      "core": "Học tập, diễn đạt, ghi chép và hệ thống hóa thông tin.",
+      "strength": "Thuận lợi khi cần trình bày hoặc làm việc với văn bản.",
+      "watchout": "Cần kiểm tra chi tiết và tránh quá cầu toàn."
+    },
+    "van-khuc": {
+      "name": "Văn Khúc",
+      "han": "文曲",
+      "core": "Ngôn ngữ, cảm thụ, sáng tạo và khả năng biểu đạt tinh tế.",
+      "strength": "Có duyên với cách diễn đạt và ý tưởng sáng tạo.",
+      "watchout": "Nên gắn cảm hứng với kế hoạch thực hiện cụ thể."
+    },
+    "thien-khoi": {
+      "name": "Thiên Khôi",
+      "han": "天魁",
+      "core": "Sự hướng dẫn, cơ hội học hỏi và trợ lực từ người có kinh nghiệm.",
+      "strength": "Dễ gặp người mở thêm góc nhìn hoặc cơ hội.",
+      "watchout": "Cần chủ động chuẩn bị để nắm bắt sự giúp đỡ."
+    },
+    "thien-viet": {
+      "name": "Thiên Việt",
+      "han": "天鉞",
+      "core": "Sự nâng đỡ, kết nối và khả năng nhận lời khuyên đúng lúc.",
+      "strength": "Có thể được hỗ trợ khi biết tìm đúng người.",
+      "watchout": "Không nên chờ may mắn thay cho hành động của mình."
+    },
+    "loc-ton": {
+      "name": "Lộc Tồn",
+      "han": "祿存",
+      "core": "Sự tích lũy, gìn giữ nguồn lực và cân nhắc lợi ích dài hạn.",
+      "strength": "Có xu hướng biết dành dụm và bảo toàn thành quả.",
+      "watchout": "Cần tránh quá dè dặt hoặc giữ chặt điều đã hết phù hợp."
+    },
+    "thien-ma": {
+      "name": "Thiên Mã",
+      "han": "天馬",
+      "core": "Dịch chuyển, thay đổi môi trường và phát triển qua hoạt động.",
+      "strength": "Linh hoạt, dễ mở rộng trải nghiệm và quan hệ.",
+      "watchout": "Cần cân đối sức lực, thời gian và chi phí di chuyển."
+    },
+    "kinh-duong": {
+      "name": "Kình Dương",
+      "han": "擎羊",
+      "core": "Tính quyết liệt, trực diện và xu hướng xử lý vấn đề nhanh.",
+      "strength": "Dám đối mặt việc khó và bảo vệ ranh giới.",
+      "watchout": "Dễ va chạm nếu thiếu kiên nhẫn hoặc quá cứng."
+    },
+    "da-la": {
+      "name": "Đà La",
+      "han": "陀羅",
+      "core": "Sự bền bỉ, dai dẳng và những vấn đề cần tháo gỡ từng bước.",
+      "strength": "Có thể kiên trì với việc phức tạp.",
+      "watchout": "Tránh để bất đồng nhỏ kéo dài thành bế tắc."
+    },
+    "hoa-tinh": {
+      "name": "Hỏa Tinh",
+      "han": "火星",
+      "core": "Năng lượng mạnh, phản ứng nhanh và tính thúc đẩy hành động.",
+      "strength": "Có thể tạo động lực khi cần khởi sự.",
+      "watchout": "Nên dừng lại kiểm tra trước quyết định nóng vội."
+    },
+    "linh-tinh": {
+      "name": "Linh Tinh",
+      "han": "鈴星",
+      "core": "Sự nhạy cảm với biến động và phản ứng nội tâm mạnh.",
+      "strength": "Nhận ra thay đổi sớm và có khả năng tập trung cao.",
+      "watchout": "Cần quản lý căng thẳng và tránh phản ứng khi chưa đủ thông tin."
+    },
+    "dia-khong": {
+      "name": "Địa Không",
+      "han": "地空",
+      "core": "Sự thay đổi bất ngờ, khoảng trống hoặc nhu cầu làm mới cách tiếp cận.",
+      "strength": "Có thể buông bỏ khuôn mẫu không còn hữu ích.",
+      "watchout": "Nên có phương án dự phòng và kiểm chứng giả định."
+    },
+    "dia-kiep": {
+      "name": "Địa Kiếp",
+      "han": "地劫",
+      "core": "Tính bất định và những lần phải điều chỉnh kế hoạch hoặc nguồn lực.",
+      "strength": "Có thể rút kinh nghiệm nhanh sau thay đổi.",
+      "watchout": "Nên quản trị rủi ro, tránh quyết định tất tay."
+    },
+    "dao-hoa": {
+      "name": "Đào Hoa",
+      "han": "桃花",
+      "core": "Sức hút xã hội, sự duyên dáng và nhu cầu giao tiếp.",
+      "strength": "Dễ tạo thiện cảm và kết nối.",
+      "watchout": "Cần giữ ranh giới rõ ràng trong các mối quan hệ."
+    },
+    "hong-loan": {
+      "name": "Hồng Loan",
+      "han": "紅鸞",
+      "core": "Sự ấm áp, rung động và khả năng tạo kết nối tình cảm.",
+      "strength": "Khuyến khích sự cởi mở và quan tâm.",
+      "watchout": "Không nên xem duyên gặp gỡ là bảo đảm cho kết quả lâu dài."
+    },
+    "thien-hy": {
+      "name": "Thiên Hỷ",
+      "han": "天喜",
+      "core": "Không khí vui vẻ, sự hòa đồng và tin vui trong giao tiếp.",
+      "strength": "Giúp quan hệ thêm cởi mở, dễ chia sẻ.",
+      "watchout": "Cần duy trì sự chân thành sau giai đoạn hào hứng ban đầu."
+    },
+    "co-than": {
+      "name": "Cô Thần",
+      "han": "孤辰",
+      "core": "Tính độc lập, nhu cầu riêng tư và xu hướng tự xử lý cảm xúc.",
+      "strength": "Có thể tự chủ và làm việc độc lập.",
+      "watchout": "Nên chủ động chia sẻ để tránh tự cô lập."
+    },
+    "qua-tu": {
+      "name": "Quả Tú",
+      "han": "寡宿",
+      "core": "Sự kín đáo, chọn lọc trong thân thiết và nhu cầu có không gian riêng.",
+      "strength": "Biết suy xét trước khi trao niềm tin.",
+      "watchout": "Cần bày tỏ nhu cầu thay vì để người khác đoán."
+    },
+    "hoa-cai": {
+      "name": "Hoa Cái",
+      "han": "華蓋",
+      "core": "Thẩm mỹ, chiều sâu suy tưởng và xu hướng theo đuổi sở thích riêng.",
+      "strength": "Có thể tập trung vào chuyên môn hoặc sáng tạo.",
+      "watchout": "Cần cân bằng thời gian một mình với sự hợp tác."
+    },
+    "thien-khoc": {
+      "name": "Thiên Khốc",
+      "han": "天哭",
+      "core": "Độ nhạy cảm với mất mát, áp lực hoặc cảm xúc của người khác.",
+      "strength": "Có chiều sâu đồng cảm.",
+      "watchout": "Nên tìm hỗ trợ khi cảm xúc nặng nề kéo dài."
+    },
+    "thien-hu": {
+      "name": "Thiên Hư",
+      "han": "天虛",
+      "core": "Sự suy tư, cảm giác hụt hẫng và nhu cầu tìm ý nghĩa.",
+      "strength": "Có thể nhìn ra điều chưa trọn vẹn để cải thiện.",
+      "watchout": "Tránh để lo nghĩ thay thế việc kiểm tra thực tế."
+    },
+    "thien-duc": {
+      "name": "Thiên Đức",
+      "han": "天德",
+      "core": "Tinh thần thiện chí, hòa giải và chú ý đến cách cư xử.",
+      "strength": "Hỗ trợ cách giải quyết ôn hòa.",
+      "watchout": "Lòng tốt cần đi cùng ranh giới phù hợp."
+    },
+    "nguyet-duc": {
+      "name": "Nguyệt Đức",
+      "han": "月德",
+      "core": "Sự mềm mỏng, cảm thông và khả năng giảm căng thẳng trong quan hệ.",
+      "strength": "Dễ tìm cách hòa giải.",
+      "watchout": "Không nên né tránh vấn đề cần được nói rõ."
+    },
+    "long-duc": {
+      "name": "Long Đức",
+      "han": "龍德",
+      "core": "Thiện chí, sự giúp đỡ và xu hướng tìm cách xử lý có tình có lý.",
+      "strength": "Có thể tạo lòng tin qua cách hành xử tử tế.",
+      "watchout": "Cần kết hợp thiện chí với việc làm cụ thể."
+    },
+    "thien-hinh": {
+      "name": "Thiên Hình",
+      "han": "天刑",
+      "core": "Kỷ luật, nguyên tắc và ý thức về ranh giới đúng sai.",
+      "strength": "Làm việc nghiêm túc, giữ chuẩn mực và dám nói điều cần nói.",
+      "watchout": "Dễ khắt khe với bản thân và người khác nếu thiếu linh hoạt.",
+      "group": "minor"
+    },
+    "thien-dieu": {
+      "name": "Thiên Diêu",
+      "han": "天姚",
+      "core": "Sức hút, sự tinh tế và nhạy cảm trong cảm xúc.",
+      "strength": "Khéo léo, có duyên giao tiếp và thẩm mỹ.",
+      "watchout": "Dễ để cảm xúc chi phối quyết định; cần minh bạch trong quan hệ.",
+      "group": "minor"
+    },
+    "thien-y": {
+      "name": "Thiên Y",
+      "han": "天醫",
+      "core": "Tinh thần chăm sóc, hỗ trợ và quan tâm đến cách giữ cân bằng.",
+      "strength": "Biết lắng nghe, giúp người khác và tìm hướng giải quyết nhẹ nhàng.",
+      "watchout": "Cần phân biệt quan tâm với ôm việc thay người khác.",
+      "group": "minor"
+    },
+    "thien-quan": {
+      "name": "Thiên Quan",
+      "han": "天官",
+      "core": "Tinh thần trách nhiệm, vị thế và sự hỗ trợ từ người có kinh nghiệm.",
+      "strength": "Dễ nhận sự nâng đỡ trong công việc có tổ chức.",
+      "watchout": "Cần tự chủ để không phụ thuộc vào người đỡ đầu.",
+      "group": "minor"
+    },
+    "thien-phuc": {
+      "name": "Thiên Phúc",
+      "han": "天福",
+      "core": "Sự an yên, thuận lợi và cảm giác được che chở.",
+      "strength": "Giúp giữ tâm thế bình ổn, biết trân trọng điều đang có.",
+      "watchout": "Dễ chủ quan nếu quá an nhàn; cần giữ nhịp phát triển.",
+      "group": "minor"
+    },
+    "quoc-an": {
+      "name": "Quốc Ấn",
+      "han": "國印",
+      "core": "Trách nhiệm, uy tín và sự tin cậy trong vai trò được giao.",
+      "strength": "Hợp việc quản lý, thủ tục, giữ tín nhiệm.",
+      "watchout": "Dễ nặng nề vì trách nhiệm hoặc quá coi trọng danh phận.",
+      "group": "minor"
+    },
+    "thien-tho": {
+      "name": "Thiên Thọ",
+      "han": "天壽",
+      "core": "Sự bền bỉ, điềm tĩnh và khả năng kiên nhẫn theo thời gian.",
+      "strength": "Làm việc đều đặn, không vội, biết chờ thời điểm.",
+      "watchout": "Dễ thụ động nếu quá thong thả; cần đặt mốc cụ thể.",
+      "group": "minor"
+    },
+    "an-quang": {
+      "name": "Ân Quang",
+      "han": "恩光",
+      "core": "Sự giúp đỡ, thiện cảm và cơ hội được ghi nhận.",
+      "strength": "Dễ được người khác nhìn nhận, hỗ trợ khi làm việc chân thành.",
+      "watchout": "Cần chủ động cảm ơn và giữ mối quan hệ qua lại.",
+      "group": "minor"
+    },
+    "thien-quy": {
+      "name": "Thiên Quý",
+      "han": "天貴",
+      "core": "Phẩm hạnh, sự chỉn chu và mong muốn được tôn trọng.",
+      "strength": "Cư xử có chuẩn mực, dễ tạo thiện cảm đúng mực.",
+      "watchout": "Dễ để ý hình ảnh, cần đặt thực chất lên trước.",
+      "group": "minor"
+    },
+    "tam-thai": {
+      "name": "Tam Thai",
+      "han": "三台",
+      "core": "Cơ hội tiến bước, vị thế và khuôn phép trong môi trường tổ chức.",
+      "strength": "Hợp lộ trình thăng tiến từng bước.",
+      "watchout": "Cần kiên nhẫn; tránh so sánh vị trí với người khác.",
+      "group": "minor"
+    },
+    "bat-toa": {
+      "name": "Bát Tọa",
+      "han": "八座",
+      "core": "Vị trí, nghi thức và sự trang nghiêm trong ứng xử.",
+      "strength": "Giữ phong thái chuẩn mực, dễ được coi trọng.",
+      "watchout": "Dễ cứng nhắc về hình thức; cần mềm mỏng.",
+      "group": "minor"
+    },
+    "long-tri": {
+      "name": "Long Trì",
+      "han": "龍池",
+      "core": "Sự khéo léo, tao nhã và năng khiếu thẩm mỹ.",
+      "strength": "Khéo tay, có gu, giỏi trình bày.",
+      "watchout": "Dễ chú trọng vẻ ngoài; cần đủ nội dung.",
+      "group": "minor"
+    },
+    "phuong-cac": {
+      "name": "Phượng Các",
+      "han": "鳳閣",
+      "core": "Phong thái thanh lịch, thẩm mỹ và sự tinh tế.",
+      "strength": "Cư xử duyên dáng, có khiếu nghệ thuật.",
+      "watchout": "Cần cân bằng giữa vẻ đẹp và tính thực tế.",
+      "group": "minor"
+    },
+    "thien-tai": {
+      "name": "Thiên Tài",
+      "han": "天才",
+      "core": "Tư chất, năng khiếu và khả năng tiếp thu.",
+      "strength": "Học nhanh khi được đúng môi trường.",
+      "watchout": "Dễ chủ quan; cần rèn luyện đều để năng khiếu thành kỹ năng.",
+      "group": "minor"
+    },
+    "thien-khong": {
+      "name": "Thiên Không",
+      "han": "天空",
+      "core": "Tư duy thoát khỏi lối quen, ý tưởng khác thường và cảm giác trống trải.",
+      "strength": "Có góc nhìn độc đáo, không bám chấp.",
+      "watchout": "Dễ thiếu điểm tựa thực tế; cần biến ý tưởng thành việc cụ thể.",
+      "group": "minor"
+    },
+    "thien-thuong": {
+      "name": "Thiên Thương",
+      "han": "天傷",
+      "core": "Sự nhạy cảm, nỗi niềm và những trải nghiệm làm trưởng thành.",
+      "strength": "Biết đồng cảm, trân trọng điều có.",
+      "watchout": "Dễ cảm thấy thiệt thòi; cần chia sẻ và điều chỉnh kỳ vọng.",
+      "group": "minor"
+    },
+    "thien-su": {
+      "name": "Thiên Sứ",
+      "han": "天使",
+      "core": "Những chuyển biến trong tâm tình và thông điệp cần tiếp nhận.",
+      "strength": "Biết nhìn lại để điều chỉnh, trưởng thành qua trải nghiệm.",
+      "watchout": "Dễ chìm trong suy tư; cần hoạt động và kết nối.",
+      "group": "minor"
+    },
+    "thien-tru": {
+      "name": "Thiên Trù",
+      "han": "天廚",
+      "core": "Sự chu đáo trong ăn uống, chăm sóc đời sống thường ngày.",
+      "strength": "Biết tận hưởng và chăm lo cho gia đình.",
+      "watchout": "Cần chú ý chừng mực trong chi tiêu và sinh hoạt.",
+      "group": "minor"
+    },
+    "pha-toai": {
+      "name": "Phá Toái",
+      "han": "破碎",
+      "core": "Những chuyện nhỏ vụn vặt, thiếu liền mạch.",
+      "strength": "Quen xử lý việc nhỏ, linh hoạt khi kế hoạch lệch.",
+      "watchout": "Dễ hao tổn nhỏ; cần rà kỹ chi tiết và dự phòng.",
+      "group": "minor"
+    },
+    "dau-quan": {
+      "name": "Đẩu Quân",
+      "han": "斗君",
+      "core": "Mốc tham chiếu để tính nhịp tháng của năm xem.",
+      "strength": "Có ích khi đọc nhịp thời gian trong năm.",
+      "watchout": "Chỉ dùng cùng dữ liệu lưu niên, không dùng độc lập.",
+      "group": "minor"
+    },
+    "phong-cao": {
+      "name": "Phong Cáo",
+      "han": "封誥",
+      "core": "Danh phận, văn bản chính thức và sự ghi nhận bằng văn bản.",
+      "strength": "Hợp việc cần bằng cấp, chứng nhận.",
+      "watchout": "Cần chuẩn bị hồ sơ, tránh trông chờ danh nghĩa.",
+      "group": "minor"
+    },
+    "thien-nguyet": {
+      "name": "Thiên Nguyệt",
+      "han": "天月",
+      "core": "Sự nhạy cảm, hay nghĩ ngợi và cần thời gian nghỉ ngơi.",
+      "strength": "Tinh tế, biết quan tâm bản thân khi được nhắc.",
+      "watchout": "Dễ lo lắng; nên giữ nhịp sinh hoạt đều, không dùng để chẩn đoán.",
+      "group": "minor"
+    },
+    "am-sat": {
+      "name": "Âm Sát",
+      "han": "陰煞",
+      "core": "Những tác động gián tiếp, ngầm và các quan hệ khó nói thẳng.",
+      "strength": "Nhạy bén trước tín hiệu nhỏ.",
+      "watchout": "Dễ nghi ngờ; nên giao tiếp rõ ràng để tránh hiểu lầm ngầm.",
+      "group": "minor"
+    },
+    "thai-phu": {
+      "name": "Thai Phụ",
+      "han": "台輔",
+      "core": "Sự hỗ trợ trang trọng, được nâng đỡ khi làm việc đúng chuẩn.",
+      "strength": "Dễ có người giới thiệu hoặc hỗ trợ hợp lệ.",
+      "watchout": "Cần tự thân tiến bộ, không chỉ trông vào nâng đỡ.",
+      "group": "minor"
+    },
+    "thien-vu": {
+      "name": "Thiên Vu",
+      "han": "天巫",
+      "core": "Trực giác, cảm nhận tinh tế và sự hỗ trợ âm thầm.",
+      "strength": "Nhạy với thời điểm, dễ nhận gợi ý đúng lúc.",
+      "watchout": "Cần dựa vào dữ kiện thực để không chỉ theo cảm giác.",
+      "group": "minor"
+    },
+    "kiep-sat": {
+      "name": "Kiếp Sát",
+      "han": "劫煞",
+      "core": "Áp lực bất ngờ và đòi hỏi xử lý quyết đoán.",
+      "strength": "Thúc đẩy hành động nhanh khi có việc gấp.",
+      "watchout": "Dễ vội vàng; cần cân nhắc trước khi ra quyết định.",
+      "group": "minor"
+    },
+    "luu-ha": {
+      "name": "Lưu Hà",
+      "han": "流霞",
+      "core": "Dễ bị cuốn theo hoàn cảnh hoặc môi trường.",
+      "strength": "Linh hoạt khi gặp tình huống thay đổi.",
+      "watchout": "Cần giữ kiểm soát nhịp sinh hoạt và chi tiêu.",
+      "group": "minor"
+    },
+    "bac-si-0": {
+      "name": "Bác Sĩ",
+      "han": "博士",
+      "core": "Học thức, sự tinh thông và khả năng nghiên cứu.",
+      "strength": "Học hỏi sâu, trình bày có hệ thống.",
+      "watchout": "Dễ nghĩ nhiều; cần chuyển hiểu biết thành hành động.",
+      "group": "bac-si"
+    },
+    "bac-si-1": {
+      "name": "Lực Sĩ",
+      "han": "力士",
+      "core": "Sức lực, ý chí và khả năng chịu áp lực.",
+      "strength": "Bền chí, dám đảm nhận việc nặng.",
+      "watchout": "Dễ gồng quá mức; cần nghỉ hợp lý.",
+      "group": "bac-si"
+    },
+    "bac-si-2": {
+      "name": "Thanh Long",
+      "han": "青龍",
+      "core": "Tin vui, thuận lợi và cơ hội tốt.",
+      "strength": "Dễ gặp thời cơ khi chuẩn bị tốt.",
+      "watchout": "Cần giữ khiêm tốn và kiên trì.",
+      "group": "bac-si"
+    },
+    "bac-si-3": {
+      "name": "Tiểu Hao",
+      "han": "小耗",
+      "core": "Những khoản hao nhỏ, chi phí phát sinh.",
+      "strength": "Biết rà soát chi tiết khi để ý.",
+      "watchout": "Cần ngân sách dự phòng cho chi tiêu nhỏ.",
+      "group": "bac-si"
+    },
+    "bac-si-4": {
+      "name": "Tướng Quân",
+      "han": "將軍",
+      "core": "Khí phách, quyết đoán và tinh thần dẫn đầu.",
+      "strength": "Dám đứng ra nhận trách nhiệm.",
+      "watchout": "Dễ cứng; cần lắng nghe ý kiến khác.",
+      "group": "bac-si"
+    },
+    "bac-si-5": {
+      "name": "Tấu Thư",
+      "han": "奏書",
+      "core": "Văn thư, trình bày, giao tiếp bằng văn bản.",
+      "strength": "Hợp việc viết, báo cáo, đề xuất.",
+      "watchout": "Cần cẩn trọng khi cam kết bằng văn bản.",
+      "group": "bac-si"
+    },
+    "bac-si-6": {
+      "name": "Phi Liêm",
+      "han": "飛廉",
+      "core": "Tin đồn, lời bàn tán và biến động nhỏ.",
+      "strength": "Nhạy với thông tin xung quanh.",
+      "watchout": "Cần kiểm chứng thông tin trước khi tin hoặc truyền lại.",
+      "group": "bac-si"
+    },
+    "bac-si-7": {
+      "name": "Hỷ Thần",
+      "han": "喜神",
+      "core": "Niềm vui, tin tốt và không khí hòa hợp.",
+      "strength": "Dễ tạo không khí vui vẻ.",
+      "watchout": "Cần giữ cân bằng, tránh chỉ chạy theo niềm vui nhất thời.",
+      "group": "bac-si"
+    },
+    "bac-si-8": {
+      "name": "Bệnh Phù",
+      "han": "病符",
+      "core": "Gợi nhắc chú ý nghỉ ngơi và chăm sóc bản thân.",
+      "strength": "Biết lắng nghe nhịp nghỉ khi được nhắc.",
+      "watchout": "Không dùng để chẩn đoán; chỉ gợi giữ thói quen sinh hoạt lành mạnh.",
+      "group": "bac-si"
+    },
+    "bac-si-9": {
+      "name": "Đại Hao",
+      "han": "大耗",
+      "core": "Những khoản chi lớn hoặc thay đổi nguồn lực.",
+      "strength": "Biết đầu tư có mục đích khi tính kỹ.",
+      "watchout": "Cần kế hoạch tài chính trước khi chi lớn.",
+      "group": "bac-si"
+    },
+    "bac-si-10": {
+      "name": "Phục Binh",
+      "han": "伏兵",
+      "core": "Những vướng mắc tiềm ẩn, chưa lộ rõ.",
+      "strength": "Cẩn thận, chuẩn bị phương án.",
+      "watchout": "Dễ đa nghi; nên kiểm tra thông tin thay vì phỏng đoán.",
+      "group": "bac-si"
+    },
+    "bac-si-11": {
+      "name": "Quan Phủ",
+      "han": "官府",
+      "core": "Thủ tục, quy định và các việc liên quan cơ quan.",
+      "strength": "Làm việc đúng quy trình.",
+      "watchout": "Cần giữ giấy tờ đầy đủ, tuân thủ quy định.",
+      "group": "bac-si"
+    },
+    "trang-sinh-0": {
+      "name": "Tràng Sinh",
+      "han": "長生",
+      "core": "Giai đoạn khởi sinh, nảy mầm và được nuôi dưỡng.",
+      "strength": "Dễ gặp sự hỗ trợ ban đầu.",
+      "watchout": "Cần phát triển năng lực thật.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-1": {
+      "name": "Mộc Dục",
+      "han": "沐浴",
+      "core": "Giai đoạn học hỏi, thử nghiệm và thay đổi hình ảnh.",
+      "strength": "Dễ tiếp nhận cái mới.",
+      "watchout": "Dễ thiếu ổn định; cần tập trung.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-2": {
+      "name": "Quan Đới",
+      "han": "冠帶",
+      "core": "Giai đoạn trưởng thành, chuẩn bị vai trò.",
+      "strength": "Biết chuẩn bị trước khi ra mắt.",
+      "watchout": "Dễ quá chú ý hình thức.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-3": {
+      "name": "Lâm Quan",
+      "han": "臨官",
+      "core": "Giai đoạn tiến bộ, tự lập và đảm nhận vai trò.",
+      "strength": "Có đà phát triển rõ.",
+      "watchout": "Cần giữ kiên trì, tránh nóng vội.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-4": {
+      "name": "Đế Vượng",
+      "han": "帝旺",
+      "core": "Giai đoạn sung sức, năng lượng cao.",
+      "strength": "Dễ phát huy thế mạnh.",
+      "watchout": "Dễ quá tự tin; cần giữ khiêm tốn.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-5": {
+      "name": "Suy",
+      "han": "衰",
+      "core": "Giai đoạn chậm lại, cần thận trọng.",
+      "strength": "Biết điều chỉnh nhịp.",
+      "watchout": "Cần chủ động đổi mới.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-6": {
+      "name": "Bệnh",
+      "han": "病",
+      "core": "Giai đoạn chững, cần chăm sóc và điều chỉnh.",
+      "strength": "Biết lắng nghe bản thân khi chậm lại.",
+      "watchout": "Không dùng để chẩn đoán; hiểu như nhịp cần nghỉ ngơi và điều chỉnh.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-7": {
+      "name": "Tử",
+      "han": "死",
+      "core": "Giai đoạn khép lại một chu kỳ cũ để chuyển sang hướng khác.",
+      "strength": "Biết buông cái đã hết vai trò.",
+      "watchout": "Cần tránh bám chấp; không hiểu theo nghĩa đen.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-8": {
+      "name": "Mộ",
+      "han": "墓",
+      "core": "Giai đoạn thu giữ, cất giữ và tích lũy âm thầm.",
+      "strength": "Giỏi giữ gìn, kín đáo.",
+      "watchout": "Dễ khép kín; cần mở lòng đúng lúc.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-9": {
+      "name": "Tuyệt",
+      "han": "絕",
+      "core": "Điểm cuối chu kỳ, dễ làm lại từ đầu.",
+      "strength": "Dễ khởi đầu mới khi dám buông.",
+      "watchout": "Cần kiên nhẫn khi bắt đầu lại.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-10": {
+      "name": "Thai",
+      "han": "胎",
+      "core": "Giai đoạn ươm mầm, ý tưởng đang hình thành.",
+      "strength": "Nhiều tiềm năng chưa lộ.",
+      "watchout": "Cần thời gian, đừng vội.",
+      "group": "trang-sinh"
+    },
+    "trang-sinh-11": {
+      "name": "Dưỡng",
+      "han": "養",
+      "core": "Giai đoạn nuôi dưỡng, tích lũy dần.",
+      "strength": "Phát triển bền vững khi kiên trì.",
+      "watchout": "Cần chủ động tạo điều kiện, không chỉ chờ.",
+      "group": "trang-sinh"
+    },
+    "thai-tue-0": {
+      "name": "Thái Tuế",
+      "han": "太歲",
+      "core": "Cách ứng xử, lời nói và mối quan hệ với quy củ.",
+      "strength": "Giữ chuẩn mực, nói có trọng lượng.",
+      "watchout": "Dễ cứng hoặc phán xét; cần mềm mỏng.",
+      "group": "thai-tue"
+    },
+    "thai-tue-1": {
+      "name": "Thiếu Dương",
+      "han": "少陽",
+      "core": "Sự ấm áp, mới mẻ và tinh thần tích cực.",
+      "strength": "Dễ lạc quan, mở đầu thuận lợi.",
+      "watchout": "Cần bền bỉ để đi đến cùng.",
+      "group": "thai-tue"
+    },
+    "thai-tue-2": {
+      "name": "Tang Môn",
+      "han": "喪門",
+      "core": "Tâm trạng trầm lắng, nhạy cảm với chuyện gia đình.",
+      "strength": "Sâu sắc, biết quan tâm người thân.",
+      "watchout": "Dễ ưu tư; nên có hoạt động nâng tinh thần.",
+      "group": "thai-tue"
+    },
+    "thai-tue-3": {
+      "name": "Thiếu Âm",
+      "han": "少陰",
+      "core": "Sự dịu dàng, kín đáo và tinh tế.",
+      "strength": "Biết lắng nghe, ứng xử nhẹ nhàng.",
+      "watchout": "Dễ giữ trong lòng; cần nói ra.",
+      "group": "thai-tue"
+    },
+    "thai-tue-4": {
+      "name": "Quan Phù",
+      "han": "官符",
+      "core": "Thủ tục, tranh luận và những điều cần rõ ràng bằng văn bản.",
+      "strength": "Cẩn trọng với giấy tờ.",
+      "watchout": "Dễ tranh luận; nên giải quyết bằng thỏa thuận minh bạch.",
+      "group": "thai-tue"
+    },
+    "thai-tue-5": {
+      "name": "Tử Phù",
+      "han": "死符",
+      "core": "Tâm trạng nặng nề, hay nghĩ ngợi.",
+      "strength": "Biết trân trọng điều đang có.",
+      "watchout": "Không hiểu theo nghĩa đen; nên giải tỏa tinh thần.",
+      "group": "thai-tue"
+    },
+    "thai-tue-6": {
+      "name": "Tuế Phá",
+      "han": "歲破",
+      "core": "Phá nếp cũ, buộc thay đổi cách làm.",
+      "strength": "Dễ đổi mới khi chấp nhận thay đổi.",
+      "watchout": "Dễ xáo trộn; cần kế hoạch chuyển tiếp.",
+      "group": "thai-tue"
+    },
+    "thai-tue-8": {
+      "name": "Bạch Hổ",
+      "han": "白虎",
+      "core": "Lời nói và phản ứng dễ gay gắt, sức ép tranh luận.",
+      "strength": "Quyết liệt, dám nói thẳng.",
+      "watchout": "Cần kiềm chế ngôn từ, tránh va chạm không cần thiết.",
+      "group": "thai-tue"
+    },
+    "thai-tue-9": {
+      "name": "Phúc Đức",
+      "han": "福德",
+      "core": "Phúc phần, sự hỗ trợ và nền tinh thần.",
+      "strength": "Dễ có điểm tựa khi sống tử tế.",
+      "watchout": "Cần chủ động tạo thiện duyên.",
+      "group": "thai-tue"
+    },
+    "thai-tue-10": {
+      "name": "Điếu Khách",
+      "han": "弔客",
+      "core": "Tâm trạng ưu tư, quan hệ xã giao có chiều sâu.",
+      "strength": "Biết đồng cảm với người khác.",
+      "watchout": "Dễ mang tâm sự; nên tìm người chia sẻ.",
+      "group": "thai-tue"
+    },
+    "thai-tue-11": {
+      "name": "Trực Phù",
+      "han": "直符",
+      "core": "Tính thẳng thắn, theo nguyên tắc công việc.",
+      "strength": "Làm đúng quy định, có trách nhiệm.",
+      "watchout": "Dễ khô cứng; cần mềm mỏng khi giao tiếp.",
+      "group": "thai-tue"
+    }
+  },
+  "transformationProfiles": {
+    "hoa-loc": {
+      "name": "Hóa Lộc",
+      "kind": "positive",
+      "text": "Gợi cơ hội phát triển, nguồn lực hoặc sự thuận lợi trong chủ đề của cung; cần gắn với việc cụ thể của cung ấy."
+    },
+    "hoa-quyen": {
+      "name": "Hóa Quyền",
+      "kind": "context",
+      "text": "Gợi trách nhiệm, quyền chủ động hoặc sức ép phải đứng ra quyết định trong chủ đề của cung."
+    },
+    "hoa-khoa": {
+      "name": "Hóa Khoa",
+      "kind": "positive",
+      "text": "Gợi học hỏi, uy tín, sự trợ giúp hoặc cách giải quyết có lý lẽ trong chủ đề của cung."
+    },
+    "hoa-ky": {
+      "name": "Hóa Kỵ",
+      "kind": "caution",
+      "text": "Gợi phần việc dễ vướng bận, phải xem xét kỹ hoặc cần trao đổi minh bạch; không đồng nghĩa với tai họa chắc chắn."
+    }
+  },
+  "palaceModifiers": {
+    "tuan": "Tuần có thể làm chậm, ngắt quãng hoặc giảm độ mạnh của biểu hiện trong cung; đôi khi cũng khiến mặt bất lợi bớt gay gắt. Cần xét cùng toàn bộ tổ hợp.",
+    "triet": "Triệt có thể tạo điểm ngắt, buộc điều chỉnh hoặc khiến kết quả đến không liền mạch; không nên luận thành tốt/xấu tuyệt đối.",
+    "brightness": {
+      "Miếu": "Tính chất sao thường biểu hiện rõ và có điều kiện phát huy thuận lợi hơn.",
+      "Vượng": "Tính chất sao có lực biểu hiện khá mạnh.",
+      "Đắc": "Tính chất sao có cơ hội phát huy tương đối thuận.",
+      "Bình": "Tính chất sao biểu hiện ở mức vừa, cần xem các yếu tố phối hợp.",
+      "Hãm": "Mặt thử thách của sao dễ lộ hơn hoặc cần thêm nỗ lực để điều hòa."
+    },
+    "tuanByPalace": {
+      "Mệnh": "Hành trình bản thân có đoạn chậm hoặc ngắt quãng; cần kiên nhẫn dựng nền theo thời gian.",
+      "Phụ Mẫu": "Sự hỗ trợ từ cha mẹ hoặc học vấn có lúc đến chậm; nên tự chủ động học hỏi.",
+      "Phúc Đức": "Tinh thần có lúc nhẹ đi, ít bám chấp; cần tự xây điểm tựa nội tâm.",
+      "Điền Trạch": "Tích lũy nhà đất đến chậm hoặc ngắt quãng; cần kế hoạch dài hạn.",
+      "Quan Lộc": "Con đường công việc có đoạn chậm; thiên về xây dựng dần.",
+      "Nô Bộc": "Quan hệ hỗ trợ có lúc thưa; nên chủ động duy trì.",
+      "Thiên Di": "Cơ hội bên ngoài đến chậm; cần chuẩn bị kỹ trước khi di chuyển.",
+      "Tật Ách": "Gợi cần giữ thói quen chăm sóc bản thân đều đặn; không dùng để chẩn đoán.",
+      "Tài Bạch": "Dòng tiền có lúc chậm; nên có quỹ dự phòng và nguồn thu ổn định.",
+      "Tử Tức": "Sự đồng hành với con cái cần thời gian vun đắp.",
+      "Phu Thê": "Quan hệ lâu dài cần thời gian hiểu nhau; không nên vội.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân có lúc ít gần gũi; nên chủ động liên lạc."
+    },
+    "trietByPalace": {
+      "Mệnh": "Dễ có bước ngoặt phải điều chỉnh; tự mở hướng đi riêng là cách ứng phó tốt.",
+      "Phụ Mẫu": "Có lúc xa cách hoặc không liền mạch trong hỗ trợ từ gia đình; nên chủ động tự lập.",
+      "Phúc Đức": "Nội tâm có lúc gián đoạn nhịp; cần thời gian tĩnh lại.",
+      "Điền Trạch": "Tích lũy tài sản không liền mạch; nên tránh quyết định vội.",
+      "Quan Lộc": "Con đường nghề có điểm ngắt, buộc đổi hướng; cần học kỹ năng mới.",
+      "Nô Bộc": "Quan hệ có lúc đứt đoạn; nên chọn người đồng hành phù hợp.",
+      "Thiên Di": "Việc đi xa hoặc đổi môi trường cần chuẩn bị; có thể phải điều chỉnh kế hoạch.",
+      "Tật Ách": "Gợi cần chăm sóc bản thân đều đặn; không dùng để chẩn đoán.",
+      "Tài Bạch": "Dòng tiền có điểm ngắt; nên đa dạng nguồn thu.",
+      "Tử Tức": "Quan hệ với con cái cần đồng hành kiên nhẫn.",
+      "Phu Thê": "Quan hệ cần giao tiếp rõ, tránh để khoảng cách kéo dài.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân có lúc xa cách; nên duy trì kết nối."
+    },
+    "aspects": {
+      "doiCung": "Cung xung chiếu (đối cung) tác động trực tiếp nhất lên cung đang xét: sao ở đối cung cho thấy áp lực, hỗ trợ hoặc môi trường bên ngoài tác động vào chủ đề của cung.",
+      "tamHop": "Hai cung tam hợp bổ trợ cho cung chính: đọc như hai nguồn lực cùng hướng, cho thấy năng lực và nền hỗ trợ đi kèm chủ đề của cung.",
+      "giapCung": "Hai cung kề hai bên (giáp cung) tạo tác động gián tiếp, như môi trường sát cạnh; chỉ dùng làm yếu tố bổ sung, không thay cho chính tinh trong cung.",
+      "vongTamPhuongTuChinh": "Tam phương tứ chính gồm cung chính, đối cung và hai cung tam hợp; luận theo tổ hợp chung, không kết luận từ một sao đơn lẻ.",
+      "voChinhDieu": "Cung vô chính diệu mượn chính tinh ở đối cung với lực nhẹ hơn; cần đọc kèm phụ tinh trong cung, Tuần/Triệt và tam phương. Người có cung như vậy thường chịu ảnh hưởng rõ từ môi trường.",
+      "weighting": "Thứ tự ưu tiên khi đọc: (1) chính tinh trong cung, (2) phụ tinh và Tứ Hóa tại cung, (3) đối cung và tam hợp, (4) giáp cung, (5) Tuần/Triệt và độ sáng làm điều chỉnh lực."
+    },
+    "voidEffects": {
+      "reviewStatus": "needs-review",
+      "note": "Tổng hợp hiện đại theo nguyên tắc luận đồng cung/sinh khắc/cát hung trong interpretivePrinciples. Toàn Thư không có công thức Tuần/Triệt theo tổ hợp; các điểm khác nhau giữa Tuần và Triệt theo cách luận Nam phái phổ biến, cần người am hiểu rà soát.",
+      "classes": {
+        "satStarIds": [
+          "kinh-duong",
+          "da-la",
+          "hoa-tinh",
+          "linh-tinh",
+          "dia-khong",
+          "dia-kiep"
+        ],
+        "supportStarIds": [
+          "ta-phu",
+          "huu-bat",
+          "van-xuong",
+          "van-khuc",
+          "thien-khoi",
+          "thien-viet",
+          "loc-ton"
+        ],
+        "peachStarIds": [
+          "dao-hoa",
+          "hong-loan",
+          "thien-hy"
+        ],
+        "strongBrightness": [
+          "Miếu",
+          "Vượng",
+          "Đắc"
+        ],
+        "weakBrightness": [
+          "Hãm"
+        ]
+      },
+      "kinds": {
+        "Tuần": {
+          "nature": "Tuần thiên về làm mờ và kéo giãn nhịp: sao vẫn hiện diện nhưng biểu hiện chậm, nhạt, thường rõ dần theo thời gian hoặc sau khi chủ động thử lại.",
+          "mainStrong": "{stars} có độ sáng Miếu/Vượng/Đắc trên lá số nên Tuần có thể làm sức phát huy chưa trọn, kết quả đến chậm hơn kỳ vọng.",
+          "mainWeak": "{stars} ở thế Hãm nên Tuần có thể làm dịu bớt mặt thử thách của sao, bớt gay gắt hơn thường lệ.",
+          "mainMid": "{stars} ở thế Bình nên Tuần chủ yếu làm nhịp biểu hiện chậm lại, chưa nghiêng rõ về giảm lực hay làm dịu.",
+          "mainUnknown": "Payload không có nhãn độ sáng cho {stars} nên chưa thể đối chiếu mức độ phát huy; chỉ nên đọc là nhịp biểu hiện bị kéo giãn.",
+          "sat": "{stars} thuộc nhóm sát/biến động: Tuần có thể làm bớt đà gay gắt, nhưng mặt bất lợi vẫn cần được xử lý chủ động chứ không tự biến mất.",
+          "support": "{stars} thuộc nhóm hỗ trợ: sự trợ giúp có thể đến muộn hoặc thưa hơn; nên chủ động đón nhận thay vì chờ.",
+          "peach": "{stars} thuộc nhóm duyên và kết nối: duyên có thể đến chậm, cần thời gian để rõ ràng.",
+          "transformation": "{stars}: tính chất Tứ Hóa này vẫn có, nhưng hiện ra từ từ hoặc ở mức nhẹ hơn.",
+          "combo": "Bộ {name} nằm trọn trong cung chịu Tuần nên đọc như một khối bị điều chỉnh nhịp: {text}",
+          "empty": "Cung vô chính diệu nên Tuần tác động lên cách mượn chính tinh đối cung{opp}: ảnh hưởng của đối cung đến chậm hoặc nhạt hơn; cần xem phụ tinh trong cung và tam phương trước khi kết luận."
+        },
+        "Triệt": {
+          "nature": "Triệt thiên về cắt ngang và đổi hướng: nhịp biểu hiện có điểm ngắt rõ, thường buộc đổi cách làm hoặc làm lại từ một mốc khác.",
+          "mainStrong": "{stars} có độ sáng Miếu/Vượng/Đắc trên lá số nên Triệt có thể chặn bớt đà phát huy, dễ có điểm ngắt giữa chừng.",
+          "mainWeak": "{stars} ở thế Hãm nên Triệt có thể chặn bớt mặt thử thách của sao, giúp mặt thử thách bớt nặng nề hơn so với khi không có Triệt.",
+          "mainMid": "{stars} ở thế Bình nên Triệt chủ yếu tạo điểm ngắt trong nhịp biểu hiện, chưa nghiêng rõ về giảm lực hay chặn bớt thử thách.",
+          "mainUnknown": "Payload không có nhãn độ sáng cho {stars} nên chưa thể đối chiếu mức độ phát huy; chỉ nên đọc là nhịp biểu hiện có điểm ngắt.",
+          "sat": "{stars} thuộc nhóm sát/biến động: Triệt có thể chặn bớt đà biểu hiện, nhưng nên coi là điểm ngắt để điều chỉnh chứ không phải sự bảo đảm an toàn.",
+          "support": "{stars} thuộc nhóm hỗ trợ: sự trợ giúp có thể đứt quãng hoặc phải tự tìm lại; nên duy trì kết nối đều đặn.",
+          "peach": "{stars} thuộc nhóm duyên và kết nối: mối duyên có thể bị ngắt rồi nối lại; cần giao tiếp rõ ràng.",
+          "transformation": "{stars}: tính chất Tứ Hóa này có thể bị ngắt nhịp, cần gắn với việc cụ thể để không bỏ lỡ.",
+          "combo": "Bộ {name} nằm trọn trong cung chịu Triệt nên đọc như một khối bị ngắt nhịp: {text}",
+          "empty": "Cung vô chính diệu nên Triệt tác động lên cách mượn chính tinh đối cung{opp}: ảnh hưởng của đối cung dễ đứt quãng; cần xem phụ tinh trong cung và tam phương trước khi kết luận."
+        }
+      },
+      "both": "Cung có cả Tuần lẫn Triệt: hai lớp điều chỉnh chồng lên nhau, nhịp biểu hiện vừa chậm vừa có điểm ngắt. Nên đọc kỹ tổng thể cung, không cộng dồn thành kết luận nặng hơn.",
+      "closing": "Đây là cách đọc {label} như yếu tố điều chỉnh cả tổ hợp trong cung, không xóa ý nghĩa từng sao và không kết luận tốt/xấu chỉ từ {label}; cần đối chiếu thêm chính tinh đối cung và tam phương tứ chính."
+    }
+  },
+  "combinationRules": [
+    {
+      "id": "combo-ta-huu",
+      "topic": "personal_family",
+      "palaces": [
+        "Phụ Mẫu",
+        "Huynh Đệ",
+        "Phúc Đức",
+        "Điền Trạch"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "ta-phu",
+        "huu-bat"
+      ],
+      "kind": "positive",
+      "text": "Tả Phù và Hữu Bật cùng cung nhấn mạnh khả năng nhận hỗ trợ hoặc phối hợp; nên nhìn vào chất lượng quan hệ thực tế."
+    },
+    {
+      "id": "combo-khong-kiep",
+      "topic": "personal_family",
+      "palaces": [
+        "Phúc Đức",
+        "Điền Trạch",
+        "Huynh Đệ"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "kind": "caution",
+      "text": "Địa Không và Địa Kiếp đồng cung làm nổi bật tính biến động hoặc cảm giác thiếu ổn định của chủ đề; nên có kế hoạch dự phòng."
+    },
+    {
+      "id": "combo-kinh-da",
+      "topic": "personal_family",
+      "palaces": [
+        "Phụ Mẫu",
+        "Huynh Đệ",
+        "Điền Trạch"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "kinh-duong",
+        "da-la"
+      ],
+      "kind": "caution",
+      "text": "Kình Dương và Đà La đồng cung gợi va chạm kéo dài; xử lý từng bất đồng cụ thể sẽ hiệu quả hơn quy kết tính cách."
+    },
+    {
+      "id": "combo-xuong-khuc",
+      "topic": "career_finance",
+      "palaces": [
+        "Quan Lộc"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "van-xuong",
+        "van-khuc"
+      ],
+      "kind": "positive",
+      "text": "Văn Xương và Văn Khúc cùng cung nhấn mạnh năng lực học hỏi, trình bày và xử lý thông tin."
+    },
+    {
+      "id": "combo-sat-pha-tham",
+      "topic": "career_finance",
+      "palaces": [
+        "Quan Lộc",
+        "Tài Bạch"
+      ],
+      "scope": "tam_phuong",
+      "starIds": [
+        "that-sat",
+        "pha-quan",
+        "tham-lang"
+      ],
+      "kind": "context",
+      "text": "Thất Sát, Phá Quân và Tham Lang cùng xuất hiện trong tam phương gợi môi trường nhiều chuyển động, cần chủ động đổi mới và quản trị rủi ro."
+    },
+    {
+      "id": "combo-co-nguyet-dong-luong",
+      "topic": "career_finance",
+      "palaces": [
+        "Quan Lộc"
+      ],
+      "scope": "tam_phuong",
+      "starIds": [
+        "thien-co",
+        "thai-am",
+        "thien-dong",
+        "thien-luong"
+      ],
+      "kind": "positive",
+      "text": "Cơ, Nguyệt, Đồng, Lương cùng hiện diện trong tam phương nhấn mạnh tư duy, chuyên môn, hỗ trợ và công việc có quy trình."
+    },
+    {
+      "id": "combo-loc-ma",
+      "topic": "career_finance",
+      "palaces": [
+        "Tài Bạch",
+        "Quan Lộc"
+      ],
+      "scope": "tam_phuong",
+      "starIds": [
+        "loc-ton",
+        "thien-ma"
+      ],
+      "kind": "positive",
+      "text": "Lộc Tồn và Thiên Mã cùng hiện diện trong tam phương gợi nguồn lực gắn với sự dịch chuyển hoặc mở rộng hoạt động; cần cân đối chi phí."
+    },
+    {
+      "id": "combo-dao-hong",
+      "topic": "love",
+      "palaces": [
+        "Phu Thê"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "dao-hoa",
+        "hong-loan"
+      ],
+      "kind": "positive",
+      "text": "Đào Hoa và Hồng Loan đồng cung nhấn mạnh sức hút và cơ hội giao tiếp tình cảm; sự bền vững vẫn phụ thuộc cách hai người ứng xử."
+    },
+    {
+      "id": "combo-khoc-hu",
+      "topic": "health",
+      "palaces": [
+        "Tật Ách"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "thien-khoc",
+        "thien-hu"
+      ],
+      "kind": "context",
+      "text": "Thiên Khốc và Thiên Hư đồng cung nhắc chú ý đời sống tinh thần và duy trì hỗ trợ xã hội; không dùng để suy đoán bệnh."
+    },
+    {
+      "id": "combo-khoi-viet",
+      "topic": "environment",
+      "palaces": [
+        "Nô Bộc",
+        "Thiên Di"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "thien-khoi",
+        "thien-viet"
+      ],
+      "kind": "positive",
+      "text": "Thiên Khôi và Thiên Việt đồng cung nhấn mạnh cơ hội được hướng dẫn hoặc nâng đỡ trong quan hệ và môi trường mới."
+    },
+    {
+      "id": "combo-ziwei-assistants",
+      "topic": "chart_foundation",
+      "palaces": [
+        "Mệnh"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "tu-vi",
+        "ta-phu",
+        "huu-bat"
+      ],
+      "kind": "positive",
+      "text": "Tử Vi cùng Tả Phù, Hữu Bật nhấn mạnh năng lực điều phối sẽ phát huy tốt qua cộng tác và phân công; tránh tự gánh mọi việc."
+    },
+    {
+      "id": "combo-ziwei-tianfu",
+      "topic": "career_finance",
+      "palaces": [
+        "Quan Lộc"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "tu-vi",
+        "thien-phu"
+      ],
+      "kind": "positive",
+      "text": "Tử Vi và Thiên Phủ cùng cung gợi năng lực tổ chức, quản trị và duy trì nền tảng; nên kết hợp tầm nhìn với khả năng thích ứng."
+    },
+    {
+      "id": "combo-sun-chang-career",
+      "topic": "career_finance",
+      "palaces": [
+        "Quan Lộc"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "thai-duong",
+        "van-xuong"
+      ],
+      "kind": "positive",
+      "text": "Thái Dương và Văn Xương cùng cung Quan Lộc nhấn mạnh việc dùng kiến thức, trình bày và sự chủ động trong công việc."
+    },
+    {
+      "id": "combo-moon-qu-spouse",
+      "topic": "love",
+      "palaces": [
+        "Phu Thê"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "thai-am",
+        "van-khuc"
+      ],
+      "kind": "positive",
+      "text": "Thái Âm và Văn Khúc cùng cung gợi sự tinh tế, đồng cảm và chia sẻ qua trò chuyện; cần nói rõ nhu cầu thay vì giữ trong lòng."
+    },
+    {
+      "id": "combo-qi-sha-yang-ling",
+      "topic": "career_finance",
+      "palaces": [
+        "Quan Lộc"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "that-sat",
+        "kinh-duong",
+        "linh-tinh"
+      ],
+      "kind": "caution",
+      "text": "Thất Sát cùng Kình Dương, Linh Tinh tạo sắc thái hành động mạnh và áp lực cao; nên có quy trình kiểm tra, phối hợp và an toàn trước khi quyết nhanh."
+    },
+    {
+      "id": "combo-wealth-wuqu-loc",
+      "topic": "career_finance",
+      "palaces": [
+        "Tài Bạch"
+      ],
+      "scope": "tam_phuong_tu_chinh",
+      "starIds": [
+        "vu-khuc",
+        "loc-ton"
+      ],
+      "kind": "positive",
+      "text": "Vũ Khúc và Lộc Tồn cùng hiện diện trong tam phương tứ chính của Tài Bạch gợi chú trọng quản trị và tích lũy; kết quả vẫn phụ thuộc quyết định tài chính thực tế."
+    },
+    {
+      "id": "combo-wealth-loc-quyen",
+      "topic": "career_finance",
+      "palaces": [
+        "Tài Bạch",
+        "Quan Lộc"
+      ],
+      "scope": "tam_phuong_tu_chinh",
+      "starIds": [
+        "hoa-loc",
+        "hoa-quyen"
+      ],
+      "kind": "context",
+      "text": "Hóa Lộc và Hóa Quyền cùng chiếu một phương diện gợi cơ hội đi kèm trách nhiệm hoặc áp lực quản lý nguồn lực; cần cân nhắc năng lực và giới hạn."
+    },
+    {
+      "id": "combo-foundation-khoa-ky",
+      "topic": "chart_foundation",
+      "palaces": [
+        "Mệnh"
+      ],
+      "scope": "tam_phuong_tu_chinh",
+      "starIds": [
+        "hoa-khoa",
+        "hoa-ky"
+      ],
+      "kind": "context",
+      "text": "Hóa Khoa và Hóa Kỵ cùng hiện diện trong trục Mệnh gợi vừa có nhu cầu làm rõ, học hỏi vừa có điều phải cân nhắc kỹ; kiểm chứng thông tin giúp giảm lo nghĩ."
+    },
+    {
+      "id": "combo-foundation-sun-moon",
+      "topic": "chart_foundation",
+      "palaces": [
+        "Mệnh"
+      ],
+      "scope": "tam_phuong_tu_chinh",
+      "starIds": [
+        "thai-duong",
+        "thai-am"
+      ],
+      "kind": "context",
+      "text": "Thái Dương và Thái Âm cùng nằm trong tam phương tứ chính của Mệnh gợi cần cân bằng giữa chủ động thể hiện và lắng nghe, giữa hành động và suy xét."
+    },
+    {
+      "id": "combo-phu-cu-mon-ky",
+      "topic": "love",
+      "palaces": [
+        "Phu Thê"
+      ],
+      "scope": "tam_phuong_tu_chinh",
+      "starIds": [
+        "cu-mon",
+        "hoa-ky"
+      ],
+      "kind": "caution",
+      "text": "Cự Môn và Hóa Kỵ cùng tác động đến trục Phu Thê nhắc chú ý cách trao đổi và những điều chưa nói rõ; nên xác nhận ý nhau trước khi kết luận."
+    },
+    {
+      "id": "combo-siblings-cu-mon-ky",
+      "topic": "personal_family",
+      "palaces": [
+        "Huynh Đệ"
+      ],
+      "scope": "tam_phuong_tu_chinh",
+      "starIds": [
+        "cu-mon",
+        "hoa-ky"
+      ],
+      "kind": "caution",
+      "text": "Cự Môn và Hóa Kỵ cùng tác động đến trục Huynh Đệ gợi khả năng hiểu lầm khi trao đổi; thống nhất rõ việc chung và tiền bạc sẽ giảm căng thẳng."
+    },
+    {
+      "id": "combo-friend-ta-huu",
+      "topic": "environment",
+      "palaces": [
+        "Nô Bộc",
+        "Thiên Di"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "ta-phu",
+        "huu-bat"
+      ],
+      "kind": "positive",
+      "text": "Tả Phù và Hữu Bật đồng cung nhấn mạnh sự hỗ trợ từ cộng đồng; chọn người cộng tác dựa trên trách nhiệm và sự tin cậy."
+    },
+    {
+      "id": "combo-home-pha-khong",
+      "topic": "personal_family",
+      "palaces": [
+        "Điền Trạch"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "pha-quan",
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "kind": "caution",
+      "text": "Phá Quân cùng Không Kiếp tại Điền Trạch gợi thay đổi lớn về nơi ở hoặc cách quản lý tài sản; nên chia giai đoạn và giữ dự phòng tài chính."
+    },
+    {
+      "id": "combo-parents-sun-moon",
+      "topic": "personal_family",
+      "palaces": [
+        "Phụ Mẫu"
+      ],
+      "scope": "tam_phuong_tu_chinh",
+      "starIds": [
+        "thai-duong",
+        "thai-am"
+      ],
+      "kind": "context",
+      "text": "Thái Dương và Thái Âm cùng tác động đến trục Phụ Mẫu gợi hai cách chăm lo hoặc hai vai trò khác nhau trong gia đình; nên tránh quy hết một nhận định cho cả cha lẫn mẹ."
+    },
+    {
+      "id": "combo-health-routine-saturn",
+      "topic": "health",
+      "palaces": [
+        "Tật Ách"
+      ],
+      "scope": "same_palace",
+      "starIds": [
+        "kinh-duong",
+        "da-la",
+        "hoa-tinh"
+      ],
+      "kind": "caution",
+      "text": "Các sao này chỉ gợi nhắc về nhịp sinh hoạt, căng thẳng và sự nóng vội; không dùng để dự báo bệnh, thương tích hay tai nạn."
+    }
+  ],
+  "rules": [
+    {
+      "id": "pf-parents-sun",
+      "topic": "personal_family",
+      "palace": "Phụ Mẫu",
+      "starIds": [
+        "thai-duong"
+      ],
+      "kind": "context",
+      "text": "Thái Dương gợi hình ảnh người cha hoặc vai trò nâng đỡ của người lớn tuổi; độ sáng tốt thường biểu hiện sự hiện diện và hỗ trợ rõ hơn."
+    },
+    {
+      "id": "pf-parents-moon",
+      "topic": "personal_family",
+      "palace": "Phụ Mẫu",
+      "starIds": [
+        "thai-am"
+      ],
+      "kind": "context",
+      "text": "Thái Âm gợi khía cạnh chăm sóc và tình cảm trong gia đình; nên đối chiếu độ sáng và các sao đồng cung trước khi kết luận."
+    },
+    {
+      "id": "pf-parents-authority",
+      "topic": "personal_family",
+      "palace": "Phụ Mẫu",
+      "starIds": [
+        "tu-vi",
+        "thien-phu"
+      ],
+      "kind": "positive",
+      "text": "Tử Vi hoặc Thiên Phủ gợi nền nếp gia đình, sự che chở và việc coi trọng giáo dục."
+    },
+    {
+      "id": "pf-parents-gentle",
+      "topic": "personal_family",
+      "palace": "Phụ Mẫu",
+      "starIds": [
+        "thien-dong",
+        "thien-luong"
+      ],
+      "kind": "positive",
+      "text": "Thiên Đồng hoặc Thiên Lương gợi cách quan tâm hiền hòa, bao dung; khi yếu thế có thể thành lo lắng hoặc thiếu quyết đoán."
+    },
+    {
+      "id": "pf-parents-argument",
+      "topic": "personal_family",
+      "palace": "Phụ Mẫu",
+      "starIds": [
+        "cu-mon"
+      ],
+      "kind": "caution",
+      "text": "Cự Môn gợi khác biệt quan điểm hoặc tranh luận; trao đổi rõ ràng và tránh nói khi đang nóng sẽ có ích."
+    },
+    {
+      "id": "pf-parents-friction",
+      "topic": "personal_family",
+      "palace": "Phụ Mẫu",
+      "starIds": [
+        "kinh-duong",
+        "da-la",
+        "hoa-tinh",
+        "linh-tinh"
+      ],
+      "kind": "caution",
+      "text": "Nhóm sát tinh này gợi những lúc quan hệ căng hoặc nghiêm khắc; nên chủ động hạ nhiệt bất đồng."
+    },
+    {
+      "id": "pf-parents-distance",
+      "topic": "personal_family",
+      "palace": "Phụ Mẫu",
+      "starIds": [
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "kind": "caution",
+      "text": "Địa Không hoặc Địa Kiếp gợi cảm giác xa cách hay ít nương tựa; nên nhìn vào hoàn cảnh thực tế và cách giữ kết nối."
+    },
+    {
+      "id": "pf-parents-study",
+      "topic": "personal_family",
+      "palace": "Phụ Mẫu",
+      "starIds": [
+        "van-xuong",
+        "van-khuc",
+        "hoa-khoa",
+        "quoc-an"
+      ],
+      "kind": "positive",
+      "text": "Văn tinh, Hóa Khoa hoặc Quốc Ấn gợi sự coi trọng học hành, giấy tờ và thành tựu chính quy."
+    },
+    {
+      "id": "pf-siblings-support",
+      "topic": "personal_family",
+      "palace": "Huynh Đệ",
+      "starIds": [
+        "ta-phu",
+        "huu-bat"
+      ],
+      "kind": "positive",
+      "text": "Tả Phù hoặc Hữu Bật gợi sự hỗ trợ từ anh chị em, bạn thân hoặc người đồng hành gần gũi."
+    },
+    {
+      "id": "pf-siblings-reliable",
+      "topic": "personal_family",
+      "palace": "Huynh Đệ",
+      "starIds": [
+        "thien-phu",
+        "thien-tuong",
+        "thien-luong"
+      ],
+      "kind": "positive",
+      "text": "Thiên Phủ, Thiên Tướng hoặc Thiên Lương gợi người thân đáng tin, ổn định và biết che chở."
+    },
+    {
+      "id": "pf-siblings-lead",
+      "topic": "personal_family",
+      "palace": "Huynh Đệ",
+      "starIds": [
+        "tu-vi"
+      ],
+      "kind": "context",
+      "text": "Tử Vi gợi một người trong nhóm anh chị em hoặc bạn thân có vai trò dẫn dắt, nổi bật."
+    },
+    {
+      "id": "pf-siblings-dispute",
+      "topic": "personal_family",
+      "palace": "Huynh Đệ",
+      "starIds": [
+        "cu-mon",
+        "hoa-ky"
+      ],
+      "kind": "caution",
+      "text": "Cự Môn hoặc Hóa Kỵ gợi hiểu lầm và bất đồng; nói rõ kỳ vọng giúp hạn chế ganh đua không đáng có."
+    },
+    {
+      "id": "pf-siblings-friction",
+      "topic": "personal_family",
+      "palace": "Huynh Đệ",
+      "starIds": [
+        "kinh-duong",
+        "da-la"
+      ],
+      "kind": "caution",
+      "text": "Kình Dương hoặc Đà La gợi va chạm hoặc mỗi người theo một hướng; cần tôn trọng ranh giới của nhau."
+    },
+    {
+      "id": "pf-siblings-distance",
+      "topic": "personal_family",
+      "palace": "Huynh Đệ",
+      "starIds": [
+        "dia-khong",
+        "dia-kiep",
+        "co-than"
+      ],
+      "kind": "caution",
+      "text": "Các sao này gợi khoảng cách tình cảm hoặc ít chia sẻ; duy trì liên lạc đều đặn có thể cải thiện sự gắn bó."
+    },
+    {
+      "id": "pf-siblings-warm",
+      "topic": "personal_family",
+      "palace": "Huynh Đệ",
+      "starIds": [
+        "dao-hoa",
+        "hong-loan",
+        "thien-hy"
+      ],
+      "kind": "positive",
+      "text": "Đào Hoa, Hồng Loan hoặc Thiên Hỷ gợi không khí vui vẻ, dễ gần và có duyên trong quan hệ thân cận."
+    },
+    {
+      "id": "pf-fortune-calm",
+      "topic": "personal_family",
+      "palace": "Phúc Đức",
+      "starIds": [
+        "thien-dong",
+        "thien-luong",
+        "thien-phu",
+        "thai-am"
+      ],
+      "kind": "positive",
+      "text": "Các chính tinh này gợi nền tinh thần mềm mại, khả năng tìm sự bình an và biết chăm lo đời sống gia đình."
+    },
+    {
+      "id": "pf-fortune-merit",
+      "topic": "personal_family",
+      "palace": "Phúc Đức",
+      "starIds": [
+        "thien-duc",
+        "nguyet-duc",
+        "long-duc"
+      ],
+      "kind": "positive",
+      "text": "Các sao Đức gợi nguồn trợ lực và khả năng hóa giải bất hòa trong quan hệ họ hàng."
+    },
+    {
+      "id": "pf-fortune-sadness",
+      "topic": "personal_family",
+      "palace": "Phúc Đức",
+      "starIds": [
+        "thien-khoc",
+        "thien-hu"
+      ],
+      "kind": "caution",
+      "text": "Thiên Khốc hoặc Thiên Hư gợi những lúc trầm lắng, dễ buồn lo; chia sẻ với người đáng tin có thể giúp cân bằng."
+    },
+    {
+      "id": "pf-fortune-rumination",
+      "topic": "personal_family",
+      "palace": "Phúc Đức",
+      "starIds": [
+        "hoa-ky",
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "kind": "caution",
+      "text": "Hóa Kỵ, Địa Không hoặc Địa Kiếp gợi xu hướng day dứt, suy nghĩ nhiều; nên tạo nếp sinh hoạt và điểm tựa tinh thần ổn định."
+    },
+    {
+      "id": "pf-fortune-irritability",
+      "topic": "personal_family",
+      "palace": "Phúc Đức",
+      "starIds": [
+        "hoa-tinh",
+        "linh-tinh"
+      ],
+      "kind": "caution",
+      "text": "Hỏa Tinh hoặc Linh Tinh gợi phản ứng nội tâm nhanh khi áp lực; nghỉ ngắn trước khi phản hồi giúp tránh căng thẳng."
+    },
+    {
+      "id": "pf-fortune-social",
+      "topic": "personal_family",
+      "palace": "Phúc Đức",
+      "starIds": [
+        "thai-tue-0"
+      ],
+      "kind": "context",
+      "text": "Thái Tuế gợi sự nhạy cảm với lời nói, chuyện họ hàng và phép ứng xử; chọn cách trao đổi thẳng thắn nhưng ôn hòa."
+    },
+    {
+      "id": "pf-home-assets",
+      "topic": "personal_family",
+      "palace": "Điền Trạch",
+      "starIds": [
+        "thien-phu",
+        "vu-khuc",
+        "loc-ton",
+        "hoa-loc"
+      ],
+      "kind": "positive",
+      "text": "Thiên Phủ, Vũ Khúc, Lộc Tồn hoặc Hóa Lộc gợi năng lực tích lũy và quản lý tài sản; kết quả vẫn tùy kế hoạch thực tế."
+    },
+    {
+      "id": "pf-home-moon",
+      "topic": "personal_family",
+      "palace": "Điền Trạch",
+      "starIds": [
+        "thai-am"
+      ],
+      "kind": "positive",
+      "text": "Thái Âm gợi sự quan tâm đến không gian sống và tích lũy bền bỉ; độ sáng cần được xác minh trước khi luận sâu."
+    },
+    {
+      "id": "pf-home-movement",
+      "topic": "personal_family",
+      "palace": "Điền Trạch",
+      "starIds": [
+        "thien-ma"
+      ],
+      "kind": "context",
+      "text": "Thiên Mã gợi thay đổi nơi ở, sửa sang hoặc gắn tài sản với việc di chuyển."
+    },
+    {
+      "id": "pf-home-volatility",
+      "topic": "personal_family",
+      "palace": "Điền Trạch",
+      "starIds": [
+        "pha-quan",
+        "dia-khong",
+        "dia-kiep",
+        "bac-si-9",
+        "bac-si-3"
+      ],
+      "kind": "caution",
+      "text": "Nhóm sao này gợi biến động hoặc khoản chi cho nhà cửa; nên dự trù quỹ sửa chữa và tránh quyết định tài sản vội vàng."
+    },
+    {
+      "id": "pf-home-paperwork",
+      "topic": "personal_family",
+      "palace": "Điền Trạch",
+      "starIds": [
+        "liem-trinh",
+        "that-sat"
+      ],
+      "kind": "caution",
+      "text": "Liêm Trinh hoặc Thất Sát gợi việc nhà đất có thể đòi hỏi xử lý dứt khoát; cần kiểm tra kỹ giấy tờ và điều khoản."
+    },
+    {
+      "id": "love-spouse-stability",
+      "topic": "love",
+      "palace": "Phu Thê",
+      "starIds": [
+        "tu-vi",
+        "thien-phu",
+        "thien-tuong"
+      ],
+      "kind": "positive",
+      "text": "Tử Vi, Thiên Phủ hoặc Thiên Tướng gợi xu hướng coi trọng trách nhiệm, nền nếp và sự ổn định trong gắn bó."
+    },
+    {
+      "id": "love-spouse-warmth",
+      "topic": "love",
+      "palace": "Phu Thê",
+      "starIds": [
+        "thai-duong",
+        "thai-am"
+      ],
+      "kind": "context",
+      "text": "Thái Dương hoặc Thái Âm gợi nhu cầu quan tâm và hỗ trợ lẫn nhau; sắc thái cần xét cùng nhãn độ sáng trên lá số nếu có."
+    },
+    {
+      "id": "love-spouse-gentle",
+      "topic": "love",
+      "palace": "Phu Thê",
+      "starIds": [
+        "thien-dong",
+        "thien-luong"
+      ],
+      "kind": "positive",
+      "text": "Thiên Đồng hoặc Thiên Lương gợi cách gắn bó nhẹ nhàng, bao dung; nên chủ động nói rõ nhu cầu để tránh thụ động."
+    },
+    {
+      "id": "love-spouse-talk",
+      "topic": "love",
+      "palace": "Phu Thê",
+      "starIds": [
+        "cu-mon"
+      ],
+      "kind": "caution",
+      "text": "Cự Môn gợi tranh luận hoặc hiểu lầm qua lời nói; lắng nghe và xác nhận điều đối phương muốn nói sẽ hữu ích."
+    },
+    {
+      "id": "love-spouse-intensity",
+      "topic": "love",
+      "palace": "Phu Thê",
+      "starIds": [
+        "liem-trinh",
+        "that-sat",
+        "pha-quan"
+      ],
+      "kind": "context",
+      "text": "Liêm Trinh, Thất Sát hoặc Phá Quân gợi cá tính mạnh và nhịp quan hệ nhiều thay đổi; cần kiên nhẫn khi bất đồng."
+    },
+    {
+      "id": "love-spouse-charm",
+      "topic": "love",
+      "palace": "Phu Thê",
+      "starIds": [
+        "tham-lang",
+        "dao-hoa",
+        "hong-loan",
+        "thien-hy"
+      ],
+      "kind": "positive",
+      "text": "Các sao này gợi sức hút và cơ hội kết nối; duy trì sự chân thành và thống nhất kỳ vọng giúp quan hệ vững hơn."
+    },
+    {
+      "id": "love-spouse-lonely",
+      "topic": "love",
+      "palace": "Phu Thê",
+      "starIds": [
+        "co-than",
+        "qua-tu"
+      ],
+      "kind": "caution",
+      "text": "Cô Thần hoặc Quả Tú gợi lúc cảm thấy riêng lẻ trong quan hệ; nên chia sẻ cảm xúc thay vì chờ đối phương tự đoán."
+    },
+    {
+      "id": "love-spouse-friction",
+      "topic": "love",
+      "palace": "Phu Thê",
+      "starIds": [
+        "kinh-duong",
+        "da-la",
+        "hoa-ky",
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "kind": "caution",
+      "text": "Các sao này gợi bất đồng hoặc kỳ vọng dễ lệch nhau; giải quyết sớm từng vấn đề cụ thể sẽ tốt hơn để kéo dài."
+    },
+    {
+      "id": "love-children-warmth",
+      "topic": "love",
+      "palace": "Tử Tức",
+      "starIds": [
+        "tu-vi",
+        "thien-phu",
+        "thai-am",
+        "thien-luong"
+      ],
+      "kind": "positive",
+      "text": "Các sao này gợi sự quan tâm đến nề nếp và mối gắn bó ấm áp trong quan hệ cha mẹ, con cái."
+    },
+    {
+      "id": "love-children-gentle",
+      "topic": "love",
+      "palace": "Tử Tức",
+      "starIds": [
+        "thien-co",
+        "thien-dong"
+      ],
+      "kind": "positive",
+      "text": "Thiên Cơ hoặc Thiên Đồng gợi cách nuôi dạy linh hoạt, mềm mỏng; khuyến khích thay vì áp đặt có thể phù hợp."
+    },
+    {
+      "id": "love-children-strong",
+      "topic": "love",
+      "palace": "Tử Tức",
+      "starIds": [
+        "that-sat",
+        "pha-quan",
+        "liem-trinh"
+      ],
+      "kind": "context",
+      "text": "Các sao này gợi cá tính mạnh trong quan hệ với con cái; kiên nhẫn và nhất quán giúp giảm va chạm."
+    },
+    {
+      "id": "love-children-talk",
+      "topic": "love",
+      "palace": "Tử Tức",
+      "starIds": [
+        "cu-mon"
+      ],
+      "kind": "caution",
+      "text": "Cự Môn gợi khác biệt quan điểm; dành thời gian lắng nghe giúp đôi bên hiểu nhau hơn."
+    },
+    {
+      "id": "love-children-support",
+      "topic": "love",
+      "palace": "Tử Tức",
+      "starIds": [
+        "ta-phu",
+        "huu-bat",
+        "van-xuong",
+        "van-khuc"
+      ],
+      "kind": "positive",
+      "text": "Các sao phụ trợ và văn tinh gợi sự giúp đỡ trong việc đồng hành, chăm sóc hoặc học tập."
+    },
+    {
+      "id": "love-children-distance",
+      "topic": "love",
+      "palace": "Tử Tức",
+      "starIds": [
+        "dia-khong",
+        "dia-kiep",
+        "thien-hu",
+        "thien-khoc"
+      ],
+      "kind": "caution",
+      "text": "Các sao này gợi lo lắng hoặc khoảng cách trong giao tiếp; nên vun đắp thời gian chất lượng và kết nối tinh thần."
+    },
+    {
+      "id": "career-leadership",
+      "topic": "career_finance",
+      "palace": "Quan Lộc",
+      "starIds": [
+        "tu-vi",
+        "thien-phu"
+      ],
+      "kind": "positive",
+      "text": "Tử Vi hoặc Thiên Phủ gợi khả năng điều phối, coi trọng uy tín và môi trường có tổ chức."
+    },
+    {
+      "id": "career-finance",
+      "topic": "career_finance",
+      "palace": "Quan Lộc",
+      "starIds": [
+        "vu-khuc"
+      ],
+      "kind": "positive",
+      "text": "Vũ Khúc gợi sự phù hợp với công việc cần kỷ luật, quản lý nguồn lực hoặc vận hành."
+    },
+    {
+      "id": "career-analysis",
+      "topic": "career_finance",
+      "palace": "Quan Lộc",
+      "starIds": [
+        "thien-co",
+        "thai-am"
+      ],
+      "kind": "context",
+      "text": "Thiên Cơ hoặc Thái Âm gợi thiên hướng phân tích, nghiên cứu, tính toán hoặc làm việc hậu trường."
+    },
+    {
+      "id": "career-communication",
+      "topic": "career_finance",
+      "palace": "Quan Lộc",
+      "starIds": [
+        "thai-duong",
+        "cu-mon",
+        "van-xuong",
+        "van-khuc"
+      ],
+      "kind": "positive",
+      "text": "Các sao này gợi lợi thế ở công việc giao tiếp, truyền đạt, tư vấn, nghiên cứu hoặc phục vụ cộng đồng."
+    },
+    {
+      "id": "career-change",
+      "topic": "career_finance",
+      "palace": "Quan Lộc",
+      "starIds": [
+        "that-sat",
+        "pha-quan",
+        "tham-lang"
+      ],
+      "kind": "context",
+      "text": "Các sao này gợi môi trường năng động, nhiều thử thách hoặc thay đổi; cần chủ động cập nhật kỹ năng."
+    },
+    {
+      "id": "career-pressure",
+      "topic": "career_finance",
+      "palace": "Quan Lộc",
+      "starIds": [
+        "kinh-duong",
+        "da-la",
+        "hoa-tinh",
+        "linh-tinh",
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "kind": "caution",
+      "text": "Nhóm sao này gợi áp lực, cạnh tranh hoặc hướng đi biến động; chia nhỏ mục tiêu và có phương án dự phòng."
+    },
+    {
+      "id": "career-support",
+      "topic": "career_finance",
+      "palace": "Quan Lộc",
+      "starIds": [
+        "hoa-khoa",
+        "ta-phu",
+        "huu-bat",
+        "thien-khoi",
+        "thien-viet"
+      ],
+      "kind": "positive",
+      "text": "Hóa Khoa, Tả Hữu, Khôi Việt gợi sự hỗ trợ, học tập và cơ hội được ghi nhận trong công việc."
+    },
+    {
+      "id": "money-accumulation",
+      "topic": "career_finance",
+      "palace": "Tài Bạch",
+      "starIds": [
+        "vu-khuc",
+        "thien-phu",
+        "loc-ton",
+        "hoa-loc"
+      ],
+      "kind": "positive",
+      "text": "Các sao này gợi khả năng kiếm tiền hoặc tích lũy; quản trị chi tiêu vẫn là yếu tố quyết định."
+    },
+    {
+      "id": "money-many-streams",
+      "topic": "career_finance",
+      "palace": "Tài Bạch",
+      "starIds": [
+        "thien-co",
+        "tham-lang",
+        "thien-ma"
+      ],
+      "kind": "context",
+      "text": "Các sao này gợi dòng thu nhập gắn với nhiều hoạt động hoặc thay đổi; tập trung và theo dõi dòng tiền sẽ hữu ích."
+    },
+    {
+      "id": "money-volatility",
+      "topic": "career_finance",
+      "palace": "Tài Bạch",
+      "starIds": [
+        "pha-quan",
+        "dia-khong",
+        "dia-kiep",
+        "bac-si-9",
+        "bac-si-3",
+        "hoa-ky"
+      ],
+      "kind": "caution",
+      "text": "Các sao này gợi khoản thu chi biến động hoặc phát sinh ngoài dự tính; duy trì quỹ dự phòng và giới hạn rủi ro."
+    },
+    {
+      "id": "money-documents",
+      "topic": "career_finance",
+      "palace": "Tài Bạch",
+      "starIds": [
+        "cu-mon"
+      ],
+      "kind": "caution",
+      "text": "Cự Môn gợi tiền bạc cần minh bạch trong trao đổi, hợp đồng và giấy tờ."
+    },
+    {
+      "id": "study-skill",
+      "topic": "career_finance",
+      "palace": "Quan Lộc",
+      "starIds": [
+        "van-xuong",
+        "van-khuc",
+        "hoa-khoa",
+        "thien-co",
+        "thien-khoi",
+        "thien-viet"
+      ],
+      "kind": "positive",
+      "text": "Văn tinh, Hóa Khoa, Khôi Việt hoặc Thiên Cơ gợi thuận lợi cho học tập, phân tích và tiếp nhận hướng dẫn."
+    },
+    {
+      "id": "friends-support",
+      "topic": "environment",
+      "palace": "Nô Bộc",
+      "starIds": [
+        "ta-phu",
+        "huu-bat",
+        "thien-khoi",
+        "thien-viet"
+      ],
+      "kind": "positive",
+      "text": "Tả Hữu hoặc Khôi Việt gợi sự hỗ trợ từ bạn bè, đồng nghiệp hoặc người hướng dẫn."
+    },
+    {
+      "id": "friends-quality",
+      "topic": "environment",
+      "palace": "Nô Bộc",
+      "starIds": [
+        "tu-vi",
+        "thien-phu"
+      ],
+      "kind": "positive",
+      "text": "Tử Vi hoặc Thiên Phủ gợi xu hướng kết giao với người có trách nhiệm, nền nếp hoặc vị trí ổn định."
+    },
+    {
+      "id": "friends-gentle",
+      "topic": "environment",
+      "palace": "Nô Bộc",
+      "starIds": [
+        "thien-co",
+        "thien-dong",
+        "thien-luong"
+      ],
+      "kind": "positive",
+      "text": "Các sao này gợi quan hệ nhẹ nhàng, biết cảm thông và ít thiên về đối đầu."
+    },
+    {
+      "id": "friends-wide",
+      "topic": "environment",
+      "palace": "Nô Bộc",
+      "starIds": [
+        "tham-lang"
+      ],
+      "kind": "context",
+      "text": "Tham Lang gợi mạng lưới giao tiếp rộng; nên dành thời gian vun đắp một số quan hệ tin cậy sâu sắc."
+    },
+    {
+      "id": "friends-conflict",
+      "topic": "environment",
+      "palace": "Nô Bộc",
+      "starIds": [
+        "cu-mon",
+        "liem-trinh",
+        "that-sat",
+        "pha-quan",
+        "kinh-duong",
+        "da-la",
+        "hoa-ky"
+      ],
+      "kind": "caution",
+      "text": "Các sao này gợi cạnh tranh, tranh luận hoặc khác biệt mạnh trong nhóm; giữ ranh giới và thống nhất trách nhiệm."
+    },
+    {
+      "id": "friends-disappointment",
+      "topic": "environment",
+      "palace": "Nô Bộc",
+      "starIds": [
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "kind": "caution",
+      "text": "Địa Không hoặc Địa Kiếp gợi quan hệ có lúc thay đổi hoặc gây hụt hẫng; nên đánh giá qua hành động thực tế."
+    },
+    {
+      "id": "travel-impression",
+      "topic": "environment",
+      "palace": "Thiên Di",
+      "starIds": [
+        "tu-vi",
+        "thai-duong"
+      ],
+      "kind": "positive",
+      "text": "Tử Vi hoặc Thái Dương gợi khả năng tạo ấn tượng và được chú ý khi bước vào môi trường bên ngoài."
+    },
+    {
+      "id": "travel-movement",
+      "topic": "environment",
+      "palace": "Thiên Di",
+      "starIds": [
+        "thien-ma"
+      ],
+      "kind": "positive",
+      "text": "Thiên Mã gợi sự thuận lợi khi chủ động dịch chuyển, đổi môi trường hoặc mở rộng phạm vi hoạt động."
+    },
+    {
+      "id": "travel-adapt",
+      "topic": "environment",
+      "palace": "Thiên Di",
+      "starIds": [
+        "thien-co",
+        "thai-am"
+      ],
+      "kind": "positive",
+      "text": "Thiên Cơ hoặc Thái Âm gợi khả năng quan sát, ứng xử khéo và thích nghi với môi trường mới."
+    },
+    {
+      "id": "travel-misunderstanding",
+      "topic": "environment",
+      "palace": "Thiên Di",
+      "starIds": [
+        "thien-dong",
+        "cu-mon"
+      ],
+      "kind": "caution",
+      "text": "Thiên Đồng hoặc Cự Môn có thể gợi ý kiến trái chiều và hiểu lầm khi giao tiếp bên ngoài; nên xác nhận thông tin."
+    },
+    {
+      "id": "travel-change",
+      "topic": "environment",
+      "palace": "Thiên Di",
+      "starIds": [
+        "that-sat",
+        "pha-quan"
+      ],
+      "kind": "context",
+      "text": "Thất Sát hoặc Phá Quân gợi môi trường nhiều thử thách và thay đổi; chuẩn bị phương án linh hoạt."
+    },
+    {
+      "id": "travel-support",
+      "topic": "environment",
+      "palace": "Thiên Di",
+      "starIds": [
+        "ta-phu",
+        "huu-bat",
+        "thien-khoi",
+        "thien-viet"
+      ],
+      "kind": "positive",
+      "text": "Các sao phụ trợ gợi khả năng gặp người giúp đỡ ở nơi xa hoặc trong môi trường mới."
+    },
+    {
+      "id": "travel-friction",
+      "topic": "environment",
+      "palace": "Thiên Di",
+      "starIds": [
+        "kinh-duong",
+        "hoa-tinh",
+        "linh-tinh",
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "kind": "caution",
+      "text": "Nhóm sao này gợi tình huống bên ngoài khó lường hoặc dễ va chạm; kiểm tra kế hoạch và giữ bình tĩnh."
+    },
+    {
+      "id": "travel-grace",
+      "topic": "environment",
+      "palace": "Thiên Di",
+      "starIds": [
+        "long-tri",
+        "phuong-cac",
+        "hoa-cai"
+      ],
+      "kind": "positive",
+      "text": "Long Trì, Phượng Các hoặc Hoa Cái gợi phong thái nhã nhặn, khả năng tạo thiện cảm qua cách thể hiện."
+    },
+    {
+      "id": "health-routine",
+      "topic": "health",
+      "palace": "Tật Ách",
+      "starIds": [
+        "thien-phu",
+        "thien-luong",
+        "thai-am"
+      ],
+      "kind": "positive",
+      "text": "Các sao này theo lối luận truyền thống gợi nền tảng chăm sóc bản thân tương đối ổn; duy trì sinh hoạt điều độ vẫn quan trọng."
+    },
+    {
+      "id": "health-rest",
+      "topic": "health",
+      "palace": "Tật Ách",
+      "starIds": [
+        "thien-dong",
+        "thien-co",
+        "hoa-tinh",
+        "linh-tinh"
+      ],
+      "kind": "context",
+      "text": "Các sao này gợi nên chú ý nhịp nghỉ ngơi và căng thẳng; đây không phải nhận định hay chẩn đoán y khoa."
+    },
+    {
+      "id": "health-mood",
+      "topic": "health",
+      "palace": "Tật Ách",
+      "starIds": [
+        "thien-hu",
+        "thien-khoc",
+        "co-than"
+      ],
+      "kind": "context",
+      "text": "Các sao này gợi nhu cầu chăm sóc đời sống tinh thần và duy trì kết nối xã hội; hãy tìm hỗ trợ phù hợp nếu thấy khó khăn kéo dài."
+    },
+    {
+      "id": "health-relax",
+      "topic": "health",
+      "palace": "Tật Ách",
+      "starIds": [
+        "kinh-duong",
+        "da-la",
+        "dia-khong",
+        "dia-kiep",
+        "hoa-ky"
+      ],
+      "kind": "caution",
+      "text": "Các sao này chỉ là gợi ý chiêm nghiệm về việc giữ nhịp sinh hoạt và giảm căng thẳng, không dự báo bệnh hay tai nạn."
+    },
+    {
+      "id": "health-support",
+      "topic": "health",
+      "palace": "Tật Ách",
+      "starIds": [
+        "thien-y",
+        "thien-quan",
+        "thien-phuc"
+      ],
+      "kind": "positive",
+      "text": "Các sao này gợi việc dễ nhận được sự chăm sóc hoặc hướng dẫn; khi có vấn đề sức khỏe, hãy hỏi chuyên gia y tế."
+    }
+  ],
+  "annualStarProfiles": {
+    "luu-thai-tue": {
+      "name": "Lưu Thái Tuế",
+      "han": "流太歲",
+      "core": "Cung đóng là trọng tâm của năm xem.",
+      "strength": "Giúp xác định chủ đề nổi bật nhất trong năm.",
+      "watchout": "Chỉ có ý nghĩa cho năm xem.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-loc-ton": {
+      "name": "Lưu Lộc Tồn",
+      "han": "流祿存",
+      "core": "Cung đóng có cơ hội và nguồn lực trong năm.",
+      "strength": "Thuận lợi cho việc giữ và tích lũy ở lĩnh vực đó.",
+      "watchout": "Cần chủ động để cơ hội thành kết quả.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-kinh-duong": {
+      "name": "Lưu Kình Dương",
+      "han": "流擎羊",
+      "core": "Cung đóng có áp lực, cạnh tranh hoặc việc cần quyết liệt.",
+      "strength": "Thúc đẩy xử lý dứt khoát.",
+      "watchout": "Dễ va chạm; cần kiên nhẫn.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-da-la": {
+      "name": "Lưu Đà La",
+      "han": "流陀羅",
+      "core": "Cung đóng có việc kéo dài, chậm tiến độ.",
+      "strength": "Rèn tính bền bỉ.",
+      "watchout": "Dễ trì hoãn; cần đặt mốc cụ thể.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-thien-ma": {
+      "name": "Lưu Thiên Mã",
+      "han": "流天馬",
+      "core": "Có di chuyển, thay đổi hoặc cơ hội mới ở lĩnh vực đó.",
+      "strength": "Thuận cho việc đi lại, mở rộng.",
+      "watchout": "Cần chuẩn bị trước khi thay đổi.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-van-xuong": {
+      "name": "Lưu Văn Xương",
+      "han": "流文昌",
+      "core": "Thuận học tập, giấy tờ, giao tiếp trong năm.",
+      "strength": "Hợp thi cử, trình bày.",
+      "watchout": "Cần kiểm tra chi tiết văn bản.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-van-khuc": {
+      "name": "Lưu Văn Khúc",
+      "han": "流文曲",
+      "core": "Thuận biểu đạt, nghệ thuật, giao tiếp trong năm.",
+      "strength": "Hợp sáng tạo, thuyết trình.",
+      "watchout": "Cần cụ thể hóa ý tưởng.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-hoa-loc": {
+      "name": "Lưu Hóa Lộc",
+      "han": "流化祿",
+      "core": "Lĩnh vực gắn với cung đóng có cơ hội trong năm.",
+      "strength": "Dễ thấy thuận lợi khi chủ động.",
+      "watchout": "Cần quản lý để không chi theo đà.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-hoa-quyen": {
+      "name": "Lưu Hóa Quyền",
+      "han": "流化權",
+      "core": "Lĩnh vực đó cần chủ động quyết định trong năm.",
+      "strength": "Có quyền chủ động, dám đảm nhận.",
+      "watchout": "Dễ áp lực; cần phân vai rõ.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-hoa-khoa": {
+      "name": "Lưu Hóa Khoa",
+      "han": "流化科",
+      "core": "Lĩnh vực đó được ghi nhận hoặc có người hỗ trợ trong năm.",
+      "strength": "Hợp học hỏi, xây uy tín.",
+      "watchout": "Cần duy trì nhất quán.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-hoa-ky": {
+      "name": "Lưu Hóa Kỵ",
+      "han": "流化忌",
+      "core": "Lĩnh vực đó cần cẩn trọng, kiểm kỹ chi tiết trong năm.",
+      "strength": "Thúc đẩy rà soát kỹ.",
+      "watchout": "Không đồng nghĩa với tai họa; nên minh bạch và chuẩn bị.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-thien-khoc": {
+      "name": "Lưu Thiên Khốc",
+      "han": "流天哭",
+      "core": "Tâm trạng trầm lắng ở lĩnh vực đó trong năm.",
+      "strength": "Sâu sắc, đồng cảm.",
+      "watchout": "Nên chia sẻ và giữ hoạt động nâng tinh thần.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-thien-hu": {
+      "name": "Lưu Thiên Hư",
+      "han": "流天虛",
+      "core": "Cảm giác trống hoặc kỳ vọng chưa thành ở lĩnh vực đó.",
+      "strength": "Biết điều chỉnh kỳ vọng.",
+      "watchout": "Cần mục tiêu thực tế.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-dao-hoa": {
+      "name": "Lưu Đào Hoa",
+      "han": "流桃花",
+      "core": "Duyên, sự chú ý và giao tiếp xã hội tăng trong năm.",
+      "strength": "Dễ có kết nối mới.",
+      "watchout": "Cần minh bạch trong quan hệ.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-hong-loan": {
+      "name": "Lưu Hồng Loan",
+      "han": "流紅鸞",
+      "core": "Tin vui, duyên lành hoặc sự kiện gắn bó trong năm.",
+      "strength": "Thuận lợi cho kết nối.",
+      "watchout": "Cần cân nhắc kỹ trước khi cam kết.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-thien-hy": {
+      "name": "Lưu Thiên Hỷ",
+      "han": "流天喜",
+      "core": "Tin vui, tụ họp, niềm vui trong năm.",
+      "strength": "Tạo không khí vui vẻ.",
+      "watchout": "Cần cân đối chi tiêu cho sự kiện.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-tang-mon": {
+      "name": "Lưu Tang Môn",
+      "han": "流喪門",
+      "core": "Tâm trạng trầm, chú ý chuyện gia đình trong năm.",
+      "strength": "Sâu sắc, quan tâm người thân.",
+      "watchout": "Nên giữ nhịp sống cân bằng.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-bach-ho": {
+      "name": "Lưu Bạch Hổ",
+      "han": "流白虎",
+      "core": "Lời nói và phản ứng dễ gay gắt trong năm.",
+      "strength": "Quyết liệt khi cần.",
+      "watchout": "Cần kiềm chế ngôn từ.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-thien-khoi": {
+      "name": "Lưu Thiên Khôi",
+      "han": "流天魁",
+      "core": "Có người giúp, dễ gặp quý nhân trong năm.",
+      "strength": "Thuận hỗ trợ từ người có kinh nghiệm.",
+      "watchout": "Cần chủ động tiếp nhận.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-thien-viet": {
+      "name": "Lưu Thiên Việt",
+      "han": "流天鉞",
+      "core": "Có người giúp kín đáo, hỗ trợ từ nhiều hướng.",
+      "strength": "Dễ nhận gợi ý đúng lúc.",
+      "watchout": "Cần cảm ơn và giữ quan hệ.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-thien-tru": {
+      "name": "Lưu Thiên Trù",
+      "han": "流天廚",
+      "core": "Chú ý ăn uống, chăm lo gia đình trong năm.",
+      "strength": "Thuận bữa ăn, tụ họp.",
+      "watchout": "Cần chừng mực chi tiêu.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-thien-duc": {
+      "name": "Lưu Thiên Đức",
+      "han": "流天德",
+      "core": "Thiện chí, hòa giải, giải tỏa trong năm.",
+      "strength": "Tạo sự ôn hòa.",
+      "watchout": "Lòng tốt cần có ranh giới.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-nguyet-duc": {
+      "name": "Lưu Nguyệt Đức",
+      "han": "流月德",
+      "core": "Sự dịu dàng, hỗ trợ từ phụ nữ hoặc người chăm sóc trong năm.",
+      "strength": "Hòa nhã, dễ hóa giải.",
+      "watchout": "Cần chủ động nói rõ nhu cầu.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-phuc-duc": {
+      "name": "Lưu Phúc Đức",
+      "han": "流福德",
+      "core": "Nền tinh thần và sự hỗ trợ trong năm.",
+      "strength": "Giúp giữ bình tâm.",
+      "watchout": "Cần chủ động tạo thiện duyên.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-long-duc": {
+      "name": "Lưu Long Đức",
+      "han": "流龍德",
+      "core": "Thiện chí và cách xử lý có tình có lý trong năm.",
+      "strength": "Hóa giải bằng sự tử tế.",
+      "watchout": "Cần kèm hành động cụ thể.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-tuan-khong": {
+      "name": "Lưu Tuần Không",
+      "han": "流旬空",
+      "core": "Lĩnh vực đó chậm hoặc ngắt quãng trong năm.",
+      "strength": "Rèn kiên nhẫn.",
+      "watchout": "Cần kế hoạch linh hoạt.",
+      "group": "annual",
+      "idNote": "Id từ engine có hậu tố -1/-2 (mỗi cung một bản); chuẩn hóa bằng cách bỏ hậu tố khi tra hồ sơ.",
+      "scope": "annual"
+    },
+    "luu-triet-khong": {
+      "name": "Lưu Triệt Không",
+      "han": "流截空",
+      "core": "Lĩnh vực đó có điểm ngắt, cần điều chỉnh trong năm.",
+      "strength": "Buộc cân nhắc lại hướng đi.",
+      "watchout": "Cần dự phòng.",
+      "group": "annual",
+      "idNote": "Id từ engine có hậu tố -1/-2 (mỗi cung một bản); chuẩn hóa bằng cách bỏ hậu tố khi tra hồ sơ.",
+      "scope": "annual"
+    },
+    "luu-thien-khong": {
+      "name": "Lưu Thiên Không",
+      "han": "流天空",
+      "core": "Dễ có ý tưởng khác thường hoặc cảm giác trống trải trong năm.",
+      "strength": "Có góc nhìn mới.",
+      "watchout": "Cần biến ý tưởng thành việc cụ thể.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-kiep-sat": {
+      "name": "Lưu Kiếp Sát",
+      "han": "流劫煞",
+      "core": "Áp lực bất ngờ đòi hỏi xử lý dứt khoát trong năm.",
+      "strength": "Thúc đẩy hành động nhanh.",
+      "watchout": "Cần cân nhắc trước khi quyết.",
+      "group": "annual",
+      "scope": "annual"
+    },
+    "luu-van-tinh": {
+      "name": "Lưu Văn Tinh",
+      "han": "流文星",
+      "core": "Thuận học hỏi, biểu đạt (an theo Can năm sinh).",
+      "strength": "Hợp học thuật, văn bản.",
+      "watchout": "Cần đối chiếu cách an của trường phái đang dùng.",
+      "group": "annual",
+      "scope": "annual"
+    }
+  },
+  "starAliases": {
+    "thai-tue-7": "long-duc"
+  },
+  "starPalaceProfiles": {
+    "tu-vi": {
+      "Mệnh": "Có phong thái điềm tĩnh, thích giữ vai trò dẫn dắt và được tôn trọng; cần lắng nghe để quyền chủ động không thành áp đặt.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ nghiêng về nề nếp, kỳ vọng và sự dìu dắt; nên trao đổi cởi mở để kỳ vọng không thành áp lực.",
+      "Phúc Đức": "Đời sống tinh thần coi trọng nguyên tắc và sự ngăn nắp; dễ tìm điểm tựa khi giữ được nếp sống ổn định.",
+      "Điền Trạch": "Chú trọng không gian sống chỉn chu, có trật tự; thiên về tích lũy lâu dài hơn là thay đổi liên tục.",
+      "Quan Lộc": "Hợp vai trò điều phối, quản lý hoặc môi trường có cấu trúc; cần tránh ôm hết quyết định về mình.",
+      "Nô Bộc": "Thường gần gũi người có kinh nghiệm hoặc vị thế; hợp tác tốt khi mỗi bên rõ vai trò.",
+      "Thiên Di": "Ra ngoài tạo ấn tượng đáng tin, dễ được chú ý; môi trường rộng mở giúp phát huy khả năng tổ chức.",
+      "Tật Ách": "Gợi thói quen sinh hoạt có kỷ luật nhưng dễ dồn trách nhiệm; nên chú ý nghỉ ngơi và cân bằng, không dùng để chẩn đoán.",
+      "Tài Bạch": "Quản lý tiền bạc có kế hoạch, thích nguồn thu ổn định và có vị thế; cần tránh chi tiêu vì sĩ diện.",
+      "Tử Tức": "Quan hệ với con cái thiên về định hướng và nâng đỡ; nên chừa chỗ để con tự chọn.",
+      "Phu Thê": "Mong quan hệ lâu dài có nền nếp và sự tôn trọng; cần mềm mỏng để không thành chuyện ai quyết ai.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân thường có người giữ vai trò dẫn dắt; hợp tác tốt khi phân rõ vai trò."
+    },
+    "thien-co": {
+      "Mệnh": "Nhanh nhạy, hay suy tính và thích tìm phương án; cần dừng lại chọn một hướng để không phân tán.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ thiên về trao đổi, lý lẽ và học hỏi; nên bổ sung sự gần gũi bằng việc làm cụ thể.",
+      "Phúc Đức": "Tâm trí hay hoạt động, dễ lo xa; hợp việc viết ra, sắp xếp suy nghĩ và dành thời gian để đầu óc nghỉ.",
+      "Điền Trạch": "Hay cải tạo, sắp xếp lại không gian sống; thiên về nơi ở linh hoạt hơn là gắn lâu một chỗ.",
+      "Quan Lộc": "Hợp công việc phân tích, tham mưu, kỹ thuật hoặc lập kế hoạch; dễ đổi hướng nếu thiếu mục tiêu dài hạn.",
+      "Nô Bộc": "Bạn bè và đồng nghiệp thường nhanh trí; hợp tác tốt khi trao đổi rõ ràng, tránh đoán ý người khác quá nhiều.",
+      "Thiên Di": "Ra ngoài thích nghi nhanh, dễ học từ môi trường mới; thuận lợi với công việc có thay đổi hoặc di chuyển.",
+      "Tật Ách": "Gợi tâm trí hoạt động nhiều, dễ căng vì suy nghĩ; nên giữ giờ giấc và nghỉ ngơi, không dùng để chẩn đoán.",
+      "Tài Bạch": "Kiếm tiền bằng trí tuệ, kỹ năng hoặc nhiều nguồn nhỏ; cần kế hoạch để tránh đổi hướng liên tục.",
+      "Tử Tức": "Quan hệ với con cái nghiêng về trò chuyện, khơi gợi tư duy; nên kiên nhẫn với nhịp học của con.",
+      "Phu Thê": "Cần người đồng hành trao đổi được, nhẹ nhàng và linh hoạt; dễ lo xa nên cần nói ra điều mình nghĩ.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân có thể là người góp ý, cùng bàn bạc; hợp tác hiệu quả khi thống nhất quyết định."
+    },
+    "thai-duong": {
+      "Mệnh": "Hướng ngoại, nhiệt tình, thích chia sẻ và được ghi nhận; cần tránh gánh việc vì sĩ diện hoặc kiệt sức.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ gắn với sự khích lệ và danh dự gia đình; nên giữ trao đổi ấm áp, rõ ràng.",
+      "Phúc Đức": "Tinh thần tích cực khi được cho đi và được ghi nhận; cần chú ý nghỉ ngơi để không cạn năng lượng.",
+      "Điền Trạch": "Thích không gian sáng, mở, có người ra vào; cần cân đối chi tiêu cho thể diện và nhu cầu thực.",
+      "Quan Lộc": "Hợp công việc đối ngoại, truyền thông, giảng dạy hoặc phục vụ cộng đồng; cần kiểm soát khối lượng việc nhận.",
+      "Nô Bộc": "Quan hệ xã hội rộng, nhiều người quý mến; nên phân biệt người cần giúp với người chỉ nhờ vả.",
+      "Thiên Di": "Ra ngoài dễ gây thiện cảm, hợp môi trường nhiều giao lưu; cơ hội đến từ việc xuất hiện đúng lúc.",
+      "Tật Ách": "Gợi nhịp sống nhiều hoạt động; nên giữ giờ ngủ, vận động đều và nghỉ giữa chừng, không dùng để chẩn đoán.",
+      "Tài Bạch": "Thu nhập thiên về công việc hướng ngoại và uy tín; dễ chi rộng vì quan hệ nên cần ngân sách rõ.",
+      "Tử Tức": "Quan hệ với con cái cởi mở, khích lệ, thích cùng hoạt động; cần để con có không gian riêng.",
+      "Phu Thê": "Mong người đồng hành chân thành, nhiệt tình; cần quan tâm đều đặn thay vì chỉ lúc rảnh.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân sôi nổi, quan tâm lẫn nhau; hợp tác tốt khi chia việc minh bạch."
+    },
+    "vu-khuc": {
+      "Mệnh": "Thực tế, kỷ luật và quyết đoán trong việc tiền bạc, công việc; cần mềm hơn trong giao tiếp tình cảm.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ nghiêng về trách nhiệm và việc thực tế; nên bày tỏ quan tâm bằng lời, không chỉ bằng việc.",
+      "Phúc Đức": "Tâm thế cần sự chắc chắn, thích tự lo; dễ căng khi mọi thứ chưa xong nên cần chừa thời gian thư giãn.",
+      "Điền Trạch": "Có xu hướng tích lũy, chi cho nhà cửa có tính toán; hợp kế hoạch tài sản dài hạn.",
+      "Quan Lộc": "Hợp công việc tài chính, vận hành, kỹ thuật hoặc quản lý có quy trình; cần chú ý phối hợp với người.",
+      "Nô Bộc": "Đồng nghiệp và bạn bè thường thẳng, thực tế; hợp tác tốt khi rõ quyền lợi và trách nhiệm.",
+      "Thiên Di": "Ra ngoài giữ phong thái nghiêm túc, đáng tin; hợp môi trường làm việc nghiêm cẩn.",
+      "Tật Ách": "Gợi nhịp sống nặng trách nhiệm, dễ làm quá sức; nên cân bằng giờ làm và nghỉ, không dùng để chẩn đoán.",
+      "Tài Bạch": "Duyên với tiền bạc theo hướng chắc chắn, kỷ luật, tích lũy; cần tránh quá cứng nhắc làm lỡ cơ hội.",
+      "Tử Tức": "Quan hệ với con cái thiên về kỷ luật, định hướng thực tế; nên bổ sung sự lắng nghe.",
+      "Phu Thê": "Coi trọng trách nhiệm và ổn định; cần bày tỏ tình cảm rõ hơn để bạn đời không thấy khô khan.",
+      "Huynh Đệ": "Anh chị em hoặc đối tác thân cận thiên về việc thực tế, giúp nhau chuyện làm ăn; nên tách bạch tiền bạc."
+    },
+    "thien-dong": {
+      "Mệnh": "Ôn hòa, dễ chịu, thích sự thoải mái; cần chủ động hơn để không bỏ lỡ cơ hội vì chần chừ.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ nhẹ nhàng, nhiều bao dung; có lúc ngại nói thẳng điều mình muốn.",
+      "Phúc Đức": "Tinh thần thiên về an yên, biết tận hưởng niềm vui nhỏ; nên giữ nhịp hoạt động để không trì trệ.",
+      "Điền Trạch": "Ưa nơi ở thoải mái, ấm cúng; tích lũy tốt khi có kế hoạch, dễ chi vì sự tiện nghi.",
+      "Quan Lộc": "Hợp công việc ổn định, chăm sóc, hỗ trợ hoặc môi trường ít áp lực; cần đặt mục tiêu để tiến bộ.",
+      "Nô Bộc": "Bạn bè hòa nhã, dễ gần; nên chọn lọc để không bị kéo vào những cuộc vui vô định.",
+      "Thiên Di": "Ra ngoài dễ hòa đồng, thích nghi bằng sự mềm mỏng; cần tự đặt ranh giới trước yêu cầu của người khác.",
+      "Tật Ách": "Gợi thói quen thư thả, dễ lơi nhịp vận động; nên giữ lịch sinh hoạt đều, không dùng để chẩn đoán.",
+      "Tài Bạch": "Thu nhập ổn định theo kiểu từ tốn; cần chủ động tăng nguồn thu và kiểm soát chi cho tiện nghi.",
+      "Tử Tức": "Quan hệ với con cái hiền hòa, gần gũi; cần giữ nề nếp để tình thương không thành dễ dãi.",
+      "Phu Thê": "Mong quan hệ nhẹ nhàng, hòa thuận; nên nói rõ mong muốn thay vì nhường nhịn trong im lặng.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân hiền hòa, ít xung đột; cần chủ động giữ liên lạc."
+    },
+    "liem-trinh": {
+      "Mệnh": "Nguyên tắc, nhiều đam mê và chính kiến rõ; cần giữ cân bằng giữa lý tưởng và sự linh hoạt.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ có chiều sâu nhưng dễ có bất đồng quan điểm; nên trao đổi trên tinh thần tôn trọng.",
+      "Phúc Đức": "Tâm thế mạnh mẽ, nhiều ham muốn tự hoàn thiện; cần học cách thả lỏng và tha thứ.",
+      "Điền Trạch": "Cần nơi ở có nguyên tắc, riêng tư; chú ý giấy tờ và thủ tục tài sản cho rõ ràng.",
+      "Quan Lộc": "Hợp công việc cần quy tắc, pháp lý, kỹ thuật hoặc quản trị; tránh để chuyện cá nhân lẫn vào công việc.",
+      "Nô Bộc": "Quan hệ có chiều sâu, chọn người kỹ; cần giữ ranh giới rõ để tránh thị phi.",
+      "Thiên Di": "Ra ngoài giữ hình ảnh chỉn chu, nguyên tắc; môi trường nhiều quy chuẩn hợp với bạn.",
+      "Tật Ách": "Gợi cảm xúc mạnh, dễ căng khi bị ràng buộc; nên có cách xả áp lực lành mạnh, không dùng để chẩn đoán.",
+      "Tài Bạch": "Kiếm tiền qua chuyên môn, quản trị hoặc quan hệ; cần minh bạch giao dịch và tránh quyết định theo cảm xúc.",
+      "Tử Tức": "Quan hệ với con cái giàu cảm xúc, kỳ vọng cao; nên dành chỗ cho con thể hiện riêng.",
+      "Phu Thê": "Tình cảm sâu, nhiều đòi hỏi về sự chân thành; cần cởi mở và kiên nhẫn trước khác biệt.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân có cá tính rõ, dễ bất đồng quan điểm; hợp tác tốt khi nêu rõ nguyên tắc chung."
+    },
+    "thien-phu": {
+      "Mệnh": "Điềm đạm, biết giữ gìn và thích sự ổn định; cần mạnh dạn thử cái mới để không quá an toàn.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ thiên về nâng đỡ, bao bọc; thường có điểm tựa từ gia đình hoặc bề trên.",
+      "Phúc Đức": "Tinh thần ổn, biết đủ và coi trọng nếp nhà; cần đa dạng trải nghiệm để không khép kín.",
+      "Điền Trạch": "Có duyên giữ của, thích tích lũy và nhà cửa ổn định; hợp kế hoạch tài sản bền vững.",
+      "Quan Lộc": "Hợp công việc quản lý, hành chính, tài chính hoặc nơi cần sự bền vững; cần chủ động tiến lên.",
+      "Nô Bộc": "Quan hệ hợp tác đáng tin, nhiều người hỗ trợ; nên cân nhắc khi người khác nhờ vả.",
+      "Thiên Di": "Ra ngoài tạo ấn tượng chững chạc, dễ được tin; thuận lợi trong môi trường ổn định.",
+      "Tật Ách": "Gợi thói quen ăn ngủ đều đặn khá quan trọng, dễ ngại vận động khi quá ổn định; không dùng để chẩn đoán.",
+      "Tài Bạch": "Thiên về tích lũy, giữ gìn nguồn thu và chi tiêu chừng mực; nên kết hợp đầu tư an toàn.",
+      "Tử Tức": "Quan hệ với con cái bao bọc, chu đáo; cần để con tự lập dần.",
+      "Phu Thê": "Mong quan hệ ổn định, có chỗ dựa; cần chủ động làm mới để quan hệ không nhạt.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân đáng tin, hay giúp đỡ; nên chia sẻ qua lại để không một chiều."
+    },
+    "thai-am": {
+      "Mệnh": "Tinh tế, kín đáo, nhạy cảm và biết tích lũy; cần chia sẻ để cảm xúc không dồn nén.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ nhiều tình cảm, quan tâm tinh tế; gắn với hình ảnh người mẹ hoặc người chăm sóc.",
+      "Phúc Đức": "Đời sống nội tâm phong phú, thích sự yên tĩnh; cần cân bằng giữa suy tư và hoạt động.",
+      "Điền Trạch": "Duyên nhà cửa và tích lũy khá tốt khi kiên nhẫn; ưa không gian dịu, gọn gàng.",
+      "Quan Lộc": "Hợp công việc tỉ mỉ, nghiên cứu, thiết kế, chăm sóc hoặc quản lý tài sản; nên mạnh dạn thể hiện năng lực.",
+      "Nô Bộc": "Bạn bè thân thiết ít mà sâu, có người âm thầm hỗ trợ; nên chủ động mở rộng mạng lưới.",
+      "Thiên Di": "Ra ngoài kín đáo, quan sát kỹ; hợp môi trường yên, ít ồn.",
+      "Tật Ách": "Gợi cảm xúc ảnh hưởng đến nhịp nghỉ; nên chú ý giấc ngủ và thư giãn, không dùng để chẩn đoán.",
+      "Tài Bạch": "Tích lũy từ từ, khéo giữ tiền; hợp kế hoạch tiết kiệm dài hạn.",
+      "Tử Tức": "Quan hệ với con cái dịu dàng, gần gũi; cần cân bằng giữa quan tâm và để con tự lập.",
+      "Phu Thê": "Mong sự thấu hiểu và ấm áp; cần nói rõ cảm xúc thay vì chờ người kia tự hiểu.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân quan tâm tinh tế, ít ồn ào; nên giữ liên lạc đều."
+    },
+    "tham-lang": {
+      "Mệnh": "Đa tài, nhiều hứng thú và giao tiếp khéo; cần chọn trọng tâm để không phân tán vì ham muốn.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ linh hoạt, có lúc khác biệt sở thích; nên giữ trao đổi thẳng thắn.",
+      "Phúc Đức": "Đời sống tinh thần phong phú, thích trải nghiệm; cần kỷ luật để niềm vui không thành buông thả.",
+      "Điền Trạch": "Hay đổi, trang trí hoặc đầu tư nhà cửa theo sở thích; cần kế hoạch để chi tiêu có kiểm soát.",
+      "Quan Lộc": "Hợp công việc giao tiếp, kinh doanh, sáng tạo, nhiều tương tác; cần giữ đạo đức nghề nghiệp và sự tập trung.",
+      "Nô Bộc": "Quan hệ rộng, nhiều nhóm bạn; nên phân biệt xã giao với tâm giao.",
+      "Thiên Di": "Ra ngoài năng động, nhiều cơ hội gặp gỡ; thuận lợi cho công việc cần quan hệ.",
+      "Tật Ách": "Gợi nhịp sống nhiều kích thích, dễ thức khuya hoặc ăn uống thất thường; nên giữ nếp, không dùng để chẩn đoán.",
+      "Tài Bạch": "Nhiều nguồn thu và cơ hội nhưng dễ chi theo hứng thú; cần ngân sách và quỹ dự phòng.",
+      "Tử Tức": "Quan hệ với con cái vui vẻ, nhiều hoạt động chung; cần đặt nề nếp rõ.",
+      "Phu Thê": "Quan hệ nhiều sức hút; cần giữ cam kết, minh bạch và thời gian chất lượng.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân năng động, hay rủ nhau làm việc mới; nên rõ phân chia khi hợp tác."
+    },
+    "cu-mon": {
+      "Mệnh": "Giỏi lập luận, hay suy xét và thẳng thắn; cần diễn đạt mềm để tránh hiểu lầm.",
+      "Phụ Mẫu": "Dễ có trao đổi nhiều, đôi khi tranh luận với cha mẹ; nên lắng nghe trước khi phản biện.",
+      "Phúc Đức": "Tâm trí hay hoài nghi, soi xét; nên tập tin tưởng và thả lỏng bớt.",
+      "Điền Trạch": "Cần chú ý giấy tờ, thỏa thuận về nhà đất cho rõ ràng; ưa không gian yên tĩnh để suy nghĩ.",
+      "Quan Lộc": "Hợp công việc dùng lời nói: giảng dạy, tư vấn, pháp lý, truyền thông; cần chú ý cách phát ngôn.",
+      "Nô Bộc": "Dễ có nhiều trao đổi ý kiến, đôi khi hiểu lầm; nên minh bạch và nói rõ ngay từ đầu.",
+      "Thiên Di": "Ra ngoài dễ gặp ý kiến trái chiều; thẳng thắn nhưng cần khéo để tránh thị phi.",
+      "Tật Ách": "Gợi hay nghĩ ngợi, căng thẳng vì lời nói; nên tìm người chia sẻ, không dùng để chẩn đoán.",
+      "Tài Bạch": "Thu nhập gắn với chuyên môn, kỹ năng nói hoặc phân tích; cần hợp đồng rõ ràng để tránh bất đồng tiền bạc.",
+      "Tử Tức": "Quan hệ với con cái nhiều trò chuyện, có lúc tranh luận; nên lắng nghe và giải thích kiên nhẫn.",
+      "Phu Thê": "Cần nói chuyện thẳng thắn nhưng dịu dàng; dễ hiểu lầm nếu giữ trong lòng.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân hay bàn luận, góp ý thẳng; nên tránh tranh cãi chuyện nhỏ."
+    },
+    "thien-tuong": {
+      "Mệnh": "Biết phò trợ, công bằng và coi trọng nề nếp; cần tự tin quyết định thay vì dựa vào người.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ nề nếp, tôn trọng; thường nhận được sự hướng dẫn rõ ràng.",
+      "Phúc Đức": "Tâm thế thích sự cân đối, hòa hợp; cần rõ chính kiến khi bị tác động.",
+      "Điền Trạch": "Thích nơi ở ngăn nắp, hài hòa; chú ý giữ cân đối giữa hình thức và thực dụng.",
+      "Quan Lộc": "Hợp vai trò hỗ trợ, điều phối, hành chính hoặc làm việc nhóm; cần dám đứng ra khi cần.",
+      "Nô Bộc": "Có người hỗ trợ khéo léo; quan hệ hợp tác tốt khi trao đổi công bằng.",
+      "Thiên Di": "Ra ngoài lịch sự, dễ được tin; thuận lợi trong môi trường có quy tắc.",
+      "Tật Ách": "Gợi cần giữ nếp sinh hoạt và cân bằng, dễ nhường nhịn đến mệt; không dùng để chẩn đoán.",
+      "Tài Bạch": "Thu nhập thiên về ổn định, từ công việc hỗ trợ hoặc dịch vụ; chi tiêu cần chừng mực.",
+      "Tử Tức": "Quan hệ với con cái chu đáo, nề nếp; nên để con có tiếng nói riêng.",
+      "Phu Thê": "Mong quan hệ hòa hợp, công bằng; cần nói rõ nhu cầu thay vì chiều theo mọi việc.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân biết giúp nhau; nên đáp lại để quan hệ cân bằng."
+    },
+    "thien-luong": {
+      "Mệnh": "Chững chạc, thích che chở và nghĩ cho người khác; cần chăm sóc bản thân để không ôm việc.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ có nét che chở, người lớn dìu dắt; thường nhận được lời khuyên bảo.",
+      "Phúc Đức": "Tinh thần thanh thản khi giúp người và sống ngay thẳng; cần buông bớt lo xa.",
+      "Điền Trạch": "Nơi ở thiên về bình yên, có người cùng gìn giữ; nên có kế hoạch cụ thể cho tài sản.",
+      "Quan Lộc": "Hợp công việc giáo dục, y tế, tư vấn, phục vụ hoặc công vụ; cần giữ thái độ công tâm.",
+      "Nô Bộc": "Có người lớn tuổi hoặc nhiều kinh nghiệm giúp đỡ; quan hệ tốt khi giữ khoảng cách vừa phải.",
+      "Thiên Di": "Ra ngoài dễ gặp người giúp, được tin cậy; hợp môi trường cộng đồng.",
+      "Tật Ách": "Gợi thói quen nghĩ cho người khác mà quên bản thân; nên cân bằng nghỉ ngơi, không dùng để chẩn đoán.",
+      "Tài Bạch": "Thu nhập bền vững qua uy tín và chuyên môn; nên tránh cho vay, bảo lãnh chỉ vì lòng tốt.",
+      "Tử Tức": "Quan hệ với con cái che chở, ân cần; cần để con tự trải nghiệm.",
+      "Phu Thê": "Mong sự chăm sóc, chín chắn; cần tránh tâm thế người lớn quá mức với bạn đời.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân hay nâng đỡ nhau; cần ranh giới để không bị phụ thuộc."
+    },
+    "that-sat": {
+      "Mệnh": "Dũng cảm, độc lập và thích tự quyết; cần kiên nhẫn trước người khác để tránh nóng vội.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ có nét mạnh, cá tính; dễ bất đồng khi mỗi bên giữ ý, nên đối thoại bình tĩnh.",
+      "Phúc Đức": "Nội tâm mạnh, thích thử thách; cần có cách xả áp lực và nghỉ ngơi.",
+      "Điền Trạch": "Hay thay đổi hoặc chuyển nơi ở; chú ý kế hoạch tài sản trước khi quyết nhanh.",
+      "Quan Lộc": "Hợp công việc thử thách, khởi nghiệp, cạnh tranh hoặc vai trò tiên phong; cần chuẩn bị rủi ro.",
+      "Nô Bộc": "Quan hệ có cá tính mạnh; nên thống nhất mục tiêu và tôn trọng ranh giới.",
+      "Thiên Di": "Ra ngoài dám xông pha, thích môi trường biến động; cần thận trọng với quyết định bốc đồng.",
+      "Tật Ách": "Gợi nhịp sống dồn dập, dễ làm quá sức; nên chủ động nghỉ ngơi và vận động an toàn, không dùng để chẩn đoán.",
+      "Tài Bạch": "Tiền đến qua nỗ lực và khả năng dám làm; dòng tiền có thể lên xuống nên cần quỹ dự phòng.",
+      "Tử Tức": "Quan hệ với con cái nhiều năng lượng, có thể nghiêm khắc; nên kiên nhẫn lắng nghe.",
+      "Phu Thê": "Quan hệ nhiều cá tính, cần tôn trọng độc lập của nhau; tránh chuyện ai thắng ai.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân độc lập; hợp tác tốt khi mỗi người có phần việc riêng."
+    },
+    "pha-quan": {
+      "Mệnh": "Thích đổi mới, dám phá cũ và hành động nhanh; cần kế hoạch để thay đổi không thành xáo trộn.",
+      "Phụ Mẫu": "Quan hệ với cha mẹ có lúc khác biệt quan điểm; nên giữ cầu nối bằng những việc nhỏ đều đặn.",
+      "Phúc Đức": "Nội tâm hay muốn thay đổi, tìm điều mới; cần định hướng để tránh bất an.",
+      "Điền Trạch": "Hay sửa sang, thay đổi nơi ở và bố cục; nên tính kỹ ngân sách trước khi thay đổi lớn.",
+      "Quan Lộc": "Hợp công việc đổi mới, khởi nghiệp, cải tổ; cần kiên trì đến kết quả thay vì bắt đầu quá nhiều.",
+      "Nô Bộc": "Quan hệ nhiều thay đổi; nên giữ vài mối thân thiết lâu dài.",
+      "Thiên Di": "Ra ngoài thích khám phá, dễ thay đổi môi trường; cần chuẩn bị nền tảng trước khi dịch chuyển.",
+      "Tật Ách": "Gợi nhịp sống nhiều biến động, dễ hao năng lượng; nên giữ giờ giấc và nghỉ đều, không dùng để chẩn đoán.",
+      "Tài Bạch": "Dòng tiền có thể biến động, hợp quản lý theo mục tiêu; tránh chi mạnh vì cảm hứng nhất thời.",
+      "Tử Tức": "Quan hệ với con cái năng động, hay thử cái mới; nên duy trì nề nếp ổn định.",
+      "Phu Thê": "Quan hệ cần sự mới mẻ và độc lập; cần cam kết rõ để không quá biến động.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân mỗi người một hướng; nên chủ động duy trì liên lạc."
+    }
+  },
+  "transformationPalaceProfiles": {
+    "hoa-loc": {
+      "Mệnh": "Dễ gặp thuận lợi, có duyên với nguồn lực; nên chủ động nắm cơ hội thay vì chờ.",
+      "Phụ Mẫu": "Có sự hỗ trợ từ cha mẹ, bề trên hoặc thuận lợi về học hành, giấy tờ.",
+      "Phúc Đức": "Tinh thần thoải mái, dễ thấy niềm vui; nên giữ thói quen biết đủ.",
+      "Điền Trạch": "Thuận lợi về nơi ở và tích lũy tài sản; hợp việc quy hoạch dài hạn.",
+      "Quan Lộc": "Có cơ hội về công việc và phát triển; cần tận dụng bằng kỹ năng cụ thể.",
+      "Nô Bộc": "Dễ có bạn bè, đồng nghiệp hỗ trợ; quan hệ hợp tác mở ra cơ hội.",
+      "Thiên Di": "Cơ hội đến từ môi trường bên ngoài, đi lại và giao lưu.",
+      "Tật Ách": "Gợi nhịp sinh hoạt thoải mái nhưng dễ buông; nên giữ nề nếp lành mạnh, không dùng để chẩn đoán.",
+      "Tài Bạch": "Dòng tiền thuận lợi, có nguồn thu; cần quản lý để không chi theo đà.",
+      "Tử Tức": "Quan hệ với con cái gần gũi, vui vẻ; thuận lợi trong việc nuôi dưỡng.",
+      "Phu Thê": "Quan hệ có duyên, dễ gắn bó; cần gìn giữ bằng sự chân thành.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân hỗ trợ nhau, hợp tác thuận lợi."
+    },
+    "hoa-quyen": {
+      "Mệnh": "Chủ động, mạnh dạn quyết định; cần tránh cứng nhắc hoặc áp đặt.",
+      "Phụ Mẫu": "Cha mẹ hoặc bề trên có ảnh hưởng mạnh; việc học đòi hỏi nỗ lực nghiêm túc.",
+      "Phúc Đức": "Nội tâm muốn kiểm soát, nhiều ý chí; cần học cách thả lỏng.",
+      "Điền Trạch": "Chủ động quyết định về nhà đất, tài sản; cần cân nhắc kỹ trước khi quyết.",
+      "Quan Lộc": "Có trách nhiệm và vai trò lớn trong công việc; áp lực quyết định cũng tăng.",
+      "Nô Bộc": "Cấp dưới hoặc đồng nghiệp có tiếng nói; cần phân vai rõ để tránh tranh quyền.",
+      "Thiên Di": "Ra ngoài dám nhận vai trò, tạo ảnh hưởng; cần giữ khiêm tốn.",
+      "Tật Ách": "Gợi áp lực trách nhiệm; nên chủ động nghỉ ngơi và điều tiết sức, không dùng để chẩn đoán.",
+      "Tài Bạch": "Chủ động quản lý và quyết đoán chuyện tiền; tránh quyết nhanh khi chưa tính kỹ.",
+      "Tử Tức": "Vai trò dẫn dắt con rõ rệt; nên để con tham gia vào quyết định.",
+      "Phu Thê": "Quan hệ có người giữ vai chủ động; cần thương lượng thay vì quyết một phía.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân có người nổi trội, cạnh tranh nhẹ; hợp tác tốt khi phân vai rõ."
+    },
+    "hoa-khoa": {
+      "Mệnh": "Được tiếng tốt, có học hỏi và lý lẽ; nên tận dụng uy tín bằng sự nhất quán.",
+      "Phụ Mẫu": "Thuận lợi học hành, có người hướng dẫn, quan hệ nề nếp.",
+      "Phúc Đức": "Tinh thần thanh nhã, thích học hỏi và suy ngẫm.",
+      "Điền Trạch": "Nơi ở và tài sản có nề nếp, giấy tờ rõ ràng; thuận lợi khi thủ tục minh bạch.",
+      "Quan Lộc": "Công việc được ghi nhận, hợp lĩnh vực học thuật và chuyên môn.",
+      "Nô Bộc": "Có người hỗ trợ, giới thiệu đáng tin; quan hệ lịch sự.",
+      "Thiên Di": "Ra ngoài được tôn trọng, dễ gặp người giúp đỡ.",
+      "Tật Ách": "Gợi thói quen chú ý chăm sóc bản thân từ sớm; nên duy trì khám định kỳ, không dùng để chẩn đoán.",
+      "Tài Bạch": "Tiền bạc ổn nhờ chuyên môn và uy tín; hợp các kế hoạch bài bản.",
+      "Tử Tức": "Quan hệ với con cái chú trọng học hành và giáo dục.",
+      "Phu Thê": "Quan hệ hòa nhã, tôn trọng; dễ giải quyết bất đồng bằng lý lẽ.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân hỗ trợ lẫn nhau, đàng hoàng."
+    },
+    "hoa-ky": {
+      "Mệnh": "Dễ bận tâm, suy nghĩ nhiều; nên viết ra điều lo và trao đổi rõ để nhẹ bớt.",
+      "Phụ Mẫu": "Có chuyện cần trao đổi thêm với cha mẹ; giấy tờ nên kiểm kỹ.",
+      "Phúc Đức": "Tâm trí hay lăn tăn; nên tìm thói quen thư giãn và người để chia sẻ.",
+      "Điền Trạch": "Cần rà kỹ thỏa thuận và giấy tờ nhà đất; thận trọng với quyết định lớn.",
+      "Quan Lộc": "Công việc có phần vướng, cần kiểm soát chi tiết; trao đổi minh bạch giúp giảm hiểu lầm.",
+      "Nô Bộc": "Quan hệ có lúc hiểu lầm; nên nói rõ kỳ vọng và ranh giới.",
+      "Thiên Di": "Ra ngoài cần cẩn trọng và chuẩn bị kỹ; chú ý cách giao tiếp.",
+      "Tật Ách": "Gợi cần chú ý nghỉ ngơi và giảm căng thẳng; không dùng để chẩn đoán.",
+      "Tài Bạch": "Cần minh bạch, kiểm kỹ thu chi và hợp đồng; tránh quyết định theo cảm xúc.",
+      "Tử Tức": "Quan hệ với con cái cần lắng nghe thêm, tránh lo lắng quá mức.",
+      "Phu Thê": "Dễ có điểm cần trao đổi; nói rõ cảm xúc sớm giúp quan hệ nhẹ nhàng.",
+      "Huynh Đệ": "Anh chị em hoặc bạn thân cần rõ ràng về tiền bạc và kỳ vọng."
+    }
+  },
+  "starCombinations": [
+    {
+      "id": "tu-phu",
+      "name": "Tử Vi – Thiên Phủ",
+      "kind": "pair",
+      "starIds": [
+        "tu-vi",
+        "thien-phu"
+      ],
+      "branches": [
+        "Dần",
+        "Thân"
+      ],
+      "text": "Vừa có tầm nhìn tổng thể vừa biết giữ gìn; hợp vai trò quản lý ổn định, nâng đỡ người khác.",
+      "watch": "Dễ an toàn quá mức; cần dám thử cái mới."
+    },
+    {
+      "id": "tu-tuong",
+      "name": "Tử Vi – Thiên Tướng",
+      "kind": "pair",
+      "starIds": [
+        "tu-vi",
+        "thien-tuong"
+      ],
+      "branches": [
+        "Thìn",
+        "Tuất"
+      ],
+      "text": "Tổ chức đi cùng phò trợ; coi trọng nề nếp, hình ảnh và sự công bằng.",
+      "watch": "Cần tự quyết khi cần, tránh phụ thuộc ý kiến người khác."
+    },
+    {
+      "id": "tu-sat",
+      "name": "Tử Vi – Thất Sát",
+      "kind": "pair",
+      "starIds": [
+        "tu-vi",
+        "that-sat"
+      ],
+      "branches": [
+        "Tỵ",
+        "Hợi"
+      ],
+      "text": "Quyền chủ động đi cùng sức quyết liệt; hợp vai trò dẫn dắt vượt thử thách.",
+      "watch": "Cần kiên nhẫn và lắng nghe để quyết đoán không thành cứng."
+    },
+    {
+      "id": "tu-pha",
+      "name": "Tử Vi – Phá Quân",
+      "kind": "pair",
+      "starIds": [
+        "tu-vi",
+        "pha-quan"
+      ],
+      "branches": [
+        "Sửu",
+        "Mùi"
+      ],
+      "text": "Muốn giữ vai trò dẫn dắt nhưng thích đổi mới; hợp cải tổ có kế hoạch.",
+      "watch": "Cần cân bằng giữa nền nếp và thay đổi."
+    },
+    {
+      "id": "tu-tham",
+      "name": "Tử Vi – Tham Lang",
+      "kind": "pair",
+      "starIds": [
+        "tu-vi",
+        "tham-lang"
+      ],
+      "branches": [
+        "Mão",
+        "Dậu"
+      ],
+      "text": "Có sức hút, nhiều tham vọng và khả năng giao tiếp; hợp môi trường nhiều tương tác.",
+      "watch": "Cần giữ trọng tâm để ham muốn không làm phân tán."
+    },
+    {
+      "id": "co-nguyet",
+      "name": "Thiên Cơ – Thái Âm",
+      "kind": "pair",
+      "starIds": [
+        "thien-co",
+        "thai-am"
+      ],
+      "branches": [
+        "Dần",
+        "Thân"
+      ],
+      "text": "Tư duy tinh tế, nhạy cảm; hợp nghiên cứu, phân tích, công việc cần tỉ mỉ.",
+      "watch": "Dễ nghĩ nhiều; cần chọn hướng và hành động."
+    },
+    {
+      "id": "co-cu",
+      "name": "Thiên Cơ – Cự Môn",
+      "kind": "pair",
+      "starIds": [
+        "thien-co",
+        "cu-mon"
+      ],
+      "branches": [
+        "Mão",
+        "Dậu"
+      ],
+      "text": "Phân tích sắc, lập luận tốt; hợp tư vấn, pháp lý, truyền thông.",
+      "watch": "Cần tránh hoài nghi quá mức; diễn đạt mềm để giảm hiểu lầm."
+    },
+    {
+      "id": "co-luong",
+      "name": "Thiên Cơ – Thiên Lương",
+      "kind": "pair",
+      "starIds": [
+        "thien-co",
+        "thien-luong"
+      ],
+      "branches": [
+        "Thìn",
+        "Tuất"
+      ],
+      "text": "Mưu trí đi cùng chững chạc; hợp tư vấn, giáo dục, công việc cần sự đáng tin.",
+      "watch": "Cần chuyển suy tính thành hành động."
+    },
+    {
+      "id": "nhat-nguyet",
+      "name": "Thái Dương – Thái Âm",
+      "kind": "pair",
+      "starIds": [
+        "thai-duong",
+        "thai-am"
+      ],
+      "branches": [
+        "Sửu",
+        "Mùi"
+      ],
+      "text": "Cân bằng giữa hướng ngoại và nội tâm; có nhiều mặt, linh hoạt khi cần.",
+      "watch": "Cần thống nhất giữa hai xu hướng để không dao động."
+    },
+    {
+      "id": "cu-nhat",
+      "name": "Cự Môn – Thái Dương",
+      "kind": "pair",
+      "starIds": [
+        "cu-mon",
+        "thai-duong"
+      ],
+      "branches": [
+        "Dần",
+        "Thân"
+      ],
+      "text": "Lời nói có sức truyền đạt; hợp giảng dạy, truyền thông, tư vấn.",
+      "watch": "Cần chú ý cách phát ngôn để tránh hiểu lầm."
+    },
+    {
+      "id": "nhat-luong",
+      "name": "Thái Dương – Thiên Lương",
+      "kind": "pair",
+      "starIds": [
+        "thai-duong",
+        "thien-luong"
+      ],
+      "branches": [
+        "Mão",
+        "Dậu"
+      ],
+      "text": "Nhân hậu, hướng ngoại, thích giúp đỡ; hợp giáo dục, công vụ, phục vụ cộng đồng.",
+      "watch": "Cần giữ ranh giới để không ôm việc."
+    },
+    {
+      "id": "vu-phu",
+      "name": "Vũ Khúc – Thiên Phủ",
+      "kind": "pair",
+      "starIds": [
+        "vu-khuc",
+        "thien-phu"
+      ],
+      "branches": [
+        "Tý",
+        "Ngọ"
+      ],
+      "text": "Thực tế, tích lũy tốt, quản lý tài chính chắc tay.",
+      "watch": "Cần mạnh dạn khi cơ hội tốt, tránh quá bảo thủ."
+    },
+    {
+      "id": "vu-tuong",
+      "name": "Vũ Khúc – Thiên Tướng",
+      "kind": "pair",
+      "starIds": [
+        "vu-khuc",
+        "thien-tuong"
+      ],
+      "branches": [
+        "Dần",
+        "Thân"
+      ],
+      "text": "Thực tế và công bằng; hợp công việc tài chính, hành chính, nề nếp.",
+      "watch": "Cần linh hoạt hơn trong giao tiếp."
+    },
+    {
+      "id": "vu-sat",
+      "name": "Vũ Khúc – Thất Sát",
+      "kind": "pair",
+      "starIds": [
+        "vu-khuc",
+        "that-sat"
+      ],
+      "branches": [
+        "Mão",
+        "Dậu"
+      ],
+      "text": "Quyết đoán, mạnh mẽ, thích tự lực; hợp việc cần dứt khoát.",
+      "watch": "Cần mềm mỏng để quan hệ không căng."
+    },
+    {
+      "id": "vu-pha",
+      "name": "Vũ Khúc – Phá Quân",
+      "kind": "pair",
+      "starIds": [
+        "vu-khuc",
+        "pha-quan"
+      ],
+      "branches": [
+        "Tỵ",
+        "Hợi"
+      ],
+      "text": "Thực tế nhưng thích thay đổi; hợp đổi mới có tính toán.",
+      "watch": "Cần kế hoạch tiền bạc rõ trước khi đổi hướng."
+    },
+    {
+      "id": "vu-tham",
+      "name": "Vũ Khúc – Tham Lang",
+      "kind": "pair",
+      "starIds": [
+        "vu-khuc",
+        "tham-lang"
+      ],
+      "branches": [
+        "Sửu",
+        "Mùi"
+      ],
+      "text": "Giỏi tạo cơ hội, nhiều nguồn thu, kiên trì theo mục tiêu.",
+      "watch": "Cần kiên nhẫn; tránh chi theo hứng thú."
+    },
+    {
+      "id": "dong-nguyet",
+      "name": "Thiên Đồng – Thái Âm",
+      "kind": "pair",
+      "starIds": [
+        "thien-dong",
+        "thai-am"
+      ],
+      "branches": [
+        "Tý",
+        "Ngọ"
+      ],
+      "text": "Dịu dàng, nhạy cảm, thích an yên; hợp công việc chăm sóc, sáng tạo nhẹ nhàng.",
+      "watch": "Cần chủ động để không bỏ lỡ cơ hội."
+    },
+    {
+      "id": "dong-cu",
+      "name": "Thiên Đồng – Cự Môn",
+      "kind": "pair",
+      "starIds": [
+        "thien-dong",
+        "cu-mon"
+      ],
+      "branches": [
+        "Sửu",
+        "Mùi"
+      ],
+      "text": "Hiền hòa nhưng hay lăn tăn; hợp công việc cần cẩn thận và trao đổi.",
+      "watch": "Cần giao tiếp rõ để giảm nghĩ ngợi."
+    },
+    {
+      "id": "dong-luong",
+      "name": "Thiên Đồng – Thiên Lương",
+      "kind": "pair",
+      "starIds": [
+        "thien-dong",
+        "thien-luong"
+      ],
+      "branches": [
+        "Dần",
+        "Thân"
+      ],
+      "text": "Ôn hòa, nhân hậu; hợp chăm sóc, tư vấn, giáo dục.",
+      "watch": "Cần chủ động tiến bộ."
+    },
+    {
+      "id": "liem-phu",
+      "name": "Liêm Trinh – Thiên Phủ",
+      "kind": "pair",
+      "starIds": [
+        "liem-trinh",
+        "thien-phu"
+      ],
+      "branches": [
+        "Thìn",
+        "Tuất"
+      ],
+      "text": "Nguyên tắc kết hợp ổn định; hợp quản trị, hành chính, tài chính.",
+      "watch": "Cần linh hoạt để không quá khuôn mẫu."
+    },
+    {
+      "id": "liem-tuong",
+      "name": "Liêm Trinh – Thiên Tướng",
+      "kind": "pair",
+      "starIds": [
+        "liem-trinh",
+        "thien-tuong"
+      ],
+      "branches": [
+        "Tý",
+        "Ngọ"
+      ],
+      "text": "Nguyên tắc, chỉn chu, coi trọng hình ảnh và uy tín.",
+      "watch": "Cần minh bạch và tránh quá chú ý bề ngoài."
+    },
+    {
+      "id": "liem-sat",
+      "name": "Liêm Trinh – Thất Sát",
+      "kind": "pair",
+      "starIds": [
+        "liem-trinh",
+        "that-sat"
+      ],
+      "branches": [
+        "Sửu",
+        "Mùi"
+      ],
+      "text": "Chính kiến mạnh, quyết liệt; hợp công việc đòi hỏi bản lĩnh.",
+      "watch": "Cần kiềm chế để không nóng vội."
+    },
+    {
+      "id": "liem-pha",
+      "name": "Liêm Trinh – Phá Quân",
+      "kind": "pair",
+      "starIds": [
+        "liem-trinh",
+        "pha-quan"
+      ],
+      "branches": [
+        "Mão",
+        "Dậu"
+      ],
+      "text": "Đam mê, đổi mới, dám làm; hợp việc cần đột phá.",
+      "watch": "Cần kiểm soát cảm xúc và kế hoạch."
+    },
+    {
+      "id": "liem-tham",
+      "name": "Liêm Trinh – Tham Lang",
+      "kind": "pair",
+      "starIds": [
+        "liem-trinh",
+        "tham-lang"
+      ],
+      "branches": [
+        "Tỵ",
+        "Hợi"
+      ],
+      "text": "Cảm xúc mạnh, có sức hút; hợp môi trường nhiều tương tác.",
+      "watch": "Cần minh bạch, giữ ranh giới trong quan hệ."
+    },
+    {
+      "id": "tu-phu-vu-tuong",
+      "name": "Tử Phủ Vũ Tướng",
+      "kind": "pattern",
+      "starIds": [
+        "tu-vi",
+        "thien-phu",
+        "vu-khuc",
+        "thien-tuong"
+      ],
+      "condition": "Các sao hội chiếu trong tam phương tứ chính của cung đang xét",
+      "text": "Nền vững, có tổ chức, thiên về ổn định và quản lý.",
+      "watch": "Cần đổi mới để không an toàn quá mức."
+    },
+    {
+      "id": "co-nguyet-dong-luong",
+      "name": "Cơ Nguyệt Đồng Lương",
+      "kind": "pattern",
+      "starIds": [
+        "thien-co",
+        "thai-am",
+        "thien-dong",
+        "thien-luong"
+      ],
+      "condition": "Hội đủ các sao trong tam phương tứ chính",
+      "text": "Thiên về chuyên môn, phục vụ, hỗ trợ; hợp công việc văn phòng, tư vấn, giáo dục, chăm sóc.",
+      "watch": "Cần chủ động để không thụ động."
+    },
+    {
+      "id": "sat-pha-tham",
+      "name": "Sát Phá Tham",
+      "kind": "pattern",
+      "starIds": [
+        "that-sat",
+        "pha-quan",
+        "tham-lang"
+      ],
+      "condition": "Hội chiếu trong tam phương (có thể kèm Liêm Trinh)",
+      "text": "Thích thử thách, đổi mới và dám đột phá; nhiều biến động nhưng có sức bật.",
+      "watch": "Cần kế hoạch và quỹ dự phòng."
+    },
+    {
+      "id": "cu-nhat-pattern",
+      "name": "Cự Nhật",
+      "kind": "pattern",
+      "starIds": [
+        "cu-mon",
+        "thai-duong"
+      ],
+      "condition": "Đồng cung hoặc hội chiếu",
+      "text": "Lời nói và sự truyền đạt có sức ảnh hưởng.",
+      "watch": "Cần diễn đạt khéo để tránh hiểu lầm."
+    },
+    {
+      "id": "nhat-nguyet-pattern",
+      "name": "Nhật Nguyệt",
+      "kind": "pattern",
+      "starIds": [
+        "thai-duong",
+        "thai-am"
+      ],
+      "condition": "Đồng cung hoặc hội chiếu",
+      "text": "Cân bằng giữa hướng ngoại và nội tâm, nhiều mặt.",
+      "watch": "Cần thống nhất định hướng."
+    },
+    {
+      "id": "phu-tuong-trieu-vien",
+      "name": "Phủ Tướng triều viên",
+      "kind": "pattern",
+      "starIds": [
+        "thien-phu",
+        "thien-tuong"
+      ],
+      "condition": "Hội chiếu cung Mệnh",
+      "text": "Có sự hỗ trợ và ổn định, thuận khi làm việc có tổ chức.",
+      "watch": "Cần tự quyết khi cần."
+    },
+    {
+      "id": "ta-huu-giap",
+      "name": "Tả Hữu giáp",
+      "kind": "pattern",
+      "starIds": [
+        "ta-phu",
+        "huu-bat"
+      ],
+      "condition": "Hai sao đứng hai bên (giáp cung)",
+      "text": "Có người hỗ trợ ở hai phía; dễ hợp tác.",
+      "watch": "Cần giữ chủ kiến."
+    },
+    {
+      "id": "xuong-khuc-giap",
+      "name": "Xương Khúc giáp",
+      "kind": "pattern",
+      "starIds": [
+        "van-xuong",
+        "van-khuc"
+      ],
+      "condition": "Hai sao đứng hai bên (giáp cung)",
+      "text": "Thuận học hỏi, biểu đạt và năng khiếu văn nghệ.",
+      "watch": "Cần chuyển năng khiếu thành kỹ năng."
+    },
+    {
+      "id": "loc-ma",
+      "name": "Lộc Mã giao trì",
+      "kind": "pattern",
+      "starIds": [
+        "loc-ton",
+        "thien-ma"
+      ],
+      "condition": "Lộc Tồn hoặc Hóa Lộc cùng Thiên Mã",
+      "text": "Cơ hội gắn với di chuyển, thay đổi, kinh doanh.",
+      "watch": "Cần kế hoạch để không chạy theo cơ hội."
+    },
+    {
+      "id": "kinh-da-giap",
+      "name": "Kình Đà giáp",
+      "kind": "caution",
+      "starIds": [
+        "kinh-duong",
+        "da-la"
+      ],
+      "condition": "Hai sao đứng hai bên (giáp cung)",
+      "text": "Chịu áp lực từ hai phía; rèn tính kiên nhẫn và khéo léo.",
+      "watch": "Cần giữ bình tĩnh và có người đồng hành."
+    },
+    {
+      "id": "khong-kiep",
+      "name": "Không Kiếp",
+      "kind": "caution",
+      "starIds": [
+        "dia-khong",
+        "dia-kiep"
+      ],
+      "condition": "Đồng cung hoặc giáp cung",
+      "text": "Suy nghĩ khác thường, dễ thay đổi hướng và nhiều thăng trầm.",
+      "watch": "Cần kế hoạch dự phòng, tránh quyết định vội."
+    },
+    {
+      "id": "hoa-linh",
+      "name": "Hỏa – Linh",
+      "kind": "caution",
+      "starIds": [
+        "hoa-tinh",
+        "linh-tinh"
+      ],
+      "condition": "Đồng cung hoặc hội chiếu",
+      "text": "Phản ứng nhanh, nóng, dứt khoát; thúc đẩy hành động khi cần.",
+      "watch": "Dễ bốc đồng; cần tạm dừng trước khi phản ứng."
+    },
+    {
+      "id": "khoi-viet",
+      "name": "Khôi – Việt",
+      "kind": "assist",
+      "starIds": [
+        "thien-khoi",
+        "thien-viet"
+      ],
+      "condition": "Đồng cung hoặc hội chiếu",
+      "text": "Dễ gặp người giúp đỡ, hướng dẫn đúng lúc.",
+      "watch": "Cần chủ động tiếp nhận và biết ơn."
+    },
+    {
+      "id": "ta-huu",
+      "name": "Tả Phù – Hữu Bật",
+      "kind": "assist",
+      "starIds": [
+        "ta-phu",
+        "huu-bat"
+      ],
+      "condition": "Đồng cung hoặc hội chiếu",
+      "text": "Có sự hỗ trợ, cộng tác và nhiều người cùng góp sức.",
+      "watch": "Cần phân vai rõ."
+    },
+    {
+      "id": "xuong-khuc",
+      "name": "Văn Xương – Văn Khúc",
+      "kind": "assist",
+      "starIds": [
+        "van-xuong",
+        "van-khuc"
+      ],
+      "condition": "Đồng cung hoặc hội chiếu",
+      "text": "Năng khiếu học thuật, ngôn từ, nghệ thuật.",
+      "watch": "Cần kỷ luật để năng khiếu thành kết quả."
+    },
+    {
+      "id": "dao-hong-hy",
+      "name": "Đào Hoa – Hồng Loan – Thiên Hỷ",
+      "kind": "assist",
+      "starIds": [
+        "dao-hoa",
+        "hong-loan",
+        "thien-hy"
+      ],
+      "condition": "Hội chiếu trong tam phương",
+      "text": "Có duyên, dễ kết nối, nhiều niềm vui trong quan hệ.",
+      "watch": "Cần minh bạch và cân nhắc kỹ trước khi cam kết."
+    },
+    {
+      "id": "co-qua",
+      "name": "Cô Thần – Quả Tú",
+      "kind": "caution",
+      "starIds": [
+        "co-than",
+        "qua-tu"
+      ],
+      "condition": "Đồng cung hoặc hội chiếu",
+      "text": "Thích tự lập, hay có khoảng riêng trong suy nghĩ.",
+      "watch": "Cần chủ động kết nối để không thu mình."
+    },
+    {
+      "id": "khoc-hu",
+      "name": "Thiên Khốc – Thiên Hư",
+      "kind": "caution",
+      "starIds": [
+        "thien-khoc",
+        "thien-hu"
+      ],
+      "condition": "Đồng cung hoặc hội chiếu",
+      "text": "Nội tâm sâu, hay trầm lắng và nhạy cảm.",
+      "watch": "Cần chia sẻ và giữ hoạt động nâng tinh thần."
+    }
+  ],
+  "greatFortune": {
+    "palaceThemes": {
+      "Mệnh": "Bản thân là trọng tâm của giai đoạn: thay đổi về cách nhìn, cách sống, vai trò cá nhân.",
+      "Phụ Mẫu": "Học tập, giấy tờ, quan hệ với bề trên và gia đình là chủ đề nổi bật.",
+      "Phúc Đức": "Đời sống tinh thần, họ hàng, tâm thế và cách tìm điểm tựa nội tâm.",
+      "Điền Trạch": "Nơi ở, tích lũy tài sản và sự ổn định của không gian sống.",
+      "Quan Lộc": "Công việc, vai trò nghề nghiệp, thành tựu và trách nhiệm.",
+      "Nô Bộc": "Bạn bè, đồng nghiệp, cấp dưới và mạng lưới hỗ trợ.",
+      "Thiên Di": "Môi trường mới, di chuyển, cơ hội từ bên ngoài và cách ứng xử ngoài xã hội.",
+      "Tật Ách": "Nhịp sinh hoạt, thói quen chăm sóc bản thân; chỉ nói theo hướng lối sống, không chẩn đoán.",
+      "Tài Bạch": "Thu nhập, dòng tiền, cách quản lý và tích lũy.",
+      "Tử Tức": "Quan hệ với con cái, sự sáng tạo, các dự án mới; không suy ra số con hay khả năng sinh con.",
+      "Phu Thê": "Tình cảm, hôn nhân, hợp tác lâu dài; không kết luận chắc chắn về kết hôn hay đổ vỡ.",
+      "Huynh Đệ": "Anh chị em, bạn thân, đối tác gần gũi."
+    },
+    "decadeFocus": {
+      "1": "Thời thơ ấu: nền tảng trưởng thành, môi trường chăm sóc, gia đình, anh chị em.",
+      "2": "Niên thiếu: học tập, thi cử, bạn bè, hình thành tính cách, định hướng ban đầu.",
+      "3": "Lập thân: công việc đầu đời, khởi nghiệp, tích lũy, tình cảm và hôn nhân.",
+      "4": "Xây dựng: sự nghiệp, tài chính, tài sản, gia đình, con cái; xét thêm cung Thân.",
+      "5": "Trung niên: thành quả hoặc bước ngoặt công việc, giữ gìn tài sản, trách nhiệm gia đình.",
+      "6": "Duy trì thành quả, chuyển giao, điều chỉnh công việc, kế hoạch giai đoạn sau.",
+      "7": "Chất lượng sống, sự an ổn, gia đình, con cháu và tinh thần.",
+      "8": "Chất lượng sống, sự an ổn, gia đình, con cháu và tinh thần.",
+      "9": "Chất lượng sống, sự an ổn, gia đình, con cháu và tinh thần.",
+      "10": "Chất lượng sống, sự an ổn, gia đình, con cháu và tinh thần."
+    },
+    "note": "Trọng tâm theo số thứ tự vận; tuổi cụ thể phụ thuộc Cục. Không dự báo bệnh, tai nạn, tuổi thọ hay sự kiện chắc chắn."
+  },
+  "supplementMeta": {
+    "addedIn": "1.4.0",
+    "basis": "Tổng hợp từ kiến thức chung về Tử Vi Đẩu Số (cách luận phổ biến), diễn giải hiện đại theo interpretivePrinciples của bộ dữ liệu.",
+    "reviewStatus": "needs-review",
+    "reviewNote": "Chưa đối chiếu từng mục với bản chữ Hán trên Wikisource; cần người am hiểu rà soát trước khi công bố. Chưa bổ sung bảng độ sáng sao vì chưa có nguồn đã xác minh.",
+    "added": [
+      "starProfiles (+sao phụ, +vòng Bác Sĩ/Tràng Sinh/Thái Tuế)",
+      "annualStarProfiles",
+      "starAliases",
+      "starPalaceProfiles",
+      "transformationPalaceProfiles",
+      "palaceModifiers.tuanByPalace/trietByPalace/aspects",
+      "starCombinations",
+      "greatFortune"
+    ]
+  }
+}

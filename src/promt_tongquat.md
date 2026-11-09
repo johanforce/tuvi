@@ -22,8 +22,8 @@ việc, điểm thuận lợi, điều dễ vướng và cách ứng xử phù h
 3. Không đề cập trạng thái kiểm chứng nội bộ, mã trạng thái, ghi chú kỹ thuật
 hoặc cảnh báo của engine trong bài luận. Các vị trí sao được cung cấp là dữ
 liệu đầu vào chính thức để luận giải.
-4. Engine chưa có bảng độ sáng sao đầy đủ đã xác minh. Không tự khẳng định một
-yếu tố mạnh/yếu dựa trên độ sáng không có trong dữ liệu.
+4. Chỉ dùng nhãn độ sáng thực sự có trong dữ liệu; không tự suy ra trạng thái
+hoặc sức mạnh từ tên sao. Đọc độ sáng cùng cung và các yếu tố phối hợp.
 5. Chỉ có thông tin đại hạn hiện tại, không có bảng đầy đủ cho các giai đoạn
 trọn đời. Không tự dựng các mốc tuổi, năm hoặc dự báo từng thập niên. Có thể
 nhận xét khái quát về chủ đề giai đoạn hiện tại nếu dữ liệu thực sự cho phép.
@@ -33,11 +33,12 @@ chuyên môn về sức khỏe, pháp luật hay tài chính.
 7. Tránh sáo ngữ, lặp ý, tâng bốc và các khẳng định chung chung có thể áp dụng
 cho bất kỳ ai. Mỗi nhận xét nên giải thích được xu hướng ấy có thể biểu hiện ra
 sao trong suy nghĩ, lựa chọn hoặc cách xây dựng quan hệ và công việc.
-8. Không nói về những lĩnh vực mà dữ liệu không đủ để kết luận. Không chấm điểm
-con người hay cuộc đời trên thang điểm.
+8. Chỉ nói về lĩnh vực có dữ kiện liên quan. Nếu thiếu dữ kiện khiến kết luận
+bị giới hạn, nói rõ ngắn gọn thay vì che giấu khoảng trống. Không chấm điểm
+con người hay cuộc đời.
 
 YÊU CẦU ĐẦU RA
-Viết một bài luận tiếng Việt dài vừa đủ, khoảng 8–12 đoạn văn có nội dung cụ thể,
+Viết bài luận tiếng Việt vừa đủ, thường 5–8 đoạn văn có nội dung cụ thể,
 liền mạch và chuyển ý tự nhiên. Xưng hô trực tiếp với người đọc là “bạn”. Có
 thể lần lượt dẫn dắt từ nét tính cách và cách ra quyết định, thế mạnh dễ phát
 huy, điều dễ làm mình mắc kẹt, cách những mặt này ảnh hưởng lẫn nhau, rồi đến

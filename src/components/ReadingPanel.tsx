@@ -26,8 +26,9 @@ const TOPICS = [
 ] as const;
 type TopicSection = typeof TOPICS[number]['id'];
 interface CachedReading { text: string; savedAt: string; }
-const CACHE_PREFIX = 'tuvi-reading-v1';
-const GREAT_FORTUNE_OUTPUT_VERSION = 'system-instruction-markdown-v2';
+const CACHE_PREFIX = 'tuvi-reading-v2';
+const READING_CONTEXT_VERSION = 'interpretation-db-1.4.0-prompt-v2';
+const GREAT_FORTUNE_OUTPUT_VERSION = `system-instruction-markdown-v3-${READING_CONTEXT_VERSION}`;
 
 function hash(value: string): string {
   // Hai hash độc lập để giữ khóa ngắn, ổn định giữa các lần mở app.
@@ -124,7 +125,8 @@ export function ReadingPanel({ chart }: { chart: ChartCore }) {
   const requestedSection = section === 'key_areas' ? topicSection : section;
   const promptVersionFor = (requested: ReadingSection | TopicSection) => {
     if (requested === 'great_fortune') return hash(`${greatFortunePrompt}:${GREAT_FORTUNE_OUTPUT_VERSION}`);
-    return TOPICS.find(item => item.id === requested) ? hash(TOPICS.find(item => item.id === requested)!.prompt) : 'base';
+    const topicPrompt = TOPICS.find(item => item.id === requested)?.prompt ?? '';
+    return hash(`${READING_CONTEXT_VERSION}:${topicPrompt}`);
   };
   const cacheKeyFor = (requested: ReadingSection | TopicSection, fortuneIndex = selectedFortuneIndex) => {
     const cacheSection = requested === 'great_fortune' ? `${requested}-${fortuneIndex}` : requested;

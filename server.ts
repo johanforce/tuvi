@@ -8,6 +8,76 @@ import { createServer as createViteServer } from 'vite';
 const app = express();
 app.use(express.json({ limit: '256kb' }));
 
+const BRANCH_NAMES = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+
+function buildInterpretationContext(db: Record<string, any>, chart: Record<string, any>, section: string): Record<string, unknown> {
+  const palaces = Array.isArray(chart.palaces) ? chart.palaces : [];
+  const fortuneBranch = section === 'great_fortune'
+    ? chart.greatFortuneCurrent?.branch
+    : section === 'minor_fortune' ? chart.minorFortuneCurrent?.branch : undefined;
+  const topic = db.topics?.[section];
+  const targetNames: string[] = topic?.palaces ?? (fortuneBranch && BRANCH_NAMES.includes(fortuneBranch)
+    ? [0, 4, 6, 8].map(offset => palaces.find((p: Record<string, any>) => p.branch === BRANCH_NAMES[(BRANCH_NAMES.indexOf(fortuneBranch) + offset) % 12])?.name).filter(Boolean)
+    : palaces.map((p: Record<string, any>) => p.name));
+  const targetBranches = new Set(palaces.filter((p: Record<string, any>) => targetNames.includes(p.name)).map((p: Record<string, any>) => p.branch));
+  const activePalaces = palaces.filter((p: Record<string, any>) => targetBranches.has(p.branch));
+  const evidenceBranches = new Set([...targetBranches]);
+  if (!fortuneBranch) {
+    for (const branch of targetBranches) {
+      if (!BRANCH_NAMES.includes(branch)) continue;
+      for (const offset of [4, 6, 8]) evidenceBranches.add(BRANCH_NAMES[(BRANCH_NAMES.indexOf(branch) + offset) % 12]);
+    }
+  }
+  const evidencePalaces = palaces.filter((p: Record<string, any>) => evidenceBranches.has(p.branch));
+  const starsAt = (branch: string) => palaces.find((p: Record<string, any>) => p.branch === branch)?.stars ?? [];
+  const natalIds = (items: Record<string, any>[]) => new Set(items.filter(star => star.scope === 'natal').map(star => star.id));
+  const ruleTopics = topic ? new Set([section]) : null;
+
+  const rules = (db.rules ?? []).filter((rule: Record<string, any>) => {
+    if (ruleTopics && rule.topic !== section) return false;
+    if (!activePalaces.some((palace: Record<string, any>) => palace.name === rule.palace && rule.starIds?.some((id: string) => natalIds(palace.stars ?? []).has(id)))) return false;
+    return true;
+  });
+
+  const combinationRules = (db.combinationRules ?? []).filter((rule: Record<string, any>) => {
+    if (ruleTopics && rule.topic !== section) return false;
+    return activePalaces.some((palace: Record<string, any>) => {
+      if (!rule.palaces?.includes(palace.name) || !BRANCH_NAMES.includes(palace.branch)) return false;
+      const offsets = rule.scope === 'same_palace' ? [0] : rule.scope === 'tam_phuong' ? [0, 4, 8] : [0, 4, 6, 8];
+      const ids = new Set(offsets.flatMap(offset => natalIds(starsAt(BRANCH_NAMES[(BRANCH_NAMES.indexOf(palace.branch) + offset) % 12]))));
+      return rule.starIds?.every((id: string) => ids.has(id));
+    });
+  });
+
+  const starCombinations = (db.starCombinations ?? []).filter((combo: Record<string, any>) =>
+    evidencePalaces.some((palace: Record<string, any>) => {
+      const ids = natalIds(palace.stars ?? []);
+      return (!combo.branches || combo.branches.includes(palace.branch)) && combo.starIds?.every((id: string) => ids.has(id));
+    }));
+  const observedStars = new Set(evidencePalaces.flatMap((palace: Record<string, any>) => (palace.stars ?? []).map((star: Record<string, any>) => star.id)));
+  const observedAnnualStars = new Set(evidencePalaces.flatMap((palace: Record<string, any>) => (palace.stars ?? []).filter((star: Record<string, any>) => star.scope === 'annual').map((star: Record<string, any>) => star.id?.replace(/-\d+$/, ''))));
+  const selectObserved = (profiles: Record<string, unknown> = {}, ids: Set<string> = observedStars) =>
+    Object.fromEntries(Object.entries(profiles).filter(([id]) => ids.has(id)));
+
+  return {
+    database: { title: db.title, version: db.version, description: db.description, interpretivePrinciples: db.interpretivePrinciples, sources: db.sources },
+    topic: topic ? { id: section, ...topic } : null,
+    scope: { targetPalaces: [...new Set(targetNames)], fortune: section === 'great_fortune' ? chart.greatFortuneCurrent ?? null : undefined },
+    starClasses: db.starClasses,
+    palaceProfiles: db.palaceProfiles,
+    starProfiles: selectObserved(db.starProfiles),
+    starPalaceProfiles: Object.fromEntries(Object.entries(db.starPalaceProfiles ?? {}).filter(([id]) => observedStars.has(id))),
+    transformationProfiles: selectObserved(db.transformationProfiles),
+    transformationPalaceProfiles: selectObserved(db.transformationPalaceProfiles),
+    annualStarProfiles: section === 'great_fortune' || topic ? {} : selectObserved(db.annualStarProfiles, observedAnnualStars),
+    palaceModifiers: db.palaceModifiers,
+    rules,
+    combinationRules,
+    starCombinations,
+    greatFortune: section === 'great_fortune' ? db.greatFortune : undefined,
+  };
+}
+
 app.post('/api/bac-de/reading', async (req, res) => {
   const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
   if (!apiKey) {
@@ -131,6 +201,8 @@ app.post('/api/tuvi/reading', async (req, res) => {
       ? 'src/promt_daivan.md'
       : topicPromptFiles[section] ?? 'src/promt_tongquat.md';
     const prompt = await readFile(resolve(promptFile), 'utf8');
+    const interpretationDb = JSON.parse(await readFile(resolve('src/data/ziwei-interpretation-db.json'), 'utf8')) as Record<string, any>;
+    const interpretationContext = buildInterpretationContext(interpretationDb, chartData, section);
     const sectionInstruction = section === 'great_fortune' || Object.hasOwn(topicPromptFiles, section) ? '' : sectionInstructions[section];
     const outputInstruction = section === 'great_fortune'
       ? 'Bắt buộc trả lời đúng cấu trúc tiêu đề Markdown và các gạch đầu dòng ngắn trong mục 6. Không trả lời bằng các đoạn văn xuôi dài.'
@@ -145,9 +217,9 @@ app.post('/api/tuvi/reading', async (req, res) => {
     });
     const geminiRequest = {
       model: 'gemini-3.1-flash-lite',
-      contents: `DỮ LIỆU CUNG VÀ AN SAO (đã loại thông tin cá nhân):\n${JSON.stringify(chartData)}`,
+      contents: `DỮ LIỆU CUNG VÀ AN SAO (đã loại thông tin cá nhân):\n${JSON.stringify(chartData)}\n\nKHO LUẬN GIẢI CỦA DỰ ÁN (chỉ dùng các mục khớp sao, cung, phạm vi và chủ đề; đây là quy tắc diễn giải biên soạn, không phải dữ kiện của lá số hay nguồn cổ thư đã xác minh):\n${JSON.stringify(interpretationContext)}`,
       config: {
-        systemInstruction: `${prompt}\n\n${sectionInstruction}\n\n${outputInstruction}`,
+        systemInstruction: `${prompt}\n\nƯU TIÊN NGUỒN VÀ CHỨNG CỨ: Dữ liệu lá số trong nội dung người dùng là dữ kiện vị trí. Kho luận giải của dự án là gợi ý diễn giải có điều kiện; chỉ áp dụng quy tắc khi các sao, cung, phạm vi và lớp thời gian khớp chính xác. Không chép quy tắc như sự thật hoặc nguồn cổ thư, không tự suy rộng từ mục gần giống. Khi kho không có quy tắc phù hợp, hãy luận thận trọng từ dữ kiện liên hệ được và nói ngắn gọn giới hạn nếu điều đó làm thay đổi kết luận. Các chỉ dẫn định dạng cũ yêu cầu che giấu giới hạn hoặc chấm điểm tùy ý không có hiệu lực.\n\n${sectionInstruction}\n\n${outputInstruction}`,
       },
     };
     if (process.env.DEBUG_GEMINI_REQUEST === '1') {
