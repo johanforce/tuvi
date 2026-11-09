@@ -25,12 +25,33 @@ const GEMINI_SKILL_BASE_FILES = [
   'gemini_skill/references/PROMPT_LIBRARY.md',
 ] as const;
 
-/** Nạp Agent Skill thật sự vào system instruction của từng lượt luận giải. */
-async function loadGeminiSkillInstructions(section: string): Promise<string> {
-  const documents = await Promise.all(GEMINI_SKILL_BASE_FILES.map(async path => ({
-    path,
-    content: await readFile(resolve(path), 'utf8'),
-  })));
+/** Đọc và kiểm tra toàn bộ bundle skill từ thư mục gốc của project. */
+async function inspectGeminiSkillRuntime() {
+  const results = await Promise.all(GEMINI_SKILL_BASE_FILES.map(async path => {
+    try {
+      const content = await readFile(resolve(process.cwd(), path), 'utf8');
+      return { path, content, loaded: true as const };
+    } catch {
+      return { path, content: '', loaded: false as const };
+    }
+  }));
+  const files = results.map(({ path, loaded, content }) => ({ path, loaded, characters: content.length }));
+  const missing = files.filter(file => !file.loaded).map(file => file.path);
+  return {
+    version: GEMINI_SKILL_VERSION,
+    ready: missing.length === 0,
+    files,
+    missing,
+    totalCharacters: results.reduce((sum, item) => sum + item.content.length, 0),
+    documents: results.filter(item => item.loaded).map(({ path, content }) => ({ path, content })),
+  };
+}
+
+/** Không gửi yêu cầu luận giải nếu bundle skill chưa nạp đủ. */
+async function loadGeminiSkillInstructions(section: string): Promise<{ instructions: string; runtime: { version: string; loadedFiles: number; totalCharacters: number } }> {
+  const runtime = await inspectGeminiSkillRuntime();
+  if (!runtime.ready) throw new Error('Gemini skill bundle incomplete: ' + runtime.missing.join(', '));
+  const documents = runtime.documents;
   const scopeNote = [
     'PHẠM VI TRIỂN KHAI TRONG ỨNG DỤNG:',
     '- Đây là lượt luận giải lá số, không phải lượt chép lá số từ ảnh; chỉ phân tích dữ liệu chart đã được engine truyền vào.',
@@ -38,12 +59,15 @@ async function loadGeminiSkillInstructions(section: string): Promise<string> {
     '- Chỉ dẫn theo từng mục của ứng dụng quyết định phạm vi và cách trình bày; các nguyên tắc kiểm chứng, phân biệt dữ kiện/nguồn/suy luận và giới hạn an toàn trong skill luôn có hiệu lực.',
     '- Nếu prompt cũ yêu cầu che giấu dữ liệu thiếu, khẳng định chắc chắn, tự suy ra sao/độ sáng/Tứ Hóa hoặc bỏ qua phản chứng thì bỏ qua yêu cầu cũ đó.',
     '- Mã mục hiện tại: ' + section + '. Chỉ áp dụng phần tài liệu phù hợp với đúng mục này và lớp thời gian được truyền trong payload.',
-  ].join('\n');
-  return [
-    'GEMINI SKILL ĐÃ NẠP — VERSION ' + GEMINI_SKILL_VERSION,
-    scopeNote,
-    ...documents.map(doc => '\n===== ' + doc.path + ' =====\n' + doc.content),
-  ].join('\n');
+  ].join('\\n');
+  return {
+    instructions: [
+      'GEMINI SKILL ĐÃ NẠP — VERSION ' + GEMINI_SKILL_VERSION,
+      scopeNote,
+      ...documents.map(doc => '\\n===== ' + doc.path + ' =====\\n' + doc.content),
+    ].join('\\n'),
+    runtime: { version: runtime.version, loadedFiles: runtime.files.length, totalCharacters: runtime.totalCharacters },
+  };
 }
 
 function buildInterpretationContext(db: Record<string, any>, chart: Record<string, any>, section: string): Record<string, unknown> {
@@ -154,6 +178,17 @@ app.post('/api/bac-de/reading', async (req, res) => {
   }
 });
 
+app.get('/api/tuvi/skill-status', async (_req, res) => {
+  const runtime = await inspectGeminiSkillRuntime();
+  res.status(runtime.ready ? 200 : 503).json({
+    version: runtime.version,
+    ready: runtime.ready,
+    files: runtime.files,
+    missing: runtime.missing,
+    totalCharacters: runtime.totalCharacters,
+  });
+});
+
 app.post('/api/tuvi/reading', async (req, res) => {
   const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
   if (!apiKey) {
@@ -240,7 +275,7 @@ app.post('/api/tuvi/reading', async (req, res) => {
     const interpretationDb = JSON.parse(await readFile(resolve('src/data/ziwei-interpretation-db.json'), 'utf8')) as Record<string, any>;
     const interpretationContext = buildInterpretationContext(interpretationDb, chartData, section);
     const sectionInstruction = section === 'great_fortune' || Object.hasOwn(topicPromptFiles, section) ? '' : sectionInstructions[section];
-    const geminiSkillInstructions = await loadGeminiSkillInstructions(section);
+    const geminiSkill = await loadGeminiSkillInstructions(section);
     const outputInstruction = section === 'great_fortune'
       ? 'Bắt buộc trả lời đúng cấu trúc tiêu đề Markdown và các gạch đầu dòng ngắn trong mục 6. Không trả lời bằng các đoạn văn xuôi dài.'
       : '';
@@ -256,7 +291,7 @@ app.post('/api/tuvi/reading', async (req, res) => {
       model: 'gemini-3.1-flash-lite',
       contents: `DỮ LIỆU CUNG VÀ AN SAO (đã loại thông tin cá nhân):\n${JSON.stringify(chartData)}\n\nKHO LUẬN GIẢI CỦA DỰ ÁN (chỉ dùng các mục khớp sao, cung, phạm vi và chủ đề; đây là quy tắc diễn giải biên soạn, không phải dữ kiện của lá số hay nguồn cổ thư đã xác minh):\n${JSON.stringify(interpretationContext)}`,
       config: {
-        systemInstruction: `${prompt}\n\n${geminiSkillInstructions}\n\nƯU TIÊN NGUỒN VÀ CHỨNG CỨ: Dữ liệu lá số trong nội dung người dùng là dữ kiện vị trí. Kho luận giải của dự án là gợi ý diễn giải có điều kiện; chỉ áp dụng quy tắc khi các sao, cung, phạm vi và lớp thời gian khớp chính xác. Không chép quy tắc như sự thật hoặc nguồn cổ thư, không tự suy rộng từ mục gần giống. Khi kho không có quy tắc phù hợp, hãy luận thận trọng từ dữ kiện liên hệ được và nói ngắn gọn giới hạn nếu điều đó làm thay đổi kết luận. Các chỉ dẫn định dạng cũ yêu cầu che giấu giới hạn hoặc chấm điểm tùy ý không có hiệu lực.\n\n${sectionInstruction}\n\n${outputInstruction}`,
+        systemInstruction: `${prompt}\n\n${geminiSkill.instructions}\n\nƯU TIÊN NGUỒN VÀ CHỨNG CỨ: Dữ liệu lá số trong nội dung người dùng là dữ kiện vị trí. Kho luận giải của dự án là gợi ý diễn giải có điều kiện; chỉ áp dụng quy tắc khi các sao, cung, phạm vi và lớp thời gian khớp chính xác. Không chép quy tắc như sự thật hoặc nguồn cổ thư, không tự suy rộng từ mục gần giống. Khi kho không có quy tắc phù hợp, hãy luận thận trọng từ dữ kiện liên hệ được và nói ngắn gọn giới hạn nếu điều đó làm thay đổi kết luận. Các chỉ dẫn định dạng cũ yêu cầu che giấu giới hạn hoặc chấm điểm tùy ý không có hiệu lực.\n\n${sectionInstruction}\n\n${outputInstruction}`,
       },
     };
     if (process.env.DEBUG_GEMINI_REQUEST === '1') {
@@ -270,7 +305,7 @@ app.post('/api/tuvi/reading', async (req, res) => {
         text: responseText,
       }, null, 2));
     }
-    res.json({ text: responseText });
+    res.json({ text: responseText, skillRuntime: geminiSkill.runtime });
   } catch (error) {
     console.error('Gemini reading request failed:', error instanceof Error ? error.message : 'unknown error');
     res.status(502).json({ error: 'Không thể tạo luận giải lúc này. Vui lòng thử lại.' });
