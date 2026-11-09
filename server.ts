@@ -21,6 +21,8 @@ const GEMINI_SKILL_BASE_FILES = [
   'gemini_skill/references/SOURCE_POLICY.md',
   'gemini_skill/references/OUTPUT_CONTRACT.md',
   'gemini_skill/references/DATABASE_INTEGRATION.md',
+  'gemini_skill/references/CASE_VALIDATION_PROTOCOL.md',
+  'gemini_skill/references/PROMPT_LIBRARY.md',
 ] as const;
 
 /** Nạp Agent Skill thật sự vào system instruction của từng lượt luận giải. */
