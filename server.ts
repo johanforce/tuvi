@@ -59,13 +59,13 @@ async function loadGeminiSkillInstructions(section: string): Promise<{ instructi
     '- Chỉ dẫn theo từng mục của ứng dụng quyết định phạm vi và cách trình bày; các nguyên tắc kiểm chứng, phân biệt dữ kiện/nguồn/suy luận và giới hạn an toàn trong skill luôn có hiệu lực.',
     '- Nếu prompt cũ yêu cầu che giấu dữ liệu thiếu, khẳng định chắc chắn, tự suy ra sao/độ sáng/Tứ Hóa hoặc bỏ qua phản chứng thì bỏ qua yêu cầu cũ đó.',
     '- Mã mục hiện tại: ' + section + '. Chỉ áp dụng phần tài liệu phù hợp với đúng mục này và lớp thời gian được truyền trong payload.',
-  ].join('\\n');
+  ].join('\n');
   return {
     instructions: [
       'GEMINI SKILL ĐÃ NẠP — VERSION ' + GEMINI_SKILL_VERSION,
       scopeNote,
-      ...documents.map(doc => '\\n===== ' + doc.path + ' =====\\n' + doc.content),
-    ].join('\\n'),
+      ...documents.map(doc => '\n===== ' + doc.path + ' =====\n' + doc.content),
+    ].join('\n'),
     runtime: { version: runtime.version, loadedFiles: runtime.files.length, totalCharacters: runtime.totalCharacters },
   };
 }
