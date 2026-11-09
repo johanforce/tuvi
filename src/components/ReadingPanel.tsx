@@ -27,7 +27,7 @@ const TOPICS = [
 type TopicSection = typeof TOPICS[number]['id'];
 interface CachedReading { text: string; savedAt: string; }
 const CACHE_PREFIX = 'tuvi-reading-v2';
-const READING_CONTEXT_VERSION = 'interpretation-db-1.4.0-prompt-v2';
+const READING_CONTEXT_VERSION = 'interpretation-db-1.4.0-prompt-v2-gemini-skill-1.1.0';
 const GREAT_FORTUNE_OUTPUT_VERSION = `system-instruction-markdown-v3-${READING_CONTEXT_VERSION}`;
 
 function hash(value: string): string {
