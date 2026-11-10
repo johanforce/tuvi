@@ -324,10 +324,6 @@ export const ThanSoHocTab: React.FC = () => {
 
       {panel === 'threecang' && <XsmbBetSimulator />}
 
-      <section className="rounded-2xl border border-amber-900/20 bg-amber-50/70 p-4"><div className="flex gap-2"><Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-800" /><p className="text-xs leading-5 text-amber-950">Bộ dữ liệu lịch sử hiện tại chỉ lưu các đuôi hai chữ số, không còn số giải gốc. Vì vậy không thể suy ngược lịch sử 3 càng từ 100 kỳ cũ. Phần này tạo phiên ngẫu nhiên để kiểm thử đối chiếu, không dự đoán kết quả thật và không kết nối giao dịch tiền thật.</p></div></section>
-        </div>
-      )}
-
       <section className="rounded-2xl border border-amber-900/20 bg-amber-50/70 p-4">
         <div className="flex gap-2"><Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-800" /><p className="text-xs leading-5 text-amber-950">Tần suất lịch sử và kết quả backtest không làm tăng xác suất của kỳ quay tiếp theo. Backtest chỉ đo hiệu quả của đúng quy tắc chọn số đã nêu trên các kỳ quá khứ, không phải cam kết kết quả tương lai.</p></div>
         <p className="mt-2 text-[11px] text-amber-900/75">Nguồn dữ liệu: <a className="underline" href={history.sourceUrl} target="_blank" rel="noreferrer">{history.sourceName}</a> · Giấy phép MIT; thông tin ghi công nằm trong data/xsmb/NOTICE.md.</p>
