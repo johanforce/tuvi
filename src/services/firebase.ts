@@ -299,6 +299,7 @@ export async function importArticlesToFirestore(
     }
     const id = existingByUrl.get(sourceUrl) || stableId(sourceUrl);
     const wasExisting = existingByUrl.has(sourceUrl);
+    const existingDoc = wasExisting ? snapshot.docs.find(item => item.id === id) : undefined;
     const wordCount = content.split(/\s+/).filter(Boolean).length;
     const payload = {
       title,
@@ -309,8 +310,8 @@ export async function importArticlesToFirestore(
       author: (typeof raw.author === 'string' && raw.author.trim() ? raw.author.trim() : 'Chưa xác định').slice(0, 100),
       readTime: Math.max(1, Math.min(120, Math.ceil(wordCount / 200))),
       featured: false,
-      viewCount: wasExisting ? (snapshot.docs.find(item => item.id === id)?.data().viewCount || 0) : 0,
-      createdAt: typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString(),
+      viewCount: wasExisting ? (existingDoc?.data().viewCount || 0) : 0,
+      createdAt: wasExisting && typeof existingDoc?.data().createdAt === 'string'\n        ? existingDoc.data().createdAt\n        : (typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString()),
       sourceUrl,
       sourceType: typeof raw.sourceType === 'string' ? raw.sourceType.slice(0, 80) : 'external-import',
     };
