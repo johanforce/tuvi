@@ -51,8 +51,9 @@ export const TangThuTab: React.FC = () => {
   // Bộ lọc tìm kiếm
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
-  const [selectedTag, setSelectedTag] = useState<string>('Tất cả');
   const [sortBy, setSortBy] = useState<'newest' | 'popular' | 'readTime'>('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ARTICLES_PER_PAGE = 10;
 
   // Đọc bài viết
   const [activeArticle, setActiveArticle] = useState<Article | null>(null);
@@ -112,20 +113,6 @@ export const TangThuTab: React.FC = () => {
     return Array.from(cats);
   }, [articles]);
 
-  // Thẻ (Tags) động được trích xuất hoàn toàn từ các bài viết thực tế
-  const allTagsWithCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const article of articles) {
-      if (Array.isArray(article.tags)) {
-        for (const t of article.tags) {
-          const trimmed = t.trim();
-          if (trimmed) counts[trimmed] = (counts[trimmed] || 0) + 1;
-        }
-      }
-    }
-    return Object.entries(counts).sort((a, b) => b[1] - a[1]);
-  }, [articles]);
-
   // Lọc và sắp xếp bài viết
   const filteredArticles = useMemo(() => {
     return articles
@@ -134,18 +121,16 @@ export const TangThuTab: React.FC = () => {
         if (selectedCategory !== 'Tất cả' && article.category !== selectedCategory) {
           return false;
         }
-        // Lọc thẻ (tag)
-        if (selectedTag !== 'Tất cả' && !article.tags?.includes(selectedTag)) {
-          return false;
-        }
-        // Tìm kiếm từ khóa
+        // Tìm kiếm: tiêu đề/tóm tắt/thẻ/tác giả khớp cụm từ; nội dung khớp đủ từng từ khóa.
         if (searchQuery.trim()) {
-          const q = searchQuery.toLowerCase().trim();
-          const matchTitle = article.title.toLowerCase().includes(q);
-          const matchSummary = article.summary?.toLowerCase().includes(q);
-          const matchContent = article.content?.toLowerCase().includes(q);
-          const matchTags = article.tags?.some(t => t.toLowerCase().includes(q));
-          const matchAuthor = article.author?.toLowerCase().includes(q);
+          const q = searchQuery.toLocaleLowerCase('vi').trim();
+          const terms = q.split(/\s+/).filter(Boolean);
+          const content = (article.content || '').toLocaleLowerCase('vi');
+          const matchTitle = article.title.toLocaleLowerCase('vi').includes(q);
+          const matchSummary = article.summary?.toLocaleLowerCase('vi').includes(q);
+          const matchContent = terms.length > 0 && terms.every(term => content.includes(term));
+          const matchTags = article.tags?.some(t => t.toLocaleLowerCase('vi').includes(q));
+          const matchAuthor = article.author?.toLocaleLowerCase('vi').includes(q);
           return matchTitle || matchSummary || matchContent || matchTags || matchAuthor;
         }
         return true;
@@ -162,7 +147,18 @@ export const TangThuTab: React.FC = () => {
         }
         return 0;
       });
-  }, [articles, selectedCategory, selectedTag, searchQuery, sortBy]);
+  }, [articles, selectedCategory, searchQuery, sortBy]);
+
+  // Đổi bộ lọc/từ khóa/sắp xếp thì quay về trang đầu.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery, sortBy]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE));
+  const paginatedArticles = useMemo(() => {
+    const start = (currentPage - 1) * ARTICLES_PER_PAGE;
+    return filteredArticles.slice(start, start + ARTICLES_PER_PAGE);
+  }, [filteredArticles, currentPage]);
 
   // Mở bài viết để đọc & tăng viewCount
   const handleOpenArticle = (article: Article) => {
@@ -520,64 +516,6 @@ export const TangThuTab: React.FC = () => {
             </div>
           )}
 
-          {/* DANH SÁCH THẺ (TAGS) ĐỘNG TỪ BÀI VIẾT */}
-          {allTagsWithCounts.length > 0 && (
-            <div className="border-t border-stone-100 pt-3">
-              <div className="mb-2 flex items-center justify-between text-xs">
-                <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-stone-600">
-                  <Tag className="h-3.5 w-3.5 text-red-900" />
-                  Gom nhóm theo Thẻ ({allTagsWithCounts.length} thẻ):
-                </span>
-                {selectedTag !== 'Tất cả' && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedTag('Tất cả')}
-                    className="text-red-900 underline hover:text-red-700"
-                  >
-                    Bỏ chọn thẻ ({selectedTag})
-                  </button>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => setSelectedTag('Tất cả')}
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${
-                    selectedTag === 'Tất cả'
-                      ? 'border border-red-800 bg-red-50 text-red-900'
-                      : 'border border-stone-200 bg-stone-50 text-stone-600 hover:border-stone-300 hover:bg-stone-100'
-                  }`}
-                >
-                  Tất cả thẻ
-                </button>
-                {allTagsWithCounts.map(([tag, count]) => {
-                  const isSelected = selectedTag === tag;
-                  return (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => setSelectedTag(isSelected ? 'Tất cả' : tag)}
-                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition ${
-                        isSelected
-                          ? 'border border-amber-600 bg-gradient-to-r from-red-900 to-red-800 text-white shadow-sm'
-                          : 'border border-stone-200 bg-white text-stone-700 hover:border-red-300 hover:bg-red-50/50'
-                      }`}
-                    >
-                      <span>#{tag}</span>
-                      <span
-                        className={`rounded-full px-1 text-[10px] ${
-                          isSelected ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-500'
-                        }`}
-                      >
-                        {count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
       )}
 
@@ -601,15 +539,13 @@ export const TangThuTab: React.FC = () => {
           <div>
             Hiển thị <strong className="text-stone-800">{filteredArticles.length}</strong> bài viết
             {selectedCategory !== 'Tất cả' && <span> trong chuyên mục <strong>{selectedCategory}</strong></span>}
-            {selectedTag !== 'Tất cả' && <span> gắn thẻ <strong>#{selectedTag}</strong></span>}
             {searchQuery && <span> khớp với <em>"{searchQuery}"</em></span>}
           </div>
-          {(selectedCategory !== 'Tất cả' || selectedTag !== 'Tất cả' || searchQuery) && (
+          {(selectedCategory !== 'Tất cả' || searchQuery) && (
             <button
               type="button"
               onClick={() => {
                 setSelectedCategory('Tất cả');
-                setSelectedTag('Tất cả');
                 setSearchQuery('');
               }}
               className="text-red-900 underline hover:text-red-700"
@@ -686,7 +622,6 @@ export const TangThuTab: React.FC = () => {
             type="button"
             onClick={() => {
               setSelectedCategory('Tất cả');
-              setSelectedTag('Tất cả');
               setSearchQuery('');
             }}
             className="mt-3 rounded-lg border border-stone-300 px-3 py-1.5 text-xs text-stone-700 hover:bg-stone-50"
@@ -696,7 +631,7 @@ export const TangThuTab: React.FC = () => {
         </div>
       ) : (
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {filteredArticles.map(article => (
+          {paginatedArticles.map(article => (
             <article
               key={article.id}
               className="group relative flex flex-col justify-between rounded-2xl border border-[#ebdcdc] bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-red-800/40 hover:shadow-md"
@@ -753,17 +688,9 @@ export const TangThuTab: React.FC = () => {
                 {/* Các thẻ gom nhóm (Tags) */}
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {article.tags?.slice(0, 4).map(tag => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={e => {
-                        e.stopPropagation();
-                        setSelectedTag(tag);
-                      }}
-                      className="rounded-full bg-red-50/70 px-2 py-0.5 text-[11px] font-medium text-red-900 transition hover:bg-red-100"
-                    >
+                    <span key={tag} className="rounded-full bg-red-50/70 px-2 py-0.5 text-[11px] font-medium text-red-900">
                       #{tag}
-                    </button>
+                    </span>
                   ))}
                   {article.tags && article.tags.length > 4 && (
                     <span className="text-[11px] text-stone-400">+{article.tags.length - 4}</span>
@@ -797,6 +724,19 @@ export const TangThuTab: React.FC = () => {
             </article>
           ))}
         </div>
+      )}
+      {!loading && filteredArticles.length > ARTICLES_PER_PAGE && (
+        <nav aria-label="Phân trang bài viết" className="flex flex-wrap items-center justify-center gap-2">
+          <button type="button" onClick={() => setCurrentPage(page => Math.max(1, page - 1))} disabled={currentPage === 1}
+            className="rounded-lg border border-stone-200 px-3 py-2 text-xs font-medium text-stone-700 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40">
+            Trang trước
+          </button>
+          <span className="px-2 text-xs text-stone-500">Trang {currentPage} / {totalPages}</span>
+          <button type="button" onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))} disabled={currentPage >= totalPages}
+            className="rounded-lg border border-stone-200 px-3 py-2 text-xs font-medium text-stone-700 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40">
+            Trang sau
+          </button>
+        </nav>
       )}
 
       {/* MODAL ĐỌC CHI TIẾT BÀI VIẾT (READER MODAL) */}
@@ -881,17 +821,9 @@ export const TangThuTab: React.FC = () => {
               <div className="flex flex-wrap items-center gap-1.5 pt-2">
                 <span className="text-xs text-stone-500">Thẻ bài viết:</span>
                 {activeArticle.tags?.map(tag => (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => {
-                      setSelectedTag(tag);
-                      setActiveArticle(null);
-                    }}
-                    className="rounded-full bg-red-100/70 px-2.5 py-0.5 text-xs font-medium text-red-900 hover:bg-red-200"
-                  >
+                  <span key={tag} className="rounded-full bg-red-100/70 px-2.5 py-0.5 text-xs font-medium text-red-900">
                     #{tag}
-                  </button>
+                  </span>
                 ))}
               </div>
             </div>
