@@ -42,7 +42,9 @@ service cloud.firestore {
         && (!('viewCount' in data) || (data.viewCount is number && data.viewCount >= 0))
         && (!('authorId' in data) || (data.authorId is string && data.authorId.size() <= 128))
         && (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 50))
-        && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50))\n        && (!('sourceUrl' in data) || (data.sourceUrl is string && data.sourceUrl.size() <= 2048))\n        && (!('sourceType' in data) || (data.sourceType is string && data.sourceType.size() <= 80));
+        && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50))
+        && (!('sourceUrl' in data) || (data.sourceUrl is string && data.sourceUrl.size() <= 2048))
+        && (!('sourceType' in data) || (data.sourceType is string && data.sourceType.size() <= 80));
     }
 
     match /articles/{articleId} {
