@@ -165,6 +165,7 @@ export const XsmbBetSimulator: React.FC = () => {
           <label className="block"><span className="text-xs font-semibold text-stone-600">Lô 3 càng · tiền nhận / điểm trúng</span><input type="number" min="0" value={loto3Payout} onChange={event => setLoto3Payout(event.target.value)} className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2.5 text-sm" /></label>
         </div>
         <div className="mt-3 rounded-xl bg-stone-50 p-3 text-xs leading-5 text-stone-600">Mặc định minh họa: đề thường 1 ăn 70; lô thường 80.000đ/điểm trúng; đề 3 càng 1 ăn 400; lô 3 càng 600.000đ/điểm trúng. Các mức trả thưởng có thể chỉnh để mô phỏng, không phải cam kết hay bảng giá chính thức.</div>
+        <div className="mt-3 max-w-xs"><label className="block"><span className="text-xs font-semibold text-stone-600">Giới hạn số kỳ khi theo dõi đến lúc trúng (1–10.000)</span><input type="number" min="1" max="10000" step="1" value={maxDraws} onChange={event => setMaxDraws(event.target.value)} className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2.5 text-sm" /></label></div>
 
         {parsed.invalid.length > 0 && <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-800">Không nhận dạng được: {parsed.invalid.join(', ')}. Kiểm tra đúng định dạng số-tiền hoặc số-điểm.</p>}
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
