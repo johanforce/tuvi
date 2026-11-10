@@ -160,6 +160,8 @@ export async function getArticlesFromFirestore(categoryFilter?: string, tagFilte
         viewCount: typeof data.viewCount === 'number' ? data.viewCount : 0,
         createdAt: data.createdAt || new Date().toISOString(),
         updatedAt: data.updatedAt,
+      sourceUrl: data.sourceUrl,
+      sourceType: data.sourceType,
         sourceUrl: data.sourceUrl,
         sourceType: data.sourceType,
       };
