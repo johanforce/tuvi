@@ -129,8 +129,8 @@ def extract_article(page, url: str):
             continue
 
     body = re.sub(r"\n[ \t]*\n[ \t]*\n+", "\n\n", body).strip()
-    if len(body) < 40:
-        return None, "Không tìm thấy .noi-dung hoặc nội dung bài viết quá ngắn"
+    if len(body) < 80:
+        return None, "Không tìm thấy .noi-dung hoặc nội dung bài viết dưới 80 ký tự"
     if any(marker in body.lower() for marker in CHALLENGE_MARKERS):
         return None, "Nội dung có dấu hiệu là trang xác minh"
     if not title:
