@@ -34,7 +34,7 @@ function normalizeXsmbValue(value: string): string | null {
 }
 
 function parseXsmbCsv(csv: string): XsmbApiDraw[] {
-  const lines = csv.replace(/^\\uFEFF/, '').trim().split(/\\r?\\n/);
+  const lines = csv.replace(/^\uFEFF/, '').trim().split(/\r?\n/);
   const header = lines[0]?.split(',');
   if (!header || header.length !== 28 || header[0] !== 'date') {
     throw new Error('Cấu trúc CSV XSMB từ nguồn không đúng định dạng mong đợi.');
@@ -43,7 +43,7 @@ function parseXsmbCsv(csv: string): XsmbApiDraw[] {
   const byDate = new Map<string, XsmbApiDraw>();
   for (const line of lines.slice(1)) {
     const columns = line.split(',');
-    if (columns.length !== 28 || !/^\\d{4}-\\d{2}-\\d{2}$/.test(columns[0])) continue;
+    if (columns.length !== 28 || !/^\d{4}-\d{2}-\d{2}$/.test(columns[0])) continue;
     const values = columns.slice(1).map(normalizeXsmbValue);
     if (values.some(value => value === null)) continue;
     const date = columns[0];
@@ -65,12 +65,12 @@ function validateXsmbSnapshot(value: unknown): XsmbApiDraw[] {
     if (!item || typeof item !== 'object') return false;
     const draw = item as Partial<XsmbApiDraw>;
     return typeof draw.date === 'string'
-      && /^\\d{4}-\\d{2}-\\d{2}$/.test(draw.date)
+      && /^\d{4}-\d{2}-\d{2}$/.test(draw.date)
       && typeof draw.special === 'string'
-      && /^\\d{2}$/.test(draw.special)
+      && /^\d{2}$/.test(draw.special)
       && Array.isArray(draw.loto)
       && draw.loto.length === 27
-      && draw.loto.every(number => typeof number === 'string' && /^\\d{2}$/.test(number));
+      && draw.loto.every(number => typeof number === 'string' && /^\d{2}$/.test(number));
   });
   if (valid.length !== draws.length || valid.length < 1) {
     throw new Error('Bản dữ liệu XSMB dự phòng có dòng sai định dạng.');
