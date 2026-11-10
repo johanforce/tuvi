@@ -149,7 +149,7 @@ def main():
                 continue
             parser = parse_page(article_url, html)
             title = parser.title or ""
-            body = clean_text("\n\n".join(parser.current or parser.best_blocks))
+            body = clean_text("\n\n".join(parser.current))
             body_lower = body.lower()
             if not title or len(body) < 80 or any(marker in body_lower for marker in BLOCK_MARKERS):
                 failed.append({"url": article_url, "reason": "Không nhận diện được nội dung bài viết"})
