@@ -27,6 +27,9 @@ Một cửa sổ Chrome riêng sẽ mở với hồ sơ lưu tại \`.cache/tang
 - Khi website hiển thị trang xác minh, hãy tự thao tác trong cửa sổ Chrome. Quay lại terminal và nhấn Enter để crawler kiểm tra lại trang.
 - Crawler truy cập từng bài theo thứ tự, mặc định nghỉ 2 giây giữa các trang.
 - File \`tang-thu-import.json\` được cập nhật sau mỗi bài, nên dữ liệu đã lấy được vẫn còn nếu quá trình bị gián đoạn.
+- Cache trạng thái được lưu riêng tại `.cache/tang-thu-crawl-state.json`; danh sách URL đã tìm thấy, trang danh sách đang chờ và trạng thái từng bài được ghi sau mỗi URL.
+- Khi chạy lại cùng lệnh, crawler giữ nguyên các bài đã có trong JSON, bỏ qua URL đã thu thập thành công và thử lại URL lỗi/chưa hoàn tất. File JSON được ghi qua file tạm rồi thay thế an toàn, không bị xóa trắng khi khởi động.
+- Mặc định crawler thử lại URL lỗi. Dùng `--no-retry-failed` để tạm bỏ qua chúng; dùng `--retry-failed` để bật lại.
 - Có thể chỉnh số trang danh sách, độ trễ và nơi lưu:
 
 \`\`\`bash
