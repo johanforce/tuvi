@@ -132,6 +132,9 @@ export interface Article {
   viewCount: number;
   createdAt: string; // ISO date string
   updatedAt?: string;
+  sourceUrl?: string;
+  sourceType?: string;
+  publishedAt?: string;
 }
 
 const ARTICLES_PATH = 'articles';
@@ -158,6 +161,10 @@ export async function getArticlesFromFirestore(categoryFilter?: string, tagFilte
         viewCount: typeof data.viewCount === 'number' ? data.viewCount : 0,
         createdAt: data.createdAt || new Date().toISOString(),
         updatedAt: data.updatedAt,
+        sourceUrl: data.sourceUrl,
+        sourceType: data.sourceType,
+      publishedAt: data.publishedAt,
+        publishedAt: data.publishedAt,
       };
     });
 
@@ -199,6 +206,8 @@ export async function getArticleById(id: string): Promise<Article | null> {
       viewCount: typeof data.viewCount === 'number' ? data.viewCount : 0,
       createdAt: data.createdAt || new Date().toISOString(),
       updatedAt: data.updatedAt,
+      sourceUrl: data.sourceUrl,
+      sourceType: data.sourceType,
     };
   } catch (error) {
     handleFirestoreError(error, OperationType.GET, docPath);
@@ -254,4 +263,70 @@ export async function deleteArticleFromFirestore(id: string): Promise<void> {
   } catch (error) {
     handleFirestoreError(error, OperationType.DELETE, docPath);
   }
+}
+
+/** Nhập/upsert bài viết từ gói JSON đã crawl; URL nguồn là khóa chống trùng. */
+export async function importArticlesToFirestore(
+  records: Array<Pick<Article, 'title' | 'content' | 'category' | 'tags' | 'author' | 'sourceUrl'> & Partial<Article> & { sourceType?: string }>
+): Promise<{ inserted: number; updated: number; skipped: number }> {
+  const user = auth.currentUser;
+  if (!isUserAdmin(user) || !user?.emailVerified) {
+    throw new Error('Cần đăng nhập bằng tài khoản admin đã xác minh email.');
+  }
+
+  const snapshot = await getDocs(collection(db, ARTICLES_PATH));
+  const existingByUrl = new Map<string, string>();
+  snapshot.docs.forEach(item => {
+    const sourceUrl = item.data().sourceUrl;
+    if (typeof sourceUrl === 'string' && sourceUrl) existingByUrl.set(sourceUrl, item.id);
+  });
+
+  const stableId = (url: string) => {
+    let hash = 2166136261;
+    for (let i = 0; i < url.length; i++) {
+      hash ^= url.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return 'src-' + (hash >>> 0).toString(16).padStart(8, '0');
+  };
+
+  let inserted = 0, updated = 0, skipped = 0;
+  for (const raw of records) {
+    const title = typeof raw.title === 'string' ? raw.title.trim() : '';
+    const content = typeof raw.content === 'string' ? raw.content.trim() : '';
+    const sourceUrl = typeof raw.sourceUrl === 'string' ? raw.sourceUrl.trim() : '';
+    if (title.length < 2 || title.length > 200 || content.length < 80 || content.length > 500000 ||
+        !/^https?:\/\//i.test(sourceUrl) || !Array.isArray(raw.tags) || raw.tags.length > 20) {
+      skipped++;
+      continue;
+    }
+    const id = existingByUrl.get(sourceUrl) || stableId(sourceUrl);
+    const wasExisting = existingByUrl.has(sourceUrl);
+    const existingDoc = wasExisting ? snapshot.docs.find(item => item.id === id) : undefined;
+    const wordCount = content.split(/\s+/).filter(Boolean).length;
+    const payload = {
+      title,
+      summary: (typeof raw.summary === 'string' ? raw.summary : content.slice(0, 220)).slice(0, 1000),
+      content,
+      category: (typeof raw.category === 'string' && raw.category.trim() ? raw.category.trim() : 'Tử Vi').slice(0, 100),
+      tags: raw.tags.map(tag => String(tag).trim()).filter(Boolean).slice(0, 20),
+      author: (typeof raw.author === 'string' && raw.author.trim() ? raw.author.trim() : 'Chưa xác định').slice(0, 100),
+      readTime: Math.max(1, Math.min(120, Math.ceil(wordCount / 200))),
+      featured: false,
+      viewCount: wasExisting ? (existingDoc?.data().viewCount || 0) : 0,
+      createdAt: wasExisting && typeof existingDoc?.data().createdAt === 'string'
+        ? existingDoc.data().createdAt
+        : (typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString()),
+      sourceUrl,
+      sourceType: typeof raw.sourceType === 'string' ? raw.sourceType.slice(0, 80) : 'external-import',
+      ...(typeof raw.publishedAt === 'string' && raw.publishedAt.length <= 50 ? { publishedAt: raw.publishedAt } : {}),
+    };
+    await setDoc(doc(db, ARTICLES_PATH, id), payload, { merge: true });
+    if (wasExisting) updated++;
+    else {
+      inserted++;
+      existingByUrl.set(sourceUrl, id);
+    }
+  }
+  return { inserted, updated, skipped };
 }
