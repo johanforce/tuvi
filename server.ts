@@ -8,6 +8,144 @@ import { createServer as createViteServer } from 'vite';
 const app = express();
 app.use(express.json({ limit: '256kb' }));
 
+const XSMB_SOURCE_URL = 'https://raw.githubusercontent.com/khiemdoan/vietnam-lottery-xsmb-analysis/main/data/xsmb-2-digits.csv';
+const XSMB_SOURCE_NAME = 'Khiem Doan — Vietnam Lottery XSMB Analysis';
+const XSMB_CACHE_MS = 30 * 60 * 1000;
+
+interface XsmbApiDraw {
+  date: string;
+  special: string;
+  loto: string[];
+}
+
+interface XsmbApiCache {
+  checkedAt: string;
+  fetchedAt: number;
+  draws: XsmbApiDraw[];
+}
+
+let xsmbApiCache: XsmbApiCache | null = null;
+
+function normalizeXsmbValue(value: string): string | null {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 0 && parsed <= 99
+    ? String(parsed).padStart(2, '0')
+    : null;
+}
+
+function parseXsmbCsv(csv: string): XsmbApiDraw[] {
+  const lines = csv.replace(/^\\uFEFF/, '').trim().split(/\\r?\\n/);
+  const header = lines[0]?.split(',');
+  if (!header || header.length !== 28 || header[0] !== 'date') {
+    throw new Error('Cấu trúc CSV XSMB từ nguồn không đúng định dạng mong đợi.');
+  }
+
+  const byDate = new Map<string, XsmbApiDraw>();
+  for (const line of lines.slice(1)) {
+    const columns = line.split(',');
+    if (columns.length !== 28 || !/^\\d{4}-\\d{2}-\\d{2}$/.test(columns[0])) continue;
+    const values = columns.slice(1).map(normalizeXsmbValue);
+    if (values.some(value => value === null)) continue;
+    const date = columns[0];
+    byDate.set(date, {
+      date,
+      special: values[0]!,
+      loto: values as string[],
+    });
+  }
+  return [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function validateXsmbSnapshot(value: unknown): XsmbApiDraw[] {
+  if (!value || typeof value !== 'object' || !Array.isArray((value as { draws?: unknown }).draws)) {
+    throw new Error('Bản dữ liệu XSMB dự phòng không hợp lệ.');
+  }
+  const draws = (value as { draws: unknown[] }).draws;
+  const valid = draws.filter((item): item is XsmbApiDraw => {
+    if (!item || typeof item !== 'object') return false;
+    const draw = item as Partial<XsmbApiDraw>;
+    return typeof draw.date === 'string'
+      && /^\\d{4}-\\d{2}-\\d{2}$/.test(draw.date)
+      && typeof draw.special === 'string'
+      && /^\\d{2}$/.test(draw.special)
+      && Array.isArray(draw.loto)
+      && draw.loto.length === 27
+      && draw.loto.every(number => typeof number === 'string' && /^\\d{2}$/.test(number));
+  });
+  if (valid.length !== draws.length || valid.length < 1) {
+    throw new Error('Bản dữ liệu XSMB dự phòng có dòng sai định dạng.');
+  }
+  return valid.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+app.get('/api/xsmb/results', async (req, res) => {
+  const requestedDays = Number(req.query.days ?? 100);
+  const days = Number.isInteger(requestedDays) ? Math.max(1, Math.min(100, requestedDays)) : 100;
+  const forceRefresh = req.query.refresh === '1';
+  const now = Date.now();
+
+  try {
+    if (!forceRefresh && xsmbApiCache && now - xsmbApiCache.fetchedAt < XSMB_CACHE_MS) {
+      const draws = xsmbApiCache.draws.slice(-days);
+      res.json({
+        source: 'live',
+        sourceName: XSMB_SOURCE_NAME,
+        sourceUrl: XSMB_SOURCE_URL,
+        checkedAt: xsmbApiCache.checkedAt,
+        startDate: draws[0]?.date ?? '',
+        endDate: draws[draws.length - 1]?.date ?? '',
+        drawCount: draws.length,
+        draws,
+      });
+      return;
+    }
+
+    const upstream = await fetch(XSMB_SOURCE_URL, {
+      headers: { Accept: 'text/csv', 'User-Agent': 'TuVi-CoHoc-XSMB/1.0' },
+      signal: AbortSignal.timeout(12000),
+    });
+    if (!upstream.ok) throw new Error('Nguồn XSMB trả về HTTP ' + upstream.status + '.');
+    const parsed = parseXsmbCsv(await upstream.text());
+    if (parsed.length < 100) throw new Error('Nguồn XSMB chưa có đủ 100 kỳ hợp lệ.');
+    xsmbApiCache = { checkedAt: new Date().toISOString(), fetchedAt: now, draws: parsed.slice(-100) };
+
+    const draws = xsmbApiCache.draws.slice(-days);
+    res.json({
+      source: 'live',
+      sourceName: XSMB_SOURCE_NAME,
+      sourceUrl: XSMB_SOURCE_URL,
+      checkedAt: xsmbApiCache.checkedAt,
+      startDate: draws[0]?.date ?? '',
+      endDate: draws[draws.length - 1]?.date ?? '',
+      drawCount: draws.length,
+      draws,
+    });
+  } catch (error) {
+    try {
+      const snapshot = JSON.parse(await readFile(resolve('data/xsmb/100-days.json'), 'utf8')) as unknown;
+      const allDraws = validateXsmbSnapshot(snapshot);
+      const draws = allDraws.slice(-days);
+      res.json({
+        source: 'snapshot',
+        sourceName: XSMB_SOURCE_NAME + ' (bản chụp dự phòng trong repo)',
+        sourceUrl: XSMB_SOURCE_URL,
+        checkedAt: new Date().toISOString(),
+        startDate: draws[0]?.date ?? '',
+        endDate: draws[draws.length - 1]?.date ?? '',
+        drawCount: draws.length,
+        draws,
+        notice: 'Không tải được nguồn trực tiếp: ' + (error instanceof Error ? error.message : 'lỗi không xác định') + ' Đang dùng bản chụp dữ liệu thật có trong repo.',
+      });
+    } catch (snapshotError) {
+      res.status(503).json({
+        error: 'Không tải được nguồn XSMB trực tiếp và bản dữ liệu dự phòng cũng không đọc được.',
+        details: snapshotError instanceof Error ? snapshotError.message : 'Lỗi không xác định',
+      });
+    }
+  }
+});
+
+
 const BRANCH_NAMES = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
 
 const GEMINI_SKILL_VERSION = '1.1.0-gemini';
