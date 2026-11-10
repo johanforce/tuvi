@@ -18,9 +18,9 @@ export const XSMB_PRIZE_STRUCTURE = [
   { group: 'G1', label: 'Giải nhất', count: 1, digits: 5 },
   { group: 'G2', label: 'Giải nhì', count: 2, digits: 5 },
   { group: 'G3', label: 'Giải ba', count: 6, digits: 5 },
-  { group: 'G4', label: 'Giải tư', count: 4, digits: 5 },
-  { group: 'G5', label: 'Giải năm', count: 6, digits: 5 },
-  { group: 'G6', label: 'Giải sáu', count: 3, digits: 5 },
+  { group: 'G4', label: 'Giải tư', count: 4, digits: 4 },
+  { group: 'G5', label: 'Giải năm', count: 6, digits: 4 },
+  { group: 'G6', label: 'Giải sáu', count: 3, digits: 3 },
   { group: 'G7', label: 'Giải bảy', count: 4, digits: 2 },
 ] as const;
 
