@@ -51,7 +51,7 @@ class PageParser(HTMLParser):
             self.body_depth = depth
         if self.article_depth is None and (
             tag in ("article", "main") or
-            any(token in classes + " " + ident for token in ("article-content", "post-content", "entry-content", "content-detail", "detail-content", "news-content"))
+            any(token in classes + " " + ident for token in ("article-content", "article-body", "article-detail", "post-content", "post-body", "entry-content", "content-detail", "detail-content", "news-content", "main-content"))
         ):
             self.article_depth = depth
             self.current = []
