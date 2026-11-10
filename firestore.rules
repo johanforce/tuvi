@@ -44,7 +44,8 @@ service cloud.firestore {
         && (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 50))
         && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50))
         && (!('sourceUrl' in data) || (data.sourceUrl is string && data.sourceUrl.size() <= 2048))
-        && (!('sourceType' in data) || (data.sourceType is string && data.sourceType.size() <= 80));
+        && (!('sourceType' in data) || (data.sourceType is string && data.sourceType.size() <= 80))
+        && (!('publishedAt' in data) || (data.publishedAt is string && data.publishedAt.size() <= 50));
     }
 
     match /articles/{articleId} {
@@ -67,7 +68,7 @@ service cloud.firestore {
           // Admin chỉnh sửa bài viết
           (isAdmin()
             && isValidArticle(incoming())
-            && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'summary', 'content', 'category', 'tags', 'author', 'readTime', 'featured', 'updatedAt', 'sourceUrl', 'sourceType']))
+            && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'summary', 'content', 'category', 'tags', 'author', 'readTime', 'featured', 'updatedAt', 'sourceUrl', 'sourceType', 'publishedAt']))
         );
 
       // Chỉ admin cthang429@gmail.com mới có quyền xóa bài viết
