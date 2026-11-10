@@ -262,7 +262,12 @@ def main():
         state = {}
 
     visited_pages = set(state.get("visitedIndexPages", []))
-    article_urls = list(dict.fromkeys(state.get("articleUrls", [])))
+    article_urls = list(dict.fromkeys([*state.get("articleUrls", []), *output_data.get("failed", [])]))
+    # Legacy exports may contain failed URLs but no state cache yet.
+    article_urls = list(dict.fromkeys([
+        *state.get("articleUrls", []),
+        *(item.get("url") for item in output_data.get("failed", []) if isinstance(item, dict) and item.get("url")),
+    ]))
     saved_queue = list(dict.fromkeys(state.get("queuedIndexPages", [])))
     list_failures = {
         item.get("url"): item for item in state.get("failedIndexPages", [])
@@ -395,7 +400,10 @@ def main():
                     # Preserve original fields such as createdAt when an existing
                     # record is encountered; replace only with the newly extracted data.
                     old_record = records_by_url.get(url, {})
-                    records_by_url[url] = {**old_record, **record}
+                    records_by_url[url] = {
+                        **record,
+                        **({"createdAt": old_record["createdAt"]} if old_record.get("createdAt") else {}),
+                    }
                     statuses[url] = {"status": "done", "updatedAt": now_iso()}
                     previous_failed.pop(url, None)
                     print(f"  [OK] {record['title']}")
