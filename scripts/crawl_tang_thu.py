@@ -46,7 +46,8 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 def same_host(url: str) -> bool:
-    return urlparse(url).netloc.lower().endswith(HOST)
+    host = urlparse(url).netloc.lower().split(":")[0]
+    return host == HOST or host.endswith("." + HOST)
 
 def is_challenge(page) -> bool:
     try:
