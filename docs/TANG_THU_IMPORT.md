@@ -1,59 +1,70 @@
 # Nhập bài viết vào Tàng Thư
 
-Quy trình này tách **thu thập nội dung** và **ghi Firestore** để có thể kiểm tra dữ liệu trước khi công khai.
+Quy trình tách **thu thập nội dung**, **rà soát** và **ghi Firestore**. Crawler mở Chrome có giao diện để bạn trực tiếp xử lý xác minh nếu website yêu cầu; nó không tự giải CAPTCHA hoặc né cơ chế kiểm soát truy cập.
 
-## 1. Thu thập từ trang nguồn
+## 1. Cài đặt
 
-Tại thư mục gốc dự án, chạy:
+Tại thư mục gốc dự án:
 
-```bash
+\`\`\`bash
+python -m pip install playwright
+python -m playwright install chrome
+\`\`\`
+
+Nếu lệnh cài Chrome của Playwright không khả dụng trên máy, hãy dùng Chrome đã cài sẵn và kiểm tra Playwright tương thích với phiên bản hiện tại.
+
+## 2. Thu thập bằng Chrome
+
+Chạy:
+
+\`\`\`bash
 python scripts/crawl_tang_thu.py
-```
+\`\`\`
 
-Mặc định script đọc tối đa 5 trang danh sách từ `https://tuvi.cohoc.net/hoc-tu-vi.html`, mở các liên kết bài viết và tạo `tang-thu-import.json`.
+Một cửa sổ Chrome riêng sẽ mở với hồ sơ lưu tại \`.cache/tang-thu-chrome\`. Hồ sơ này độc lập với Chrome cá nhân, không sao chép cookie hay dữ liệu đăng nhập hiện có.
 
-Có thể tùy chỉnh:
+- Crawler tìm URL bài viết theo mẫu \`-nid-1234.html\`, tránh nhầm các link menu và link ngoài.
+- Khi website hiển thị trang xác minh, hãy tự thao tác trong cửa sổ Chrome. Quay lại terminal và nhấn Enter để crawler kiểm tra lại trang.
+- Crawler truy cập từng bài theo thứ tự, mặc định nghỉ 2 giây giữa các trang.
+- File \`tang-thu-import.json\` được cập nhật sau mỗi bài, nên dữ liệu đã lấy được vẫn còn nếu quá trình bị gián đoạn.
+- Có thể chỉnh số trang danh sách, độ trễ và nơi lưu:
 
-```bash
-python scripts/crawl_tang_thu.py --max-pages 5 --delay 1.5 --output tang-thu-import.json
-```
+\`\`\`bash
+python scripts/crawl_tang_thu.py --max-pages 5 --delay 3 --output tang-thu-import.json
+\`\`\`
 
-Script sử dụng thư viện chuẩn Python, không cần cài package. Nếu website trả trang chống bot/challenge, script sẽ ghi nhận lỗi và không nhập trang chặn thành nội dung. Khi đó cần mở website bằng trình duyệt thông thường, xin bản export/cho phép truy cập từ chủ website hoặc bổ sung dữ liệu hợp lệ vào JSON; không tìm cách vượt cơ chế bảo vệ.
+Không chia sẻ cookie, mã xác minh hoặc thông tin đăng nhập. Nếu website tiếp tục từ chối truy cập sau khi bạn tự xác minh, dừng thu thập và xin chủ website cấp quyền hoặc bản export; không dùng proxy xoay vòng, giả mạo danh tính hay công cụ phá CAPTCHA.
 
-## 2. Rà soát JSON trước khi nhập
+## 3. Rà soát JSON trước khi nhập
 
-Mở file JSON và kiểm tra:
-- Tiêu đề, nội dung, tác giả và URL nguồn.
-- Tác giả chưa xác định được để nguyên trạng thái cần biên tập, không tự gán tên.
-- Nội dung trích dẫn, ghi chú bản quyền và trường phái/tài liệu gốc.
-- Những bài không có nội dung đầy đủ cần được loại khỏi danh sách nhập.
+Kiểm tra tiêu đề, toàn văn, tác giả, URL nguồn, trường phái và ghi chú bản quyền. Tác giả không rõ phải để trạng thái cần biên tập, không tự gán tên. Loại những bài trích xuất thiếu hoặc lẫn nội dung điều hướng.
 
-Mỗi phần tử trong `articles` cần có `title`, `content`, `sourceUrl`, `category`, `tags`, `author`. Nội dung tối đa 500.000 ký tự theo Firestore Rules hiện tại.
+Mỗi bài cần có \`title\`, \`content\`, \`sourceUrl\`, \`category\`, \`tags\`, \`author\`. Nội dung tối đa 500.000 ký tự theo Firestore Rules hiện tại.
 
-## 3. Nhập vào Firestore
+## 4. Nhập vào Firestore
 
-1. Đưa các thay đổi của nhánh này lên môi trường chạy website.
-2. Đăng nhập Tàng Thư bằng tài khoản quản trị `cthang429@gmail.com` đã xác minh email.
-3. Ở phần đầu Tàng Thư, chọn **Chọn file JSON** và chọn `tang-thu-import.json`.
-4. Kiểm tra số bản ghi hợp lệ, sau đó nhấn **Nhập**.
-5. Kiểm tra bài viết mới trong Tàng Thư và rà soát nội dung trước khi công khai rộng rãi.
+1. Đưa thay đổi của nhánh này lên môi trường chạy website.
+2. Đăng nhập Tàng Thư bằng tài khoản quản trị đã xác minh email.
+3. Chọn file JSON trong bảng nhập liệu quản trị.
+4. Kiểm tra số bản ghi hợp lệ rồi mới nhấn **Nhập**.
+5. Kiểm tra các bài mới và biên tập trước khi công khai.
 
-Importer dùng URL nguồn làm khóa chống trùng: chạy lại cùng gói dữ liệu sẽ cập nhật bài theo URL thay vì tạo bản ghi mới. Bài bị lỗi xác thực hoặc vượt giới hạn sẽ được đếm vào nhóm bỏ qua.
+Importer dùng URL nguồn làm khóa chống trùng; chạy lại cùng gói dữ liệu sẽ cập nhật bài theo URL thay vì tạo bản ghi mới. Crawler chỉ tạo JSON trên máy; không tự ghi Firestore.
 
-## 4. Triển khai Firestore Rules
+## 5. Firestore Rules
 
-Nếu dự án Firebase chưa được triển khai Rules mới từ repo, hãy kiểm tra project đang liên kết trước khi chạy:
+Nếu Rules mới chưa được triển khai, xác nhận Firebase project trước khi chạy:
 
-```bash
+\`\`\`bash
 firebase use
 firebase deploy --only firestore:rules
-```
+\`\`\`
 
-Không triển khai nhầm Firebase project. Rules giới hạn quyền ghi vào tài khoản admin và cho phép metadata nguồn `sourceUrl`, `sourceType`.
+Không triển khai nhầm Firebase project.
 
-## Giới hạn đã biết
+## Giới hạn
 
-- Trình thu thập dựa trên cấu trúc HTML phổ biến; nếu website đổi giao diện, cần hiệu chỉnh bộ nhận diện nội dung.
-- Một số trang có thể chặn truy cập tự động. Không có cam kết script tải được toàn bộ 5 trang nếu server từ chối.
-- Chưa tự động xác minh tác giả, ngày xuất bản hoặc tính đầy đủ của bài. Hãy biên tập và đối chiếu nguồn trước khi xuất bản.
-- Việc chạy crawler chỉ tạo file JSON ở máy của bạn; Firestore chỉ thay đổi sau thao tác nhập từ giao diện admin.
+- Cấu trúc HTML có thể thay đổi; một số bài cần điều chỉnh selector hoặc biên tập thủ công.
+- Website có thể yêu cầu xác minh hoặc từ chối truy cập tự động. Việc xác minh phải do người dùng tự thực hiện trong Chrome.
+- Tác giả, ngày đăng và tính đầy đủ của nội dung chưa được xác minh độc lập.
+- Chưa chạy lint/build hoặc thử import dữ liệu thật lên Firebase.
