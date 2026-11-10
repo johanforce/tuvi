@@ -61,7 +61,7 @@ export const UnverifiedNotesSection: React.FC = () => {
 
         <div className="paper-inset flex shrink-0 items-center gap-2 px-3 py-1.5 text-[12px] text-amber-900 dark:text-amber-300">
           <BookOpen className="h-4 w-4 text-red-800 dark:text-red-300" />
-          <span>Chuẩn đối chiếu: <strong>tuvicohoc.ai.studio</strong></span>
+          <span>Chuẩn đối chiếu: <strong>tuvidauso.ai.studio</strong></span>
         </div>
       </div>
 

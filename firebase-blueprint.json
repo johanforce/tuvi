@@ -1,0 +1,74 @@
+{
+  "entities": {
+    "Article": {
+      "title": "Article",
+      "description": "Bài viết Tàng Thư Cổ Học bao gồm Tử Vi, Kinh Dịch, Phong Thủy, Bát Tự",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Tiêu đề bài viết",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "summary": {
+          "type": "string",
+          "description": "Tóm tắt ngắn bài viết",
+          "maxLength": 500
+        },
+        "content": {
+          "type": "string",
+          "description": "Nội dung chi tiết bài viết hỗ trợ định dạng Markdown",
+          "minLength": 10,
+          "maxLength": 50000
+        },
+        "category": {
+          "type": "string",
+          "description": "Chuyên mục cổ học",
+          "maxLength": 100
+        },
+        "tags": {
+          "type": "array",
+          "description": "Danh sách thẻ phân loại bài viết"
+        },
+        "author": {
+          "type": "string",
+          "description": "Tên tác giả hoặc nguồn thư tịch",
+          "maxLength": 100
+        },
+        "authorId": {
+          "type": "string",
+          "description": "UID của người soạn bài viết",
+          "maxLength": 128
+        },
+        "readTime": {
+          "type": "number",
+          "description": "Thời gian đọc ước tính tính theo phút"
+        },
+        "featured": {
+          "type": "boolean",
+          "description": "Đánh dấu bài viết nổi bật"
+        },
+        "viewCount": {
+          "type": "number",
+          "description": "Số lượt xem bài viết"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Thời điểm tạo bài viết"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Thời điểm cập nhật bài viết gần nhất"
+        }
+      },
+      "required": ["title", "content", "category", "tags", "author", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/articles/{articleId}": {
+      "schema": "Article",
+      "description": "Kho lưu trữ các bài viết Tàng Thư Cổ Học"
+    }
+  }
+}

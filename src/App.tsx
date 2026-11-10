@@ -6,12 +6,13 @@ import { ChartToolbar } from './components/ChartToolbar.js';
 import { PalaceDetailPanel } from './components/PalaceDetailPanel.js';
 import { BacDeTab } from './components/BacDeTab.js';
 import { LunarCalendarTab } from './components/LunarCalendarTab.js';
+import { TangThuTab } from './components/TangThuTab.js';
 import { BrandSeal } from './components/BrandSeal.js';
 import { buildChart } from './engine/build-chart.js';
 import type { BirthInput, ChartCore } from './engine/types.js';
 import type { StarVisibilityFilters } from './types/chartUI.js';
 import { exportChartToPdf, printChart } from './utils/pdfExport.js';
-import { AlertCircle, BookOpen, CalendarDays, Compass } from 'lucide-react';
+import { AlertCircle, BookOpen, CalendarDays, Compass, BookMarked } from 'lucide-react';
 
 const LAST_CHART_INPUT_KEY = 'tuvi-last-chart-input-v1';
 
@@ -24,7 +25,7 @@ const DEFAULT_INPUT: BirthInput = {
   viewedYear: 2026,
 };
 
-type AppPage = 'form' | 'chart' | 'bacde' | 'calendar';
+type AppPage = 'form' | 'chart' | 'bacde' | 'calendar' | 'tangthu';
 type DetailTab = 'palace' | 'annual' | 'reading';
 
 interface RestoredPage {
@@ -76,7 +77,15 @@ function loadLastChartInput(): BirthInput | null {
 function readUrlPage(): RestoredPage | null {
   const params = new URLSearchParams(window.location.search);
   const page = params.get('page');
-  if (page !== 'form' && page !== 'chart' && page !== 'bacde' && page !== 'calendar') return null;
+  if (page !== 'form' && page !== 'chart' && page !== 'bacde' && page !== 'calendar' && page !== 'tangthu') return null;
+
+  if (page === 'tangthu') {
+    return {
+      view: 'tangthu', input: DEFAULT_INPUT, chart: null, selectedBranch: null, activeDetailTab: 'palace',
+      bacDeNumber: 1, showBacDeResult: false,
+      calendarDate: todayIsoDate(),
+    };
+  }
 
   if (page === 'bacde') {
     const number = Number(params.get('que'));
@@ -162,6 +171,12 @@ function writePageUrl(view: AppPage, input: BirthInput, options: {
   }
   if (view === 'calendar') {
     if (options.calendarDate) params.set('date', options.calendarDate);
+    const url = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
+    if (options.replace) window.history.replaceState({}, '', url);
+    else window.history.pushState({}, '', url);
+    return;
+  }
+  if (view === 'tangthu') {
     const url = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
     if (options.replace) window.history.replaceState({}, '', url);
     else window.history.pushState({}, '', url);
@@ -279,6 +294,11 @@ export default function App() {
     writePageUrl('calendar', currentInput, { calendarDate });
   };
 
+  const handleShowTangThu = () => {
+    setView('tangthu');
+    writePageUrl('tangthu', currentInput);
+  };
+
   const handleCalendarDateChange = (date: string) => {
     if (!isValidCalendarDate(date)) return;
     setCalendarDate(date);
@@ -392,7 +412,7 @@ export default function App() {
       />
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-2 md:px-6 py-4">
-        {view !== 'chart' && <div role="tablist" aria-label="Trang chủ" className="mx-auto mb-5 grid max-w-6xl grid-cols-3 gap-2 rounded-2xl border border-red-950/10 bg-white/75 p-2 shadow-sm">
+        {view !== 'chart' && <div role="tablist" aria-label="Trang chủ" className="mx-auto mb-5 grid max-w-6xl grid-cols-2 lg:grid-cols-4 gap-2 rounded-2xl border border-red-950/10 bg-white/75 p-2 shadow-sm">
           <button
             type="button"
             role="tab"
@@ -423,6 +443,16 @@ export default function App() {
             <BookOpen className={`h-5 w-5 shrink-0 ${view === 'bacde' ? 'text-amber-200' : 'text-red-900'}`} />
             <span><span className="block font-serif text-xs font-bold sm:text-base">Quẻ Bắc Đế</span><span className={`mt-0.5 hidden text-[11px] sm:block sm:text-xs ${view === 'bacde' ? 'text-red-100' : 'text-stone-500'}`}>Tra cứu và gieo quẻ</span></span>
           </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === 'tangthu'}
+            onClick={handleShowTangThu}
+            className={`flex min-h-[68px] items-center gap-2 rounded-xl px-2 py-3 text-left transition-all duration-200 sm:gap-3 sm:px-4 ${view === 'tangthu' ? 'bg-gradient-to-r from-red-950 to-red-800 text-white shadow-md shadow-red-950/15' : 'text-stone-700 hover:bg-red-50'}`}
+          >
+            <BookMarked className={`h-5 w-5 shrink-0 ${view === 'tangthu' ? 'text-amber-200' : 'text-red-900'}`} />
+            <span><span className="block font-serif text-xs font-bold sm:text-base">Tàng Thư</span><span className={`mt-0.5 hidden text-[11px] sm:block sm:text-xs ${view === 'tangthu' ? 'text-red-100' : 'text-stone-500'}`}>Cổ học tinh hoa & bài viết</span></span>
+          </button>
         </div>}
 
         {view === 'form' && (
@@ -443,6 +473,8 @@ export default function App() {
         />}
 
         {view === 'calendar' && <LunarCalendarTab date={calendarDate} onDateChange={handleCalendarDateChange} />}
+
+        {view === 'tangthu' && <TangThuTab />}
 
         {view === 'chart' && chart && (
           <div className="space-y-4 print-area">
@@ -516,6 +548,7 @@ export default function App() {
               <button type="button" onClick={() => { handleShowCalendar(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="transition hover:text-amber-200">Lịch âm</button>
               <button type="button" onClick={() => { handleShowForm(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="transition hover:text-amber-200">Lập lá số</button>
               <button type="button" onClick={() => { handleShowBacDe(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="transition hover:text-amber-200">Quẻ Bắc Đế</button>
+              <button type="button" onClick={() => { handleShowTangThu(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="transition hover:text-amber-200">Tàng Thư</button>
             </div>
           </nav>
         </div>
