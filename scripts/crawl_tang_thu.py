@@ -38,6 +38,7 @@ CONTENT_SELECTORS = (
     '[itemprop="articleBody"]',
     ".article-content", ".article-body", ".article-detail",
     ".post-content", ".post-body", ".entry-content",
+    ".noi-dung",
     ".content-detail", ".detail-content", ".news-content",
     "#article-content", "#content-detail", "#main-content",
 )
@@ -96,6 +97,7 @@ def extract_index(page, page_url: str):
     return articles, pagination
 
 def extract_article(page, url: str):
+    # The source site uses <h1> for title and <div class="noi-dung"> for article text.
     title = ""
     for selector in ('h1', 'meta[property="og:title"]', 'title'):
         try:
@@ -110,45 +112,93 @@ def extract_article(page, url: str):
         except Exception:
             pass
 
-    candidates = []
-    for selector in CONTENT_SELECTORS:
+    # Prefer the site's exact article body container; generic selectors are fallbacks.
+    body = ""
+    for selector in (".noi-dung", *CONTENT_SELECTORS):
         try:
-            locators = page.locator(selector)
-            count = min(locators.count(), 12)
-            for i in range(count):
-                node = locators.nth(i)
-                text = node.inner_text(timeout=1500).strip()
-                if len(text) >= 250:
-                    candidates.append((len(text), text))
+            locator = page.locator(selector).first
+            if locator.count():
+                candidate = locator.inner_text(timeout=2500).strip()
+                if len(candidate) > len(body):
+                    body = candidate
+                # The exact source container is authoritative; don't include page chrome.
+                if selector == ".noi-dung" and len(candidate) >= 40:
+                    body = candidate
+                    break
         except Exception:
             continue
-    if not candidates:
-        return None, "Không tìm thấy vùng nội dung bài viết có độ dài phù hợp"
 
-    body = max(candidates, key=lambda item: item[0])[1]
     body = re.sub(r"\n[ \t]*\n[ \t]*\n+", "\n\n", body).strip()
-    if len(body) < 250:
-        return None, "Nội dung trích xuất quá ngắn; cần kiểm tra thủ công"
+    if len(body) < 40:
+        return None, "Không tìm thấy .noi-dung hoặc nội dung bài viết quá ngắn"
     if any(marker in body.lower() for marker in CHALLENGE_MARKERS):
         return None, "Nội dung có dấu hiệu là trang xác minh"
     if not title:
         title = body.splitlines()[0][:200]
+
+    # Read the site's visible tag links instead of assigning generic placeholder tags.
+    tags = []
+    try:
+        tags = page.locator(".tags a").evaluate_all(
+            """els => els.map(a => (a.innerText || a.textContent || '').trim()).filter(Boolean)"""
+        )
+    except Exception:
+        pass
+    tags = list(dict.fromkeys(tag[:80] for tag in tags if tag.strip()))
+    if not tags:
+        tags = ["Tử Vi", "Tàng Thư"]
+
+    # Prefer a visible byline, then structured metadata author.
     author = ""
-    for selector in ('[rel="author"]', '[itemprop="author"]', ".author", ".post-author"):
+    for selector in (".noi-dung b", '[rel="author"]', '[itemprop="author"]', ".author", ".post-author"):
         try:
             candidate = page.locator(selector).first.inner_text(timeout=1000).strip()
             if candidate:
-                author = candidate[:160]
+                author = candidate[:200]
                 break
         except Exception:
             pass
+
+    description = ""
+    for selector in ('meta[name="description"]', 'meta[property="og:description"]'):
+        try:
+            description = page.locator(selector).first.get_attribute("content", timeout=1000) or ""
+            if description.strip():
+                break
+        except Exception:
+            pass
+
+    published_at = ""
+    structured_author = ""
+    # Article date and author are embedded in JSON-LD on this site.
+    try:
+        scripts = page.locator('script[type="application/ld+json"]').all_inner_texts()
+        for raw in scripts:
+            try:
+                data = json.loads(raw)
+            except Exception:
+                continue
+            objects = data if isinstance(data, list) else [data]
+            for obj in objects:
+                if not isinstance(obj, dict):
+                    continue
+                published_at = published_at or str(obj.get("datePublished") or "")
+                person = obj.get("author")
+                if isinstance(person, dict):
+                    structured_author = structured_author or str(person.get("name") or "")
+                elif isinstance(person, str):
+                    structured_author = structured_author or person
+    except Exception:
+        pass
+
     return {
         "title": title[:200],
-        "summary": re.sub(r"\s+", " ", body)[:220].strip(),
+        "summary": (description or re.sub(r"\s+", " ", body)[:220]).strip()[:500],
         "content": body,
         "category": "Tử Vi",
-        "tags": ["Tử Vi", "Tàng Thư", "Tư liệu sưu tầm"],
-        "author": author or "Chưa xác định (cần biên tập)",
+        "tags": tags,
+        "author": author or structured_author or "Chưa xác định (cần biên tập)",
+        "publishedAt": published_at or None,
         "sourceUrl": url,
         "sourceType": "tuvi.cohoc.net",
         "createdAt": now_iso(),
