@@ -339,7 +339,9 @@ def main():
         page = context.pages[0] if context.pages else context.new_page()
         try:
             while queue and len(visited_pages) < max(1, args.max_pages):
-                url = queue.pop(0)
+                # Peek instead of pop: if the process is interrupted mid-navigation,
+                # the current page remains in the persisted queue for the next run.
+                url = queue[0]
                 if url in visited_pages:
                     continue
                 print(f"[LIST] {url}")
@@ -362,6 +364,8 @@ def main():
                 except Exception as exc:
                     list_failures[url] = {"url": url, "reason": f"Lỗi tải trang danh sách: {exc}"}
                     print(f"  [LIST-FAIL] {exc}")
+                if queue and queue[0] == url:
+                    queue.pop(0)
                 save_all()
                 time.sleep(max(0, args.delay))
 
