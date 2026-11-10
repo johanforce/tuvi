@@ -1,3 +1,4 @@
+// Intentionally kept as a pure simulator: every invocation generates one independent XSMB draw.
 export interface XsmbPrizeResult {
   group: string;
   label: string;
@@ -12,7 +13,6 @@ export interface XsmbSession {
   lotoThreeDigits: string[];
 }
 
-/** 27 Northern lottery results; 23 results from special prize through prize 6 have at least 3 digits. */
 export const XSMB_PRIZE_STRUCTURE = [
   { group: 'ĐB', label: 'Đặc biệt', count: 1, digits: 5 },
   { group: 'G1', label: 'Giải nhất', count: 1, digits: 5 },
@@ -29,7 +29,6 @@ function randomDigits(length: number, random: () => number): string {
   return String(value).padStart(length, '0');
 }
 
-/** Creates one random session; an injected RNG makes it deterministic in tests. */
 export function simulateXsmbSession(random: () => number = Math.random, now: Date = new Date()): XsmbSession {
   const results: XsmbPrizeResult[] = [];
   for (const prize of XSMB_PRIZE_STRUCTURE) {
