@@ -49,9 +49,10 @@ export const TangThuImportPanel: React.FC<Props> = ({ onImported }) => {
         sourceType: typeof item.sourceType === 'string' ? item.sourceType : 'external-import',
         createdAt: typeof item.createdAt === 'string' ? item.createdAt : new Date().toISOString(),
       }));
-      setRecords(valid);
+      const unique = [...new Map(valid.map((item: ImportRecord) => [item.sourceUrl, item])).values()];
+      setRecords(unique);
       setFileName(file.name);
-      if (!valid.length) setError('Không tìm thấy bài viết hợp lệ trong file.');
+      if (!unique.length) setError('Không tìm thấy bài viết hợp lệ trong file.');
     } catch (err) {
       setRecords([]);
       setFileName('');
