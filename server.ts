@@ -104,7 +104,7 @@ function buildInterpretationContext(db: Record<string, any>, chart: Record<strin
     return activePalaces.some((palace: Record<string, any>) => {
       if (!rule.palaces?.includes(palace.name) || !BRANCH_NAMES.includes(palace.branch)) return false;
       const offsets = rule.scope === 'same_palace' ? [0] : rule.scope === 'tam_phuong' ? [0, 4, 8] : [0, 4, 6, 8];
-      const ids = new Set(offsets.flatMap(offset => natalIds(starsAt(BRANCH_NAMES[(BRANCH_NAMES.indexOf(palace.branch) + offset) % 12]))));
+      const ids = new Set(offsets.flatMap(offset => [...natalIds(starsAt(BRANCH_NAMES[(BRANCH_NAMES.indexOf(palace.branch) + offset) % 12]))]));
       return rule.starIds?.every((id: string) => ids.has(id));
     });
   });

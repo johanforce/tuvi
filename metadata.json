@@ -1,6 +1,6 @@
 {
   "name": "Lập Lá Số Tử Vi",
-  "description": "Ứng dụng lập lá số Tử Vi truyền thống với sơ đồ địa bàn, an 14 chính tinh và phụ tinh, phân tầng sao lưu niên, hiển thị ngũ hành, ghi chú sao chưa kiểm chứng và xuất PDF chuẩn A4.",
+  "description": "Ứng dụng lập lá số Tử Vi truyền thống với sơ đồ địa bàn 4x4, an 14 chính tinh và phụ tinh, phân tầng sao lưu niên, quẻ Bắc Đế và Tàng Thư Cổ Học lưu trữ trực tuyến trên Firebase Firestore.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

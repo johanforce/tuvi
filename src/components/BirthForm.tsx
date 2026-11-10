@@ -143,7 +143,7 @@ export const BirthForm: React.FC<BirthFormProps> = ({
         <div className="space-y-5 lg:col-span-5">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-100/80 px-3 py-1 text-[12px] font-semibold text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
             <Sparkles className="h-3.5 w-3.5 text-red-800 dark:text-red-300" />
-            <span>Thuật Toán Chuẩn Hóa Theo tuvicohoc.ai.studio</span>
+            <span>Thuật Toán Chuẩn Hóa Theo tuvidauso.ai.studio</span>
           </div>
 
           <div className="flex items-start gap-4">
@@ -159,8 +159,34 @@ export const BirthForm: React.FC<BirthFormProps> = ({
           </div>
 
           <p className="text-[14px] leading-relaxed text-stone-600 dark:text-slate-300">
-            Nhập ngày giờ sinh dương lịch để lập lá số theo địa bàn truyền thống. Toàn bộ 14 chính tinh, phụ tinh, vòng Tràng Sinh, Bác Sĩ, Thái Tuế và các lớp sao Lưu Niên được hiển thị trực quan.
+            Nhập ngày giờ sinh dương lịch để lập lá số theo địa bàn truyền thống. Toàn bộ 14 chính tinh, phụ tinh, vòng Tràng Sinh, Bác Sĩ, Thái Tuế và các lớp sao Lưu Niên v0.2.4 được hiển thị trực quan.
           </p>
+
+          <div className="paper-inset space-y-2 p-4 text-[13px]">
+            <h4 className="flex items-center gap-1.5 font-serif font-bold text-oriental-crimson dark:text-amber-400">
+              <CheckCircle2 className="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
+              Điểm đặc trưng phiên bản này
+            </h4>
+            <ul className="space-y-1.5 text-[12.5px] text-stone-600 dark:text-slate-300">
+              <li className="flex gap-2"><span className="text-red-800">◆</span>Địa bàn chuẩn 4x4 truyền thống kèm Thiên Bàn 2x2.</li>
+              <li className="flex gap-2"><span className="text-red-800">◆</span>Các công thức an sao đã được xác nhận; độ sáng được theo dõi riêng.</li>
+              <li className="flex gap-2"><span className="text-red-800">◆</span>Xuất file PDF khổ A4 ngang lưu trữ sắc nét.</li>
+              <li className="flex gap-2"><span className="text-red-800">◆</span>Múi giờ chuẩn Việt Nam UTC+7 (không hỏi nơi sinh).</li>
+            </ul>
+          </div>
+
+          {/* Lá số mẫu */}
+          <div className="pt-1">
+            <span className="mb-2 block text-[12px] font-semibold text-amber-900 dark:text-amber-400">Thử nghiệm nhanh với lá số mẫu:</span>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={() => handleLoadSample('tv001')} className={sampleBtn}>
+                Mẫu TV-001 (1970)
+              </button>
+              <button type="button" onClick={() => handleLoadSample('1999')} className={sampleBtn}>
+                Mẫu 1999 (Kỷ Mão)
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Cột phải: Form */}

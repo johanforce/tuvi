@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default-deny global safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Chỉ tài khoản Gmail chỉ định cthang429@gmail.com mới có quyền Admin
+    function isAdmin() {
+      return isSignedIn()
+        && request.auth.token.email == 'cthang429@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    function isValidArticle(data) {
+      return data.title is string && data.title.size() >= 2 && data.title.size() <= 200
+        && data.content is string && data.content.size() >= 10 && data.content.size() <= 50000
+        && data.category is string && data.category.size() >= 1 && data.category.size() <= 100
+        && data.author is string && data.author.size() <= 100
+        && data.tags is list && data.tags.size() <= 20
+        && (!('summary' in data) || (data.summary is string && data.summary.size() <= 1000))
+        && (!('readTime' in data) || (data.readTime is number && data.readTime >= 1 && data.readTime <= 120))
+        && (!('featured' in data) || data.featured is bool)
+        && (!('viewCount' in data) || (data.viewCount is number && data.viewCount >= 0))
+        && (!('authorId' in data) || (data.authorId is string && data.authorId.size() <= 128))
+        && (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 50))
+        && (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 50));
+    }
+
+    match /articles/{articleId} {
+      // Độc giả công khai có thể đọc các bài viết trong Tàng Thư
+      allow read: if true;
+
+      // Chỉ admin cthang429@gmail.com mới có quyền tạo bài viết mới
+      allow create: if isAdmin()
+        && isValidId(articleId)
+        && isValidArticle(incoming());
+
+      // Cập nhật: độc giả được tăng viewCount khi đọc, chỉ admin mới được sửa nội dung
+      allow update: if isValidId(articleId)
+        && (
+          // Độc giả tăng lượt xem
+          (incoming().diff(existing()).affectedKeys().hasOnly(['viewCount'])
+            && incoming().viewCount is number
+            && incoming().viewCount == existing().viewCount + 1)
+          ||
+          // Admin chỉnh sửa bài viết
+          (isAdmin()
+            && isValidArticle(incoming())
+            && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'summary', 'content', 'category', 'tags', 'author', 'readTime', 'featured', 'updatedAt']))
+        );
+
+      // Chỉ admin cthang429@gmail.com mới có quyền xóa bài viết
+      allow delete: if isValidId(articleId) && isAdmin();
+    }
+  }
+}

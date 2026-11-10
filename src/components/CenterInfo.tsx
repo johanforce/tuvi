@@ -167,12 +167,12 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
             Trang Tử Vi Cổ Học Hàng Đầu Việt Nam
           </p>
           <a
-            href="https://tuvicohoc.ai.studio"
+            href="https://tuvidauso.ai.studio"
             target="_blank"
             rel="noreferrer"
             className="block font-mono text-[12px] text-blue-600 hover:underline"
           >
-            https://tuvicohoc.ai.studio
+            https://tuvidauso.ai.studio
           </a>
           <h2 className="mt-1 font-serif text-[26px] font-bold tracking-wide text-oriental-crimson">
             Lá Số Tử Vi
@@ -183,7 +183,7 @@ export const CenterInfo: React.FC<CenterInfoProps> = ({ chart }) => {
         <div className="my-auto space-y-1 pl-2 pr-6 text-[12px] font-medium leading-[1.45] text-stone-800">
           <div className="grid grid-cols-12 items-baseline">
             <span className="col-span-3 font-semibold text-amber-900">Họ tên:</span>
-            <span className="col-span-9"><span className="font-serif text-sm font-bold text-oriental-crimson">{input.name || 'Lá số tuvicohoc.ai.studio'}</span></span>
+            <span className="col-span-9"><span className="font-serif text-sm font-bold text-oriental-crimson">{input.name || 'Lá số tuvidauso.ai.studio'}</span></span>
           </div>
           <div className="grid grid-cols-12 items-baseline">
             <span className="col-span-3 font-semibold text-amber-900">Năm:</span>
