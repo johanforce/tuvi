@@ -262,7 +262,6 @@ def main():
         state = {}
 
     visited_pages = set(state.get("visitedIndexPages", []))
-    article_urls = list(dict.fromkeys([*state.get("articleUrls", []), *output_data.get("failed", [])]))
     # Legacy exports may contain failed URLs but no state cache yet.
     article_urls = list(dict.fromkeys([
         *state.get("articleUrls", []),
