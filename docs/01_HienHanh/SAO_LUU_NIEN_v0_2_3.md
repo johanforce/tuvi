@@ -9,7 +9,7 @@
 
 - Dùng `viewedYear` (năm âm lịch người dùng chọn) để lấy Can Chi năm xem. Ví dụ 2026 → Bính Ngọ.
 - Sao lưu có `scope: 'annual'`, không ghi đè sao bản mệnh.
-- Những công thức dưới đây là **candidate** theo các cách an sao lưu niên phổ thông hoặc suy rộng bảng sao gốc theo Can/Chi năm xem; chưa xác minh đầy đủ với tuvidauso.ai.studio.
+- Những công thức dưới đây là **candidate** theo các cách an sao lưu niên phổ thông hoặc suy rộng bảng sao gốc theo Can/Chi năm xem; chưa xác minh đầy đủ với tuvicohoc.ai.studio.
 - Tứ Hóa Lưu Niên không có cung vị độc lập. Bốn dấu Lưu Hóa gắn lên cung chứa sao gốc tương ứng theo Can năm xem.
 - Sao chưa đủ căn cứ được đưa vào `annualPendingStars`, không gán cung giả.
 
@@ -54,16 +54,16 @@
 
 ## Ghi chú công thức và nguồn tham khảo ngoài
 
-Một số nguồn trực tuyến mô tả phép an sao lưu niên bằng cách lấy Can/Chi năm xem thay năm sinh; Lộc Tồn/Kình/Đà theo Can, Thái Tuế/Tang/Bạch/Khốc/Hư/Mã/Hồng Loan/Thiên Hỷ theo Chi, và Tứ Hóa theo Can. Đây chỉ là nguồn tạo giả thuyết, **không phải bằng chứng rằng tuvidauso.ai.studio dùng đúng các quy tắc này**:
+Một số nguồn trực tuyến mô tả phép an sao lưu niên bằng cách lấy Can/Chi năm xem thay năm sinh; Lộc Tồn/Kình/Đà theo Can, Thái Tuế/Tang/Bạch/Khốc/Hư/Mã/Hồng Loan/Thiên Hỷ theo Chi, và Tứ Hóa theo Can. Đây chỉ là nguồn tạo giả thuyết, **không phải bằng chứng rằng tuvicohoc.ai.studio dùng đúng các quy tắc này**:
 
 - https://thayungkhiem.vn/cac-sao-luu-nien
 - https://nhatnguyet.org/kien-thuc/bai-viet/luu-nien-va-sao-luu-trong-tu-vi-eaa375
 - https://www.mongvang.net/cach-an-sao/
-- https://www.etuvidauso.ai.studio/kien-thuc/van-han/luu-nien/
+- https://www.etuvicohoc.ai.studio/kien-thuc/van-han/luu-nien/
 
 ## Việc cần đối chiếu tiếp
 
-1. Cùng một ngày/giờ/giới tính, so sánh 2–3 năm xem liên tiếp trên tuvidauso.ai.studio; transcribe tất cả nhãn `L.` và cung chứa chúng.
+1. Cùng một ngày/giờ/giới tính, so sánh 2–3 năm xem liên tiếp trên tuvicohoc.ai.studio; transcribe tất cả nhãn `L.` và cung chứa chúng.
 2. Chọn các năm có Can khác nhau để phân biệt Lưu Lộc Tồn, Lưu Kình/Đà, Lưu Tứ Hóa, Lưu Thiên Việt/Trù.
 3. Chọn các năm có chi cách xa để phân biệt Khốc/Hư/Mã/Đào Hoa/Hồng Loan/Thiên Hỷ, đồng thời xác nhận Lưu Long Đức/Phúc Đức.
 4. Xác minh riêng Lưu Thiên Không, Lưu Văn Tinh, Lưu Tuần Không, Lưu Triệt Không, Lưu Văn Xương và Lưu Văn Khúc.

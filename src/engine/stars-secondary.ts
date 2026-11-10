@@ -36,7 +36,7 @@ export function placeYearBranchStars(yearBranch:number,menhBranch:number,thanBra
     p('thien-tai','Thiên Tài',menhBranch+z),p('thien-tho','Thiên Thọ',thanBranch+z),
     p('co-than','Cô Thần',coQua.c),p('qua-tu','Quả Tú',coQua.q)];
 }
-// Cặp Thiên Khôi/Thiên Việt theo quy ước đang khớp ảnh tuvidauso.ai.studio.
+// Cặp Thiên Khôi/Thiên Việt theo quy ước đang khớp ảnh tuvicohoc.ai.studio.
 // Thứ tự cặp: [Thiên Khôi, Thiên Việt]. Các vị trí trong bảng đã được xác nhận.
 export const KHOI_VIET_TUVIVN_TABLE:Array<[number,number]>=[
   [1,7], // Giáp: Sửu, Mùi
@@ -52,7 +52,7 @@ export const KHOI_VIET_TUVIVN_TABLE:Array<[number,number]>=[
 ];
 // Quốc Ấn = Lộc Tồn + 8 (Giáp Tuất, Ất Hợi, Bính Sửu, Đinh Dần, Mậu Sửu, Kỷ Dần, Canh Thìn, Tân Tỵ, Nhâm Mùi, Quý Thân).
 const QUOC_AN=[10,11,1,2,1,2,4,5,7,8];
-// Thiên Trù theo Can năm. Quý = Tuất (tuvidauso.ai.studio, TV-002 và LEAP-04), KHÔNG phải Hợi như iztro.
+// Thiên Trù theo Can năm. Quý = Tuất (tuvicohoc.ai.studio, TV-002 và LEAP-04), KHÔNG phải Hợi như iztro.
 const THIEN_TRU=[5,6,0,5,6,8,2,6,9,10];
 export function placeYearStemStars(yearStem:number):StarPlacement[] {
   const quan=[7,4,5,2,3,9,11,9,10,6];

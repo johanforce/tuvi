@@ -1,6 +1,6 @@
 /**
  * Bảng âm dương và độ sáng (Miếu, Vượng, Đắc, Bình hòa, Hãm địa) của 14 chính tinh
- * và các phụ tinh tiêu biểu qua 12 địa chi theo chuẩn tuvidauso.ai.studio.
+ * và các phụ tinh tiêu biểu qua 12 địa chi theo chuẩn tuvicohoc.ai.studio.
  *
  * Chỉ số Chi: 0: Tý, 1: Sửu, 2: Dần, 3: Mão, 4: Thìn, 5: Tỵ, 6: Ngọ, 7: Mùi, 8: Thân, 9: Dậu, 10: Tuất, 11: Hợi.
  */

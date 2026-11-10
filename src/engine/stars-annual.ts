@@ -110,7 +110,7 @@ export function placeAnnualStars(viewedYear: number, birthYearStem: number): {
     annual(hongLoan, 'luu-hong-loan', 'Lưu Hồng Loan'),
     annual(thienHy, 'luu-thien-hy', 'Lưu Thiên Hỷ'),
     annual(thienTru, 'luu-thien-tru', 'Lưu Thiên Trù', 'An theo bảng Thiên Trù ứng với Can năm xem.'),
-    // Các sao bổ sung quan sát trên ảnh tuvidauso.ai.studio: công thức mượn từ vòng/sao gốc tương ứng.
+    // Các sao bổ sung quan sát trên ảnh tuvicohoc.ai.studio: công thức mượn từ vòng/sao gốc tương ứng.
     annual(byId(thaiTueCircle, 'thai-tue-7'), 'luu-long-duc', 'Lưu Long Đức', 'Vị trí trong vòng Thái Tuế theo chi năm xem.'),
     annual(byId(thaiTueCircle, 'thai-tue-9'), 'luu-phuc-duc', 'Lưu Phúc Đức', 'Vị trí trong vòng Thái Tuế theo chi năm xem.'),
     annual(thienDuc, 'luu-thien-duc', 'Lưu Thiên Đức'),

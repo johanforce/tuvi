@@ -48,7 +48,7 @@ export function getBranchElementColor(branch: number): string {
   return BRANCH_ELEMENT_COLORS[info.slice(1)] || '#111827';
 }
 
-// Màu tiêu đề cung như trong fixture tuvidauso.ai.studio
+// Màu tiêu đề cung như trong fixture tuvicohoc.ai.studio
 export function getPalaceNameColor(palaceName: string, isThan: boolean): string {
   if (palaceName.includes('Mệnh') || isThan) {
     return 'text-[#7f1d1d]'; // Đỏ sẫm, đủ tương phản trên nền sáng

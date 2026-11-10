@@ -23,7 +23,7 @@ function parseDate(value:string):{day:number;month:number;year:number} {
   return {day,month,year};
 }
 export function getPlacementMonth(month:number,_day:number,isLeap:boolean):number {
-  // tuvidauso.ai.studio keeps the displayed lunar month for the entire leap month.
+  // tuvicohoc.ai.studio keeps the displayed lunar month for the entire leap month.
   // Reference screenshots LEAP-03/04 (15th/16th of leap month 2, 2023)
   // and LEAP-08/09 (15th/16th of leap month 6, 2025) keep the same
   // month Can-Chi, Mệnh/Thân and bureau across the 15/16 boundary.
@@ -42,7 +42,7 @@ export function buildChart(input:BirthInput):ChartCore {
   const ycc=yearCanChi(lunar.year), mcc=monthCanChi(ycc.stem,pMonth), dcc=dayCanChi(jdn);
   const unknown=input.unknownTime===true || input.hour===undefined || input.minute===undefined;
   const timeBranch=unknown?undefined:hourBranchFromTime(input.hour!,input.minute!);
-  // tuvidauso.ai.studio's late-Zi convention: for 23:00–23:59, the hour pillar uses
+  // tuvicohoc.ai.studio's late-Zi convention: for 23:00–23:59, the hour pillar uses
   // the following day's stem, while the displayed day pillar remains the
   // solar date's stem. Early-Zi (00:00–00:59) uses the current date.
   const hourStem=timeBranch===0 && input.hour===23 ? dayCanChi(jdn+1).stem : dcc.stem;
@@ -56,7 +56,7 @@ export function buildChart(input:BirthInput):ChartCore {
   const warnings:string[]=[];
   warnings.push(`Sao lưu đang hiển thị theo năm ${viewedYear} (${annualData.yearCanChi.label}).`);
   if(annualData.pending.length) warnings.push(`Chưa an được ${annualData.pending.length} sao lưu do thiếu quy tắc đủ căn cứ: ${annualData.pending.map(s=>s.name).join(', ')}.`);
-  if(lunar.isLeapMonth) warnings.push(`Sinh tháng nhuận ${lunar.month}; theo các fixture tuvidauso.ai.studio LEAP-03/04 và LEAP-08/09, engine giữ nguyên tháng âm nhuận cho Can Chi tháng, Mệnh/Thân và an sao trong toàn bộ tháng nhuận.`);
+  if(lunar.isLeapMonth) warnings.push(`Sinh tháng nhuận ${lunar.month}; theo các fixture tuvicohoc.ai.studio LEAP-03/04 và LEAP-08/09, engine giữ nguyên tháng âm nhuận cho Can Chi tháng, Mệnh/Thân và an sao trong toàn bộ tháng nhuận.`);
   if(unknown) warnings.push('Không rõ giờ sinh: chưa an Mệnh/Thân, chính tinh và các sao phụ thuộc giờ. Không tự gán giờ mặc định.');
   const palaceStars=new Map<number,StarPlacement[]>();
   let menh:number|undefined,than:number|undefined,bureau:ChartCore['bureau'],tv:number|undefined,tp:number|undefined;
