@@ -204,21 +204,129 @@ def extract_article(page, url: str):
         "createdAt": now_iso(),
     }, None
 
+def load_json(path: Path, default):
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        backup = path.with_name(path.name + ".corrupt-" + datetime.now().strftime("%Y%m%d-%H%M%S"))
+        try:
+            path.replace(backup)
+            print(f"[WARN] Cache lỗi JSON; đã giữ bản gốc tại: {backup}")
+        except OSError:
+            print(f"[WARN] Không đọc được {path}: {exc}. Giữ nguyên file và dùng cache rỗng.")
+        return default
+
+
+def atomic_write_json(path: Path, payload):
+    """Write to a sibling temp file, then replace; a crash won't leave half a JSON file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp = path.with_name(path.name + ".tmp")
+    temp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    temp.replace(path)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--start-url", default=BASE)
     parser.add_argument("--max-pages", type=int, default=5)
     parser.add_argument("--delay", type=float, default=2.0)
     parser.add_argument("--output", default="tang-thu-import.json")
+    parser.add_argument("--state", default=".cache/tang-thu-crawl-state.json")
     parser.add_argument("--profile-dir", default=".cache/tang-thu-chrome")
+    parser.add_argument(
+        "--retry-failed", action=argparse.BooleanOptionalAction, default=True,
+        help="Mặc định thử lại URL lỗi từ lần chạy trước; dùng --no-retry-failed để bỏ qua.",
+    )
     args = parser.parse_args()
 
-    visited_pages, article_urls = set(), []
-    failed, records = [], []
-    queue = [args.start_url]
+    output_path = Path(args.output)
+    state_path = Path(args.state)
+    output_data = load_json(output_path, {})
+    if not isinstance(output_data, dict):
+        output_data = {}
+
+    # Keep every existing article and merge new results by canonical source URL.
+    records_by_url = {}
+    for record in output_data.get("articles", []):
+        if isinstance(record, dict) and record.get("sourceUrl"):
+            records_by_url[record["sourceUrl"]] = record
+
+    previous_failed = {
+        item.get("url"): item for item in output_data.get("failed", [])
+        if isinstance(item, dict) and item.get("url")
+    }
+    state = load_json(state_path, {})
+    if not isinstance(state, dict):
+        state = {}
+
+    visited_pages = set(state.get("visitedIndexPages", []))
+    article_urls = list(dict.fromkeys(state.get("articleUrls", [])))
+    list_failures = {
+        item.get("url"): item for item in state.get("failedIndexPages", [])
+        if isinstance(item, dict) and item.get("url")
+    }
+    statuses = state.get("articleStatus", {})
+    if not isinstance(statuses, dict):
+        statuses = {}
+
+    # A record already present in the export is considered successfully collected,
+    # even if this is the first run using the new cache format.
+    for url in records_by_url:
+        statuses[url] = {"status": "done", "updatedAt": now_iso()}
+
+    def save_all():
+        nonlocal previous_failed
+        pending_failed = []
+        for url in article_urls:
+            status = statuses.get(url, {})
+            if status.get("status") == "failed":
+                pending_failed.append({
+                    "url": url,
+                    "reason": status.get("reason", "Lỗi chưa xác định"),
+                    "lastAttemptAt": status.get("updatedAt"),
+                })
+        # Preserve failures for URLs not yet rediscovered in this run.
+        known = {item["url"] for item in pending_failed}
+        for url, item in previous_failed.items():
+            if url not in known and url not in records_by_url and url not in article_urls:
+                pending_failed.append(item)
+
+        payload = dict(output_data)
+        payload.update({
+            "source": args.start_url,
+            "exportedAt": now_iso(),
+            "articles": list(records_by_url.values()),
+            "failed": pending_failed,
+            "stats": {
+                "indexPagesVisited": len(visited_pages),
+                "articleUrlsFound": len(article_urls),
+                "articlesCollected": len(records_by_url),
+                "articlesPendingOrFailed": sum(
+                    1 for url in article_urls
+                    if statuses.get(url, {}).get("status") != "done"
+                ),
+            },
+        })
+        atomic_write_json(output_path, payload)
+        atomic_write_json(state_path, {
+            "version": 1,
+            "source": args.start_url,
+            "updatedAt": now_iso(),
+            "visitedIndexPages": sorted(visited_pages),
+            "articleUrls": article_urls,
+            "failedIndexPages": list(list_failures.values()),
+            "articleStatus": statuses,
+        })
+
+    # Retry previously failed index pages first. Successfully visited pages are not
+    # downloaded again. The start page is added only if there is no prior state.
+    queue = list(list_failures.keys())
+    if not visited_pages and args.start_url not in queue:
+        queue.append(args.start_url)
 
     with sync_playwright() as playwright:
-        # Dedicated persistent profile; does not read or copy the user's normal Chrome profile.
         context = playwright.chromium.launch_persistent_context(
             user_data_dir=args.profile_dir,
             channel="chrome",
@@ -232,62 +340,81 @@ def main():
                 url = queue.pop(0)
                 if url in visited_pages:
                     continue
-                visited_pages.add(url)
                 print(f"[LIST] {url}")
                 try:
                     page.goto(url, wait_until="domcontentloaded", timeout=60000)
                     page.wait_for_timeout(1800)
                     if not wait_for_manual_verification(page, url):
-                        failed.append({"url": url, "reason": "Trang danh sách vẫn bị chặn sau khi người dùng kiểm tra"})
-                        continue
+                        raise RuntimeError("Trang danh sách vẫn bị chặn sau khi người dùng kiểm tra")
                     found, pages = extract_index(page, url)
                     for article_url in found:
                         if article_url not in article_urls:
                             article_urls.append(article_url)
+                            statuses.setdefault(article_url, {"status": "pending"})
+                    visited_pages.add(url)
+                    list_failures.pop(url, None)
                     for next_url in pages:
-                        if next_url not in visited_pages and next_url not in queue and len(visited_pages) + len(queue) < args.max_pages:
+                        if (next_url not in visited_pages and next_url not in queue
+                                and len(visited_pages) + len(queue) < args.max_pages):
                             queue.append(next_url)
                 except Exception as exc:
-                    failed.append({"url": url, "reason": f"Lỗi tải trang danh sách: {exc}"})
+                    list_failures[url] = {"url": url, "reason": f"Lỗi tải trang danh sách: {exc}"}
+                    print(f"  [LIST-FAIL] {exc}")
+                save_all()
                 time.sleep(max(0, args.delay))
 
-            print(f"\nTìm thấy {len(article_urls)} URL bài viết. Bắt đầu đọc tuần tự...")
+            # Persist any discovered URLs before article processing begins.
+            save_all()
+            print(f"\nCó {len(article_urls)} URL bài viết trong cache.")
             for index, url in enumerate(article_urls, 1):
+                status = statuses.get(url, {})
+                if status.get("status") == "done" or url in records_by_url:
+                    print(f"[{index}/{len(article_urls)}] [SKIP-DONE] {url}")
+                    continue
+                if status.get("status") == "failed" and not args.retry_failed:
+                    print(f"[{index}/{len(article_urls)}] [SKIP-FAILED] {url}")
+                    continue
+
                 print(f"[{index}/{len(article_urls)}] {url}")
+                statuses[url] = {"status": "in_progress", "updatedAt": now_iso()}
+                save_all()
                 try:
                     page.goto(url, wait_until="domcontentloaded", timeout=60000)
                     page.wait_for_timeout(1400)
                     if not wait_for_manual_verification(page, url):
-                        failed.append({"url": url, "reason": "Trang bài viết vẫn bị chặn sau khi người dùng kiểm tra"})
-                        continue
+                        raise RuntimeError("Trang bài viết vẫn bị chặn sau khi người dùng kiểm tra")
                     record, reason = extract_article(page, url)
-                    if record:
-                        records.append(record)
-                        print(f"  [OK] {record['title']}")
-                    else:
-                        failed.append({"url": url, "reason": reason})
-                        print(f"  [SKIP] {reason}")
+                    if not record:
+                        raise RuntimeError(reason)
+                    # Preserve original fields such as createdAt when an existing
+                    # record is encountered; replace only with the newly extracted data.
+                    old_record = records_by_url.get(url, {})
+                    records_by_url[url] = {**old_record, **record}
+                    statuses[url] = {"status": "done", "updatedAt": now_iso()}
+                    previous_failed.pop(url, None)
+                    print(f"  [OK] {record['title']}")
                 except PlaywrightTimeoutError:
-                    failed.append({"url": url, "reason": "Hết thời gian chờ tải trang"})
+                    reason = "Hết thời gian chờ tải trang"
+                    statuses[url] = {"status": "failed", "reason": reason, "updatedAt": now_iso()}
+                    print(f"  [FAIL] {reason}")
                 except Exception as exc:
-                    failed.append({"url": url, "reason": str(exc)})
-                payload = {
-                    "source": args.start_url,
-                    "exportedAt": now_iso(),
-                    "articles": records,
-                    "failed": failed,
-                    "stats": {"indexPagesVisited": len(visited_pages), "articleUrlsFound": len(article_urls)},
-                }
-                Path(args.output).write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+                    reason = str(exc)
+                    statuses[url] = {"status": "failed", "reason": reason, "updatedAt": now_iso()}
+                    print(f"  [FAIL] {reason}")
+                # Save immediately after every URL, including failures.
+                save_all()
                 time.sleep(max(0, args.delay))
         finally:
+            # Save cache one last time even if the browser closes unexpectedly.
+            save_all()
             context.close()
 
-    print(f"\nĐã xuất {len(records)} bài; {len(failed)} URL cần kiểm tra -> {args.output}")
-    if not records:
-        print("Không có bài nào được xuất. Xem danh sách lỗi trong file JSON.", file=sys.stderr)
-        return 2
-    return 0
+    done_count = sum(1 for value in statuses.values() if value.get("status") == "done")
+    failed_count = sum(1 for value in statuses.values() if value.get("status") == "failed")
+    print(f"\nCache: {done_count} bài đã thu thập; {failed_count} URL lỗi/chờ thử lại.")
+    print(f"File kết quả: {output_path}")
+    print(f"File trạng thái: {state_path}")
+    return 0 if done_count else 2
 
 if __name__ == "__main__":
     raise SystemExit(main())
