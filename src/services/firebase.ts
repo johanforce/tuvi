@@ -311,7 +311,8 @@ export async function importArticlesToFirestore(
       readTime: Math.max(1, Math.min(120, Math.ceil(wordCount / 200))),
       featured: false,
       viewCount: wasExisting ? (existingDoc?.data().viewCount || 0) : 0,
-      createdAt: wasExisting && typeof existingDoc?.data().createdAt === 'string'\n        ? existingDoc.data().createdAt\n        : (typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString()),
+      createdAt: wasExisting && typeof existingDoc?.data().createdAt === 'string'
+        ? existingDoc.data().createdAt\n        : (typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString()),
       sourceUrl,
       sourceType: typeof raw.sourceType === 'string' ? raw.sourceType.slice(0, 80) : 'external-import',
     };
