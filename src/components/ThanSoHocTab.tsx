@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Activity,
+  Dices,
+  Play,
   AlertCircle,
   BarChart3,
   CalendarDays,
@@ -14,8 +16,9 @@ import {
 } from 'lucide-react';
 import { fetchXsmbHistory, type XsmbDraw, type XsmbHistoryResponse } from '../services/xsmb.js';
 import { backtestFrequencyStrategy, calculateXsmbStats } from '../utils/xsmbStats.js';
+import { simulateXsmbSession, type XsmbSession } from '../utils/xsmbSimulator.js';
 
-type Panel = 'overview' | 'numbers' | 'loto' | 'de' | 'bachthu' | 'thanhlong';
+type Panel = 'overview' | 'numbers' | 'loto' | 'de' | 'bachthu' | 'threecang';
 
 const PERIODS = [7, 30, 60, 100];
 
@@ -83,6 +86,12 @@ export const ThanSoHocTab: React.FC = () => {
   const [panel, setPanel] = useState<Panel>('overview');
   const [numberInput, setNumberInput] = useState('34');
   const [searchNumber, setSearchNumber] = useState('');
+  const [threeCangNumber, setThreeCangNumber] = useState('000');
+  const [deStake, setDeStake] = useState('10000');
+  const [lotoStake, setLotoStake] = useState('10000');
+  const [deOdds, setDeOdds] = useState('400');
+  const [lotoOdds, setLotoOdds] = useState('600');
+  const [simulatedSession, setSimulatedSession] = useState<XsmbSession | null>(null);
 
   const loadHistory = async (refresh = false) => {
     if (refresh) setRefreshing(true);
@@ -129,13 +138,31 @@ export const ThanSoHocTab: React.FC = () => {
     [history],
   );
 
+  // Build a calendar window (today + previous 29 days), retaining gaps when
+  // the upstream source has not published a draw for a date yet.
+  const dailyXsmbRows = useMemo(() => {
+    const byDate = new Map((history?.draws ?? []).map(draw => [draw.date, draw]));
+    const today = new Date();
+    const rows: Array<{ date: string; draw?: XsmbDraw }> = [];
+    for (let offset = 0; offset < 30; offset++) {
+      const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - offset);
+      const key = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0'),
+      ].join('-');
+      rows.push({ date: key, draw: byDate.get(key) });
+    }
+    return rows;
+  }, [history]);
+
   const tabs: Array<{ id: Panel; label: string }> = [
     { id: 'overview', label: 'Tổng quan' },
     { id: 'numbers', label: 'Bảng 00–99' },
     { id: 'loto', label: 'Thống kê lô' },
     { id: 'de', label: 'Thống kê đề' },
     { id: 'bachthu', label: 'Bạch thủ' },
-    { id: 'thanhlong', label: 'Thanh Long' },
+    { id: 'threecang', label: '3 Càng' },
   ];
 
   if (loading) {
@@ -303,10 +330,108 @@ export const ThanSoHocTab: React.FC = () => {
         </div>
       )}
 
-      {panel === 'thanhlong' && (
-        <section className="rounded-2xl border border-amber-900/10 bg-white p-6 shadow-sm">
-          <div className="flex items-start gap-3"><Info className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" /><div><h2 className="font-serif text-lg font-bold text-red-950">Phương pháp Thanh Long</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-stone-600">Phần này chưa tự sinh số hoặc tỷ lệ. Cần chốt đúng quy tắc Thanh Long mà bạn sử dụng: cách lấy số, số lượng số trong một kỳ và điều kiện được tính là trúng. Sau khi có công thức, hệ thống sẽ chạy lại trên chính 100 kỳ dữ liệu đã lưu và hiển thị backtest có thể kiểm chứng.</p></div></div>
-        </section>
+      {panel === 'threecang' && (
+        <div className="space-y-4">
+          <section className="rounded-2xl border border-amber-900/10 bg-white p-5 shadow-sm">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-red-950">Mô phỏng 3 càng – một phiên XSMB</h2>
+                <p className="mt-1 max-w-3xl text-sm leading-6 text-stone-600">Nhập bộ ba chữ số, mức cược và tỷ lệ giả lập, sau đó quay thử một phiên gồm 27 kết quả theo cơ cấu giải miền Bắc. Đây là kết quả ngẫu nhiên mô phỏng, không phải kết quả xổ số chính thức.</p>
+              </div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900"><Dices className="h-4 w-4" />Quay thử</span>
+            </div>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <label className="block"><span className="text-xs font-semibold text-stone-600">Số dự đoán (000–999)</span><input value={threeCangNumber} onChange={event => setThreeCangNumber(event.target.value.replace(/[^0-9]/g, '').slice(0, 3))} inputMode="numeric" maxLength={3} placeholder="000" className="mt-1.5 w-full rounded-xl border border-stone-200 px-3 py-3 font-mono text-xl font-bold tracking-widest text-red-950 outline-none focus:border-red-800" /></label>
+              <label className="block"><span className="text-xs font-semibold text-stone-600">Cược đề 3 càng (VNĐ)</span><input type="number" min="0" value={deStake} onChange={event => setDeStake(event.target.value)} className="mt-1.5 w-full rounded-xl border border-stone-200 px-3 py-3 text-sm outline-none focus:border-red-800" /></label>
+              <label className="block"><span className="text-xs font-semibold text-stone-600">Tỷ lệ đề 3 càng (1 ăn X)</span><input type="number" min="1" value={deOdds} onChange={event => setDeOdds(event.target.value)} className="mt-1.5 w-full rounded-xl border border-stone-200 px-3 py-3 text-sm outline-none focus:border-red-800" /></label>
+              <label className="block"><span className="text-xs font-semibold text-stone-600">Cược lô 3 càng (VNĐ / lần ghi)</span><input type="number" min="0" value={lotoStake} onChange={event => setLotoStake(event.target.value)} className="mt-1.5 w-full rounded-xl border border-stone-200 px-3 py-3 text-sm outline-none focus:border-red-800" /></label>
+              <label className="block"><span className="text-xs font-semibold text-stone-600">Tỷ lệ lô 3 càng (1 ăn X)</span><input type="number" min="1" value={lotoOdds} onChange={event => setLotoOdds(event.target.value)} className="mt-1.5 w-full rounded-xl border border-stone-200 px-3 py-3 text-sm outline-none focus:border-red-800" /></label>
+              <div className="flex items-end"><button type="button" disabled={!/^\d{3}$/.test(threeCangNumber) || Number(deOdds) < 1 || Number(lotoOdds) < 1 || Number(deStake) < 0 || Number(lotoStake) < 0} onClick={() => setSimulatedSession(simulateXsmbSession())} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-red-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-900 disabled:cursor-not-allowed disabled:opacity-50"><Play className="h-4 w-4" />Quay một phiên XSMB</button></div>
+            </div>
+            <p className="mt-3 text-xs leading-5 text-stone-500">Tỷ lệ mặc định là tham số giả lập, không phải mức trả thưởng được xác nhận. Tiền nhận = mức cược × tỷ lệ; lãi/lỗ = tiền nhận − tổng tiền cược.</p>
+          </section>
+          {simulatedSession && (
+            <>
+              <section className="grid gap-3 sm:grid-cols-2">
+                {(() => {
+                  const deHit = simulatedSession.specialThreeDigit === threeCangNumber;
+                  const lotoHits = simulatedSession.lotoThreeDigits.filter(value => value === threeCangNumber).length;
+                  const stakeDe = Math.max(0, Number(deStake) || 0);
+                  const stakeLoto = Math.max(0, Number(lotoStake) || 0);
+                  const returnDe = deHit ? stakeDe * Math.max(0, Number(deOdds) || 0) : 0;
+                  const returnLoto = lotoHits * stakeLoto * Math.max(0, Number(lotoOdds) || 0);
+                  const money = (value: number) => Math.round(value).toLocaleString('vi-VN') + ' ₫';
+                  return (
+                    <>
+                      <div className="rounded-2xl border border-amber-900/10 bg-white p-5 shadow-sm">
+                        <div className="flex items-center justify-between gap-2"><h3 className="font-serif text-lg font-bold text-red-950">Đề 3 càng</h3><span className={'rounded-full px-3 py-1 text-xs font-bold ' + (deHit ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-600')}>{deHit ? 'TRÚNG' : 'KHÔNG TRÚNG'}</span></div>
+                        <p className="mt-3 text-sm text-stone-600">Đuôi giải đặc biệt: <strong className="font-mono text-xl text-red-950">{simulatedSession.specialThreeDigit}</strong></p>
+                        <p className="mt-2 text-xs text-stone-500">Số chọn: {threeCangNumber} · Tỷ lệ 1 ăn {deOdds || '0'}</p>
+                        <div className="mt-4 grid grid-cols-2 gap-2 text-sm"><div className="rounded-xl bg-stone-50 p-3"><p className="text-xs text-stone-500">Tiền nhận</p><p className="mt-1 font-bold text-red-950">{money(returnDe)}</p></div><div className="rounded-xl bg-stone-50 p-3"><p className="text-xs text-stone-500">Lãi / lỗ</p><p className="mt-1 font-bold text-red-950">{money(returnDe - stakeDe)}</p></div></div>
+                      </div>
+                      <div className="rounded-2xl border border-amber-900/10 bg-white p-5 shadow-sm">
+                        <div className="flex items-center justify-between gap-2"><h3 className="font-serif text-lg font-bold text-red-950">Lô 3 càng</h3><span className={'rounded-full px-3 py-1 text-xs font-bold ' + (lotoHits > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-600')}>{lotoHits > 0 ? 'TRÚNG ' + lotoHits + ' LẦN' : 'KHÔNG TRÚNG'}</span></div>
+                        <p className="mt-3 text-sm text-stone-600">Số {threeCangNumber} xuất hiện <strong className="text-red-950">{lotoHits}</strong> lần trong 23 kết quả từ giải đặc biệt đến giải sáu.</p>
+                        <p className="mt-2 text-xs text-stone-500">Tỷ lệ 1 ăn {lotoOdds || '0'} · Cược {money(stakeLoto)} cho mỗi một trong 23 số được đối chiếu</p>
+                        <div className="mt-4 grid grid-cols-2 gap-2 text-sm"><div className="rounded-xl bg-stone-50 p-3"><p className="text-xs text-stone-500">Tổng tiền cược</p><p className="mt-1 font-bold text-red-950">{money(stakeLoto * 23)}</p></div><div className="rounded-xl bg-stone-50 p-3"><p className="text-xs text-stone-500">Tiền nhận</p><p className="mt-1 font-bold text-red-950">{money(returnLoto)}</p></div><div className="col-span-2 rounded-xl bg-stone-50 p-3"><p className="text-xs text-stone-500">Lãi / lỗ sau khi trừ toàn bộ 23 lượt cược</p><p className="mt-1 font-bold text-red-950">{money(returnLoto - stakeLoto * 23)}</p></div></div>
+                      </div>
+                    </>
+                  );
+                })()}
+              </section>
+              <section className="rounded-2xl border border-amber-900/10 bg-white p-5 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-serif text-lg font-bold text-red-950">Bảng kết quả phiên giả lập</h3><span className="text-xs text-stone-500">{new Date(simulatedSession.createdAt).toLocaleString('vi-VN')}</span></div>
+                <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                  {simulatedSession.results.map((result, index) => <div key={result.group + '-' + index} className={'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 ' + (result.group === 'ĐB' ? 'bg-amber-50' : 'bg-stone-50')}><span className="text-xs font-semibold text-stone-600">{result.group} · {result.label}</span><span className="font-mono text-base font-bold tracking-wider text-red-950">{result.value}</span></div>)}
+                </div>
+                <div className="mt-4 rounded-xl bg-amber-50/80 p-3 text-xs leading-5 text-amber-950">Phiên có 27 kết quả. Giải bảy có hai chữ số nên không tham gia đối chiếu 3 càng.</div>
+              </section>
+            </>
+          )}
+          <section className="rounded-2xl border border-amber-900/10 bg-white p-5 shadow-sm">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-red-950">Lịch sử kết quả XSMB – 30 ngày gần nhất</h2>
+                <p className="mt-1 text-xs leading-5 text-stone-500">Mỗi dòng là một ngày theo lịch. Cột ĐB hiển thị đuôi giải đặc biệt; 27 ô bên phải là 27 đuôi hai chữ số của toàn bộ kỳ quay (bao gồm đuôi ĐB).</p>
+              </div>
+              <span className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900">{dailyXsmbRows.filter(row => row.draw).length}/30 ngày có dữ liệu</span>
+            </div>
+            <div className="mt-4 overflow-x-auto rounded-xl border border-stone-200">
+              <table className="w-full min-w-[1120px] border-collapse text-sm">
+                <thead className="sticky top-0 bg-stone-50">
+                  <tr className="border-b border-stone-200 text-xs text-stone-500">
+                    <th className="sticky left-0 z-10 bg-stone-50 px-3 py-3 text-left">Ngày quay</th>
+                    <th className="px-3 py-3 text-center">Đặc biệt</th>
+                    <th className="px-3 py-3 text-left">27 đuôi giải (theo thứ tự nguồn)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dailyXsmbRows.map(row => (
+                    <tr key={row.date} className="border-b border-stone-100 align-top last:border-0 hover:bg-red-50/30">
+                      <td className="sticky left-0 whitespace-nowrap bg-white px-3 py-3 font-semibold text-stone-700">{formatDate(row.date)}</td>
+                      {row.draw ? (
+                        <>
+                          <td className="px-3 py-2 text-center"><span className="inline-flex rounded-lg bg-red-950 px-3 py-1.5 font-mono text-base font-bold tracking-wider text-amber-200">{row.draw.special}</span></td>
+                          <td className="px-3 py-2">
+                            <div className="flex max-w-[920px] flex-wrap gap-1.5">
+                              {row.draw.loto.map((number, index) => (
+                                <span key={index} className={'inline-flex min-w-8 justify-center rounded-md px-2 py-1 font-mono text-xs font-semibold ' + (index === 0 ? 'bg-amber-100 text-amber-950' : 'bg-stone-100 text-stone-700')}>{number}</span>
+                              ))}
+                            </div>
+                          </td>
+                        </>
+                      ) : (
+                        <td colSpan={2} className="px-3 py-3 text-xs italic text-stone-400">Chưa có dữ liệu cho ngày này hoặc nguồn chưa cập nhật.</td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-[11px] leading-5 text-stone-500">Nguồn hiện lưu 27 đuôi hai chữ số mỗi kỳ, không chứa số giải đầy đủ. Các ngày chưa có bản ghi được giữ lại để bạn nhận biết khoảng trống dữ liệu, không tự nội suy kết quả.</p>
+          </section>
+          <section className="rounded-2xl border border-amber-900/20 bg-amber-50/70 p-4"><div className="flex gap-2"><Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-800" /><p className="text-xs leading-5 text-amber-950">Bộ dữ liệu lịch sử hiện tại chỉ lưu các đuôi hai chữ số, không còn số giải gốc. Vì vậy không thể suy ngược lịch sử 3 càng từ 100 kỳ cũ. Phần này tạo phiên ngẫu nhiên để kiểm thử đối chiếu, không dự đoán kết quả thật và không kết nối giao dịch tiền thật.</p></div></section>
+        </div>
       )}
 
       <section className="rounded-2xl border border-amber-900/20 bg-amber-50/70 p-4">
