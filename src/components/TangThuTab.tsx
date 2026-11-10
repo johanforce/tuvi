@@ -23,6 +23,7 @@ import {
   FolderOpen,
 } from 'lucide-react';
 import type { User } from 'firebase/auth';
+import { TangThuImportPanel } from './TangThuImportPanel.js';
 import {
   type Article,
   ADMIN_EMAIL,
@@ -362,6 +363,8 @@ export const TangThuTab: React.FC = () => {
           <span>{toastMessage}</span>
         </div>
       )}
+
+      {isAdmin && <TangThuImportPanel onImported={() => loadArticles(true)} />}
 
       {/* BANNER TÀNG THƯ */}
       <section className="relative overflow-hidden rounded-2xl border border-red-900/30 bg-gradient-to-br from-red-950 via-[#3a0a10] to-[#1e0508] p-6 text-white shadow-lg sm:p-8">
