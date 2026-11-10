@@ -132,6 +132,8 @@ export interface Article {
   viewCount: number;
   createdAt: string; // ISO date string
   updatedAt?: string;
+  sourceUrl?: string;
+  sourceType?: string;
 }
 
 const ARTICLES_PATH = 'articles';
@@ -158,6 +160,8 @@ export async function getArticlesFromFirestore(categoryFilter?: string, tagFilte
         viewCount: typeof data.viewCount === 'number' ? data.viewCount : 0,
         createdAt: data.createdAt || new Date().toISOString(),
         updatedAt: data.updatedAt,
+        sourceUrl: data.sourceUrl,
+        sourceType: data.sourceType,
       };
     });
 
