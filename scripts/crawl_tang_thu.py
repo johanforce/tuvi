@@ -347,6 +347,8 @@ def main():
                 # the current page remains in the persisted queue for the next run.
                 url = queue[0]
                 if url in visited_pages:
+                    queue.pop(0)
+                    save_all()
                     continue
                 print(f"[LIST] {url}")
                 try:
