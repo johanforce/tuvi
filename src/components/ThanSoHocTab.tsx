@@ -138,6 +138,24 @@ export const ThanSoHocTab: React.FC = () => {
     [history],
   );
 
+  // Build a calendar window (today + previous 29 days), retaining gaps when
+  // the upstream source has not published a draw for a date yet.
+  const dailyXsmbRows = useMemo(() => {
+    const byDate = new Map((history?.draws ?? []).map(draw => [draw.date, draw]));
+    const today = new Date();
+    const rows: Array<{ date: string; draw?: XsmbDraw }> = [];
+    for (let offset = 0; offset < 30; offset++) {
+      const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - offset);
+      const key = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0'),
+      ].join('-');
+      rows.push({ date: key, draw: byDate.get(key) });
+    }
+    return rows;
+  }, [history]);
+
   const tabs: Array<{ id: Panel; label: string }> = [
     { id: 'overview', label: 'Tổng quan' },
     { id: 'numbers', label: 'Bảng 00–99' },
@@ -370,6 +388,48 @@ export const ThanSoHocTab: React.FC = () => {
               </section>
             </>
           )}
+          <section className="rounded-2xl border border-amber-900/10 bg-white p-5 shadow-sm">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-red-950">Lịch sử kết quả XSMB – 30 ngày gần nhất</h2>
+                <p className="mt-1 text-xs leading-5 text-stone-500">Mỗi dòng là một ngày theo lịch. Cột ĐB hiển thị đuôi giải đặc biệt; 27 ô bên phải là 27 đuôi hai chữ số của toàn bộ kỳ quay (bao gồm đuôi ĐB).</p>
+              </div>
+              <span className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-900">{dailyXsmbRows.filter(row => row.draw).length}/30 ngày có dữ liệu</span>
+            </div>
+            <div className="mt-4 overflow-x-auto rounded-xl border border-stone-200">
+              <table className="w-full min-w-[1120px] border-collapse text-sm">
+                <thead className="sticky top-0 bg-stone-50">
+                  <tr className="border-b border-stone-200 text-xs text-stone-500">
+                    <th className="sticky left-0 z-10 bg-stone-50 px-3 py-3 text-left">Ngày quay</th>
+                    <th className="px-3 py-3 text-center">Đặc biệt</th>
+                    <th className="px-3 py-3 text-left">27 đuôi giải (theo thứ tự nguồn)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dailyXsmbRows.map(row => (
+                    <tr key={row.date} className="border-b border-stone-100 align-top last:border-0 hover:bg-red-50/30">
+                      <td className="sticky left-0 whitespace-nowrap bg-white px-3 py-3 font-semibold text-stone-700">{formatDate(row.date)}</td>
+                      {row.draw ? (
+                        <>
+                          <td className="px-3 py-2 text-center"><span className="inline-flex rounded-lg bg-red-950 px-3 py-1.5 font-mono text-base font-bold tracking-wider text-amber-200">{row.draw.special}</span></td>
+                          <td className="px-3 py-2">
+                            <div className="flex max-w-[920px] flex-wrap gap-1.5">
+                              {row.draw.loto.map((number, index) => (
+                                <span key={index} className={'inline-flex min-w-8 justify-center rounded-md px-2 py-1 font-mono text-xs font-semibold ' + (index === 0 ? 'bg-amber-100 text-amber-950' : 'bg-stone-100 text-stone-700')}>{number}</span>
+                              ))}
+                            </div>
+                          </td>
+                        </>
+                      ) : (
+                        <td colSpan={2} className="px-3 py-3 text-xs italic text-stone-400">Chưa có dữ liệu cho ngày này hoặc nguồn chưa cập nhật.</td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-[11px] leading-5 text-stone-500">Nguồn hiện lưu 27 đuôi hai chữ số mỗi kỳ, không chứa số giải đầy đủ. Các ngày chưa có bản ghi được giữ lại để bạn nhận biết khoảng trống dữ liệu, không tự nội suy kết quả.</p>
+          </section>
           <section className="rounded-2xl border border-amber-900/20 bg-amber-50/70 p-4"><div className="flex gap-2"><Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-800" /><p className="text-xs leading-5 text-amber-950">Bộ dữ liệu lịch sử hiện tại chỉ lưu các đuôi hai chữ số, không còn số giải gốc. Vì vậy không thể suy ngược lịch sử 3 càng từ 100 kỳ cũ. Phần này tạo phiên ngẫu nhiên để kiểm thử đối chiếu, không dự đoán kết quả thật và không kết nối giao dịch tiền thật.</p></div></section>
         </div>
       )}
