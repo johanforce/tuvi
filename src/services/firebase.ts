@@ -134,6 +134,7 @@ export interface Article {
   updatedAt?: string;
   sourceUrl?: string;
   sourceType?: string;
+  publishedAt?: string;
 }
 
 const ARTICLES_PATH = 'articles';
@@ -162,6 +163,8 @@ export async function getArticlesFromFirestore(categoryFilter?: string, tagFilte
         updatedAt: data.updatedAt,
         sourceUrl: data.sourceUrl,
         sourceType: data.sourceType,
+      publishedAt: data.publishedAt,
+        publishedAt: data.publishedAt,
       };
     });
 
@@ -316,6 +319,7 @@ export async function importArticlesToFirestore(
         : (typeof raw.createdAt === 'string' ? raw.createdAt : new Date().toISOString()),
       sourceUrl,
       sourceType: typeof raw.sourceType === 'string' ? raw.sourceType.slice(0, 80) : 'external-import',
+      ...(typeof raw.publishedAt === 'string' && raw.publishedAt.length <= 50 ? { publishedAt: raw.publishedAt } : {}),
     };
     await setDoc(doc(db, ARTICLES_PATH, id), payload, { merge: true });
     if (wasExisting) updated++;
