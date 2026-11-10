@@ -7,12 +7,13 @@ import { PalaceDetailPanel } from './components/PalaceDetailPanel.js';
 import { BacDeTab } from './components/BacDeTab.js';
 import { LunarCalendarTab } from './components/LunarCalendarTab.js';
 import { TangThuTab } from './components/TangThuTab.js';
+import { ThanSoHocTab } from './components/ThanSoHocTab.js';
 import { BrandSeal } from './components/BrandSeal.js';
 import { buildChart } from './engine/build-chart.js';
 import type { BirthInput, ChartCore } from './engine/types.js';
 import type { StarVisibilityFilters } from './types/chartUI.js';
 import { exportChartToPdf, printChart } from './utils/pdfExport.js';
-import { AlertCircle, BookOpen, CalendarDays, Compass, BookMarked } from 'lucide-react';
+import { AlertCircle, BookOpen, CalendarDays, Compass, BookMarked, ChartColumnIncreasing } from 'lucide-react';
 
 const LAST_CHART_INPUT_KEY = 'tuvi-last-chart-input-v1';
 
@@ -25,7 +26,7 @@ const DEFAULT_INPUT: BirthInput = {
   viewedYear: 2026,
 };
 
-type AppPage = 'form' | 'chart' | 'bacde' | 'calendar' | 'tangthu';
+type AppPage = 'form' | 'chart' | 'bacde' | 'calendar' | 'tangthu' | 'thanso';
 type DetailTab = 'palace' | 'annual' | 'reading';
 
 interface RestoredPage {
@@ -77,11 +78,11 @@ function loadLastChartInput(): BirthInput | null {
 function readUrlPage(): RestoredPage | null {
   const params = new URLSearchParams(window.location.search);
   const page = params.get('page');
-  if (page !== 'form' && page !== 'chart' && page !== 'bacde' && page !== 'calendar' && page !== 'tangthu') return null;
+  if (page !== 'form' && page !== 'chart' && page !== 'bacde' && page !== 'calendar' && page !== 'tangthu' && page !== 'thanso') return null;
 
-  if (page === 'tangthu') {
+  if (page === 'tangthu' || page === 'thanso') {
     return {
-      view: 'tangthu', input: DEFAULT_INPUT, chart: null, selectedBranch: null, activeDetailTab: 'palace',
+      view: page, input: DEFAULT_INPUT, chart: null, selectedBranch: null, activeDetailTab: 'palace',
       bacDeNumber: 1, showBacDeResult: false,
       calendarDate: todayIsoDate(),
     };
@@ -176,7 +177,7 @@ function writePageUrl(view: AppPage, input: BirthInput, options: {
     else window.history.pushState({}, '', url);
     return;
   }
-  if (view === 'tangthu') {
+  if (view === 'tangthu' || view === 'thanso') {
     const url = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
     if (options.replace) window.history.replaceState({}, '', url);
     else window.history.pushState({}, '', url);
@@ -299,6 +300,11 @@ export default function App() {
     writePageUrl('tangthu', currentInput);
   };
 
+  const handleShowThanSoHoc = () => {
+    setView('thanso');
+    writePageUrl('thanso', currentInput);
+  };
+
   const handleCalendarDateChange = (date: string) => {
     if (!isValidCalendarDate(date)) return;
     setCalendarDate(date);
@@ -412,7 +418,7 @@ export default function App() {
       />
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-2 md:px-6 py-4">
-        {view !== 'chart' && <div role="tablist" aria-label="Trang chủ" className="mx-auto mb-5 grid max-w-6xl grid-cols-2 lg:grid-cols-4 gap-2 rounded-2xl border border-red-950/10 bg-white/75 p-2 shadow-sm">
+        {view !== 'chart' && <div role="tablist" aria-label="Trang chủ" className="mx-auto mb-5 grid max-w-6xl grid-cols-2 lg:grid-cols-5 gap-2 rounded-2xl border border-red-950/10 bg-white/75 p-2 shadow-sm">
           <button
             type="button"
             role="tab"
@@ -453,6 +459,16 @@ export default function App() {
             <BookMarked className={`h-5 w-5 shrink-0 ${view === 'tangthu' ? 'text-amber-200' : 'text-red-900'}`} />
             <span><span className="block font-serif text-xs font-bold sm:text-base">Tàng Thư</span><span className={`mt-0.5 hidden text-[11px] sm:block sm:text-xs ${view === 'tangthu' ? 'text-red-100' : 'text-stone-500'}`}>Cổ học tinh hoa & bài viết</span></span>
           </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === 'thanso'}
+            onClick={handleShowThanSoHoc}
+            className={`flex min-h-[68px] items-center gap-2 rounded-xl px-2 py-3 text-left transition-all duration-200 sm:gap-3 sm:px-4 ${view === 'thanso' ? 'bg-gradient-to-r from-red-950 to-red-800 text-white shadow-md shadow-red-950/15' : 'text-stone-700 hover:bg-red-50'}`}
+          >
+            <ChartColumnIncreasing className={`h-5 w-5 shrink-0 ${view === 'thanso' ? 'text-amber-200' : 'text-red-900'}`} />
+            <span><span className="block font-serif text-xs font-bold sm:text-base">Thần số học</span><span className={`mt-0.5 hidden text-[11px] sm:block sm:text-xs ${view === 'thanso' ? 'text-red-100' : 'text-stone-500'}`}>Phân tích dữ liệu XSMB</span></span>
+          </button>
         </div>}
 
         {view === 'form' && (
@@ -475,6 +491,8 @@ export default function App() {
         {view === 'calendar' && <LunarCalendarTab date={calendarDate} onDateChange={handleCalendarDateChange} />}
 
         {view === 'tangthu' && <TangThuTab />}
+
+        {view === 'thanso' && <ThanSoHocTab />}
 
         {view === 'chart' && chart && (
           <div className="space-y-4 print-area">
@@ -549,6 +567,7 @@ export default function App() {
               <button type="button" onClick={() => { handleShowForm(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="transition hover:text-amber-200">Lập lá số</button>
               <button type="button" onClick={() => { handleShowBacDe(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="transition hover:text-amber-200">Quẻ Bắc Đế</button>
               <button type="button" onClick={() => { handleShowTangThu(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="transition hover:text-amber-200">Tàng Thư</button>
+              <button type="button" onClick={() => { handleShowThanSoHoc(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="transition hover:text-amber-200">Thần số học</button>
             </div>
           </nav>
         </div>
