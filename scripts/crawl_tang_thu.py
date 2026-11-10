@@ -1,180 +1,240 @@
 #!/usr/bin/env python3
-"""Export articles from tuvi.cohoc.net/hoc-tu-vi.html to a Tàng Thư JSON import file.
+"""Collect Tàng Thư source articles through a visible, user-controlled Chrome session.
 
-Run: python scripts/crawl_tang_thu.py
-Optional: python scripts/crawl_tang_thu.py --start-url URL --max-pages 5 --output tang-thu-import.json
-The script intentionally stops on anti-bot/challenge pages; it never treats them as article content.
+Install:
+  pip install playwright
+  playwright install chrome
+
+Run:
+  python scripts/crawl_tang_thu.py
+
+The browser is visible. If the source site presents a verification page, complete it
+yourself in the opened browser and press Enter in this terminal. This tool does not
+solve CAPTCHAs, evade access controls, rotate IPs, or disguise automation.
 """
 from __future__ import annotations
-import argparse, json, re, sys, time
+
+import argparse
+import json
+import re
+import sys
+import time
 from datetime import datetime, timezone
-from html.parser import HTMLParser
+from pathlib import Path
 from urllib.parse import urljoin, urlparse
-from urllib.request import Request, urlopen
+
+try:
+    from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
+except ImportError:
+    print("Thiếu Playwright. Cài bằng: pip install playwright", file=sys.stderr)
+    raise SystemExit(2)
 
 BASE = "https://tuvi.cohoc.net/hoc-tu-vi.html"
 HOST = "tuvi.cohoc.net"
-BLOCK_MARKERS = ("xử lý nghiệp vụ", "chờ -- giây", "ip-spam", "access denied", "captcha")
+ARTICLE_RE = re.compile(r"-nid-\d+\.html(?:$|[?#])", re.I)
+CHALLENGE_MARKERS = ("xử lý nghiệp vụ", "ip-spam", "captcha", "access denied", "chờ -- giây")
+CONTENT_SELECTORS = (
+    "article",
+    '[itemprop="articleBody"]',
+    ".article-content", ".article-body", ".article-detail",
+    ".post-content", ".post-body", ".entry-content",
+    ".content-detail", ".detail-content", ".news-content",
+    "#article-content", "#content-detail", "#main-content",
+)
 
-def clean_text(value: str) -> str:
-    value = re.sub(r"\r", "", value)
-    value = re.sub(r"[ \t]+", " ", value)
-    value = re.sub(r"\n[ \t]*\n+", "\n\n", value)
-    return value.strip()
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
-class PageParser(HTMLParser):
-    def __init__(self):
-        super().__init__(convert_charrefs=True)
-        self.stack = []
-        self.links = []
-        self.blocks = []
-        self.current = []
-        self.capture_depth = None
-        self.title = ""
-        self.in_title = False
-        self.in_body = False
-        self.body_depth = 0
-        self.article_depth = None
-        self.best_blocks = []
+def same_host(url: str) -> bool:
+    return urlparse(url).netloc.lower().endswith(HOST)
 
-    def handle_starttag(self, tag, attrs):
-        attrs = dict(attrs)
-        depth = len(self.stack)
-        classes = (attrs.get("class") or "").lower()
-        ident = (attrs.get("id") or "").lower()
-        if tag == "a" and attrs.get("href"):
-            self.links.append((attrs["href"], ""))
-        if tag == "title" or tag == "h1":
-            self.in_title = True
-        if tag == "body":
-            self.in_body = True
-            self.body_depth = depth
-        if self.article_depth is None and (
-            tag in ("article", "main") or
-            any(token in classes + " " + ident for token in ("article-content", "article-body", "article-detail", "post-content", "post-body", "entry-content", "content-detail", "detail-content", "news-content", "main-content"))
-        ):
-            self.article_depth = depth
-            self.current = []
-        if tag in ("p", "h1", "h2", "h3", "h4", "li", "blockquote", "pre", "br"):
-            self.blocks.append((tag, depth))
-        self.stack.append(tag)
+def is_challenge(page) -> bool:
+    try:
+        text = page.locator("body").inner_text(timeout=5000).lower()
+    except Exception:
+        return True
+    return any(marker in text for marker in CHALLENGE_MARKERS)
 
-    def handle_endtag(self, tag):
-        if tag in ("title", "h1"):
-            self.in_title = False
-        if self.stack:
-            try:
-                idx = len(self.stack) - 1 - self.stack[::-1].index(tag)
-                self.stack = self.stack[:idx]
-            except ValueError:
-                pass
-        if self.article_depth is not None and len(self.stack) <= self.article_depth:
-            self.article_depth = None
+def wait_for_manual_verification(page, label: str) -> bool:
+    if not is_challenge(page):
+        return True
+    print(f"\n[CAN XAC MINH] Website đang hiển thị trang xác minh: {label}")
+    print("Hãy tự xử lý trên cửa sổ Chrome vừa mở. Không chia sẻ mã xác minh hoặc cookie.")
+    input("Khi Chrome đã hiển thị nội dung bình thường, quay lại đây và nhấn Enter...")
+    page.wait_for_timeout(1500)
+    if is_challenge(page):
+        print("[BLOCKED] Trang vẫn đang ở trạng thái xác minh; bỏ qua URL này.")
+        return False
+    return True
 
-    def handle_data(self, data):
-        text = clean_text(data)
-        if not text:
-            return
-        if self.in_title and not self.title:
-            self.title = text
-        if self.links:
-            href, label = self.links[-1]
-            self.links[-1] = (href, (label + " " + text).strip())
-        if self.article_depth is not None:
-            self.current.append(text)
-        elif self.in_body:
-            self.best_blocks.append(text)
+def collect_links(page, page_url: str):
+    return page.locator("a[href]").evaluate_all(
+        """els => els.map(a => ({href:a.href, text:(a.innerText||a.textContent||'').trim()}))"""
+    )
 
-def fetch(url: str) -> str:
-    req = Request(url, headers={"User-Agent": "Mozilla/5.0 (compatible; TangThuResearchImporter/1.0)", "Accept-Language": "vi,en;q=0.8"})
-    with urlopen(req, timeout=25) as response:
-        raw = response.read()
-        charset = response.headers.get_content_charset() or "utf-8"
-    return raw.decode(charset, errors="replace")
+def extract_index(page, page_url: str):
+    links = collect_links(page, page_url)
+    articles, pagination = [], []
+    for item in links:
+        url = urljoin(page_url, item.get("href", "")).split("#")[0]
+        if not same_host(url):
+            continue
+        if ARTICLE_RE.search(url):
+            if url not in articles:
+                articles.append(url)
+            continue
+        label = (item.get("text") or "").strip().lower()
+        parsed = urlparse(url)
+        path = parsed.path.lower()
+        looks_like_page = (
+            any(token in path for token in ("hoc-tu-vi", "page", "trang", "list"))
+            and (url != page_url)
+        ) or label in {"2", "3", "4", "5", "sau", "tiếp", "next", "»", "›"}
+        if looks_like_page and url not in pagination:
+            pagination.append(url)
+    return articles, pagination
 
-def is_challenge(html: str) -> bool:
-    sample = re.sub(r"<[^>]+>", " ", html).lower()
-    return any(marker in sample for marker in BLOCK_MARKERS)
+def extract_article(page, url: str):
+    title = ""
+    for selector in ('h1', 'meta[property="og:title"]', 'title'):
+        try:
+            locator = page.locator(selector).first
+            if selector.startswith("meta"):
+                value = locator.get_attribute("content", timeout=1500)
+            else:
+                value = locator.inner_text(timeout=1500)
+            if value and value.strip():
+                title = value.strip()
+                break
+        except Exception:
+            pass
 
-def parse_page(url: str, html: str):
-    parser = PageParser()
-    parser.feed(html)
-    return parser
+    candidates = []
+    for selector in CONTENT_SELECTORS:
+        try:
+            locators = page.locator(selector)
+            count = min(locators.count(), 12)
+            for i in range(count):
+                node = locators.nth(i)
+                text = node.inner_text(timeout=1500).strip()
+                if len(text) >= 250:
+                    candidates.append((len(text), text))
+        except Exception:
+            continue
+    if not candidates:
+        return None, "Không tìm thấy vùng nội dung bài viết có độ dài phù hợp"
+
+    body = max(candidates, key=lambda item: item[0])[1]
+    body = re.sub(r"\n[ \t]*\n[ \t]*\n+", "\n\n", body).strip()
+    if len(body) < 250:
+        return None, "Nội dung trích xuất quá ngắn; cần kiểm tra thủ công"
+    if any(marker in body.lower() for marker in CHALLENGE_MARKERS):
+        return None, "Nội dung có dấu hiệu là trang xác minh"
+    if not title:
+        title = body.splitlines()[0][:200]
+    author = ""
+    for selector in ('[rel="author"]', '[itemprop="author"]', ".author", ".post-author"):
+        try:
+            candidate = page.locator(selector).first.inner_text(timeout=1000).strip()
+            if candidate:
+                author = candidate[:160]
+                break
+        except Exception:
+            pass
+    return {
+        "title": title[:200],
+        "summary": re.sub(r"\s+", " ", body)[:220].strip(),
+        "content": body,
+        "category": "Tử Vi",
+        "tags": ["Tử Vi", "Tàng Thư", "Tư liệu sưu tầm"],
+        "author": author or "Chưa xác định (cần biên tập)",
+        "sourceUrl": url,
+        "sourceType": "tuvi.cohoc.net",
+        "createdAt": now_iso(),
+    }, None
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--start-url", default=BASE)
-    ap.add_argument("--max-pages", type=int, default=5)
-    ap.add_argument("--output", default="tang-thu-import.json")
-    ap.add_argument("--delay", type=float, default=1.0)
-    args = ap.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--start-url", default=BASE)
+    parser.add_argument("--max-pages", type=int, default=5)
+    parser.add_argument("--delay", type=float, default=2.0)
+    parser.add_argument("--output", default="tang-thu-import.json")
+    parser.add_argument("--profile-dir", default=".cache/tang-thu-chrome")
+    args = parser.parse_args()
 
-    queue = [args.start_url]
     visited_pages, article_urls = set(), []
-    page_parsers = []
-    while queue and len(visited_pages) < max(1, args.max_pages):
-        page_url = queue.pop(0)
-        if page_url in visited_pages:
-            continue
-        visited_pages.add(page_url)
-        try:
-            html = fetch(page_url)
-        except Exception as exc:
-            print(f"[WARN] Không tải được trang danh sách {page_url}: {exc}", file=sys.stderr)
-            continue
-        if is_challenge(html):
-            print(f"[BLOCKED] Website trả trang chống truy cập tại {page_url}. Dừng để tránh nhập nhầm trang chặn.", file=sys.stderr)
-            continue
-        parser = parse_page(page_url, html)
-        page_parsers.append((page_url, parser))
-        for href, label in parser.links:
-            absolute = urljoin(page_url, href).split("#")[0]
-            parsed = urlparse(absolute)
-            if parsed.netloc and parsed.netloc != HOST:
-                continue
-            if re.search(r"(page|trang|list|hoc-tu-vi)", absolute, re.I) and absolute not in visited_pages and absolute not in queue:
-                if len(visited_pages) + len(queue) < args.max_pages:
-                    queue.append(absolute)
-            elif absolute.startswith("http") and absolute != page_url and absolute not in article_urls:
-                if parsed.netloc.endswith(HOST):
-                    article_urls.append(absolute)
-        time.sleep(max(0, args.delay))
+    failed, records = [], []
+    queue = [args.start_url]
 
-    records, failed = [], []
-    for article_url in article_urls:
+    with sync_playwright() as playwright:
+        # Dedicated persistent profile; does not read or copy the user's normal Chrome profile.
+        context = playwright.chromium.launch_persistent_context(
+            user_data_dir=args.profile_dir,
+            channel="chrome",
+            headless=False,
+            viewport={"width": 1440, "height": 950},
+            args=["--start-maximized"],
+        )
+        page = context.pages[0] if context.pages else context.new_page()
         try:
-            html = fetch(article_url)
-            if is_challenge(html):
-                failed.append({"url": article_url, "reason": "anti-bot/challenge"})
-                continue
-            parser = parse_page(article_url, html)
-            title = parser.title or ""
-            body = clean_text("\n\n".join(parser.current))
-            body_lower = body.lower()
-            if not title or len(body) < 80 or any(marker in body_lower for marker in BLOCK_MARKERS):
-                failed.append({"url": article_url, "reason": "Không nhận diện được nội dung bài viết"})
-                continue
-            records.append({
-                "title": title[:200],
-                "summary": body[:220].replace("\n", " ").strip(),
-                "content": body,
-                "category": "Tử Vi",
-                "tags": ["Tử Vi", "Tàng Thư", "Tư liệu sưu tầm"],
-                "author": "Chưa xác định (cần biên tập)",
-                "sourceUrl": article_url,
-                "sourceType": "tuvi.cohoc.net",
-                "createdAt": datetime.now(timezone.utc).isoformat(),
-            })
-        except Exception as exc:
-            failed.append({"url": article_url, "reason": str(exc)})
-        time.sleep(max(0, args.delay))
+            while queue and len(visited_pages) < max(1, args.max_pages):
+                url = queue.pop(0)
+                if url in visited_pages:
+                    continue
+                visited_pages.add(url)
+                print(f"[LIST] {url}")
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                    page.wait_for_timeout(1800)
+                    if not wait_for_manual_verification(page, url):
+                        failed.append({"url": url, "reason": "Trang danh sách vẫn bị chặn sau khi người dùng kiểm tra"})
+                        continue
+                    found, pages = extract_index(page, url)
+                    for article_url in found:
+                        if article_url not in article_urls:
+                            article_urls.append(article_url)
+                    for next_url in pages:
+                        if next_url not in visited_pages and next_url not in queue and len(visited_pages) + len(queue) < args.max_pages:
+                            queue.append(next_url)
+                except Exception as exc:
+                    failed.append({"url": url, "reason": f"Lỗi tải trang danh sách: {exc}"})
+                time.sleep(max(0, args.delay))
 
-    payload = {"source": BASE, "exportedAt": datetime.now(timezone.utc).isoformat(), "articles": records, "failed": failed}
-    with open(args.output, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
-    print(f"Đã xuất {len(records)} bài; {len(failed)} URL cần kiểm tra -> {args.output}")
+            print(f"\nTìm thấy {len(article_urls)} URL bài viết. Bắt đầu đọc tuần tự...")
+            for index, url in enumerate(article_urls, 1):
+                print(f"[{index}/{len(article_urls)}] {url}")
+                try:
+                    page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                    page.wait_for_timeout(1400)
+                    if not wait_for_manual_verification(page, url):
+                        failed.append({"url": url, "reason": "Trang bài viết vẫn bị chặn sau khi người dùng kiểm tra"})
+                        continue
+                    record, reason = extract_article(page, url)
+                    if record:
+                        records.append(record)
+                        print(f"  [OK] {record['title']}")
+                    else:
+                        failed.append({"url": url, "reason": reason})
+                        print(f"  [SKIP] {reason}")
+                except PlaywrightTimeoutError:
+                    failed.append({"url": url, "reason": "Hết thời gian chờ tải trang"})
+                except Exception as exc:
+                    failed.append({"url": url, "reason": str(exc)})
+                payload = {
+                    "source": args.start_url,
+                    "exportedAt": now_iso(),
+                    "articles": records,
+                    "failed": failed,
+                    "stats": {"indexPagesVisited": len(visited_pages), "articleUrlsFound": len(article_urls)},
+                }
+                Path(args.output).write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+                time.sleep(max(0, args.delay))
+        finally:
+            context.close()
+
+    print(f"\nĐã xuất {len(records)} bài; {len(failed)} URL cần kiểm tra -> {args.output}")
     if not records:
-        print("Không có bài nào được xuất. Kiểm tra anti-bot hoặc cấu trúc HTML trước khi nhập.", file=sys.stderr)
+        print("Không có bài nào được xuất. Xem danh sách lỗi trong file JSON.", file=sys.stderr)
         return 2
     return 0
 
