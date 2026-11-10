@@ -263,6 +263,7 @@ def main():
 
     visited_pages = set(state.get("visitedIndexPages", []))
     article_urls = list(dict.fromkeys(state.get("articleUrls", [])))
+    saved_queue = list(dict.fromkeys(state.get("queuedIndexPages", [])))
     list_failures = {
         item.get("url"): item for item in state.get("failedIndexPages", [])
         if isinstance(item, dict) and item.get("url")
@@ -315,6 +316,7 @@ def main():
             "source": args.start_url,
             "updatedAt": now_iso(),
             "visitedIndexPages": sorted(visited_pages),
+            "queuedIndexPages": queue,
             "articleUrls": article_urls,
             "failedIndexPages": list(list_failures.values()),
             "articleStatus": statuses,
@@ -322,7 +324,7 @@ def main():
 
     # Retry previously failed index pages first. Successfully visited pages are not
     # downloaded again. The start page is added only if there is no prior state.
-    queue = list(list_failures.keys())
+    queue = list(dict.fromkeys([*list_failures.keys(), *saved_queue]))
     if not visited_pages and args.start_url not in queue:
         queue.append(args.start_url)
 
